@@ -2,13 +2,13 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.1** adds application form controls and field validation to the
-theme, typography, buttons, badges, and square spinner introduced in 1.0.0.
+Version **1.0.2** adds composable cards and alerts to the form controls,
+validation, theme, typography, buttons, badges, and square spinner.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.1"
+dutchy-egui = "1.0.2"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -69,6 +69,16 @@ and custom predicates. `FieldValidation` tracks explicit change/blur/submit
 triggers and rejects stale async tickets; the application executes async work.
 See the [form API guide](docs/forms.md) for examples and boundaries.
 
+## Cards and alerts
+
+`Card` provides six surfaces, token padding, header/footer helpers, and an
+explicitly named keyboard-accessible action surface. Child controls retain
+their own actions. Dutchy and native text inherit inverse surface colors.
+
+`Alert` supports four severities, tinted alerts or solid banners, action and
+dismiss results, live metadata, and an explicit dismissal focus target. The host
+owns visibility and action execution. See the [cards and alerts guide](docs/cards-alerts.md).
+
 ## Showcase
 
 ```sh
@@ -76,8 +86,8 @@ cargo run --example showcase
 ```
 
 The native showcase includes theme/motion switches, component navigation,
-typography and palette pages, an application form with validation, interactive
-controls, and narrow-window layouts.
+typography and palette pages, an application form with validation, cards, alerts,
+interactive controls, and narrow-window layouts.
 Its renderer is Glow; automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
 
@@ -113,11 +123,12 @@ cargo package --allow-dirty
 
 Rendering tests need a WGPU-capable adapter (a software Vulkan adapter works on
 Linux). Review rendering baseline changes visually before accepting updates:
-`UPDATE_SNAPSHOTS=true cargo test --test rendering`, then rerun without that
+`UPDATE_SNAPSHOTS=true cargo test --test surfaces_rendering`, then rerun without that
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
-[form verification](docs/verification-forms.md) and the earlier
+[cards and alerts verification](docs/verification-surfaces.md),
+[form verification](docs/verification-forms.md), and the earlier
 [visual-proof verification](docs/verification.md). This milestone does not claim whole-system
 parity or blanket contrast compliance; [DS-003](docs/issues/DS-003.md) records
 inherited source-palette contrast limitations.

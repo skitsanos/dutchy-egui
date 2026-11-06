@@ -1,8 +1,10 @@
 mod components;
 mod forms;
+mod surfaces;
 mod typography;
 
 pub use forms::FormState;
+pub use surfaces::SurfacesState;
 
 use dutchy_egui::tokens::{border, space};
 use dutchy_egui::{
@@ -16,6 +18,8 @@ pub enum Page {
     Overview,
     Typography,
     Forms,
+    Cards,
+    Alerts,
     Buttons,
     Badges,
     Motion,
@@ -23,10 +27,12 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 7] = [
+    const ALL: [Self; 9] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
+        Self::Cards,
+        Self::Alerts,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -38,6 +44,8 @@ impl Page {
             Self::Overview => "Overview",
             Self::Typography => "Typography",
             Self::Forms => "Forms",
+            Self::Cards => "Cards",
+            Self::Alerts => "Alerts",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -56,6 +64,7 @@ pub struct Showcase {
     pub native_text: String,
     pub native_checked: bool,
     pub forms: FormState,
+    pub surfaces: SurfacesState,
 }
 
 impl Default for Showcase {
@@ -70,6 +79,7 @@ impl Default for Showcase {
             native_text: "Native egui, Dutchy style".into(),
             native_checked: true,
             forms: FormState::default(),
+            surfaces: SurfacesState::default(),
         }
     }
 }
@@ -107,6 +117,8 @@ impl Showcase {
                             Page::Overview => components::overview(ui, self),
                             Page::Typography => typography::show(ui),
                             Page::Forms => forms::show(ui, &mut self.forms),
+                            Page::Cards => surfaces::cards(ui, &mut self.surfaces),
+                            Page::Alerts => surfaces::alerts(ui, &mut self.surfaces),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),

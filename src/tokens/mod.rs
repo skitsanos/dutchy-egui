@@ -1,9 +1,11 @@
 //! Shared design tokens, expressed in egui logical points.
 
 mod color;
+pub mod surface;
 mod typography;
 
 pub use color::{Accent, Mode, Palette};
+pub use surface::CardPadding;
 pub use typography::{Family, Leading, TextSize, Tracking, Weight};
 
 /// Four-point spacing rhythm, including the documented two-point micro gap.

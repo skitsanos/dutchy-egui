@@ -173,8 +173,13 @@ impl<'a> Text<'a> {
 }
 
 impl Widget for Text<'_> {
-    fn ui(self, ui: &mut Ui) -> Response {
+    fn ui(mut self, ui: &mut Ui) -> Response {
         let theme = Theme::from_context(ui.ctx());
+        if matches!(self.color, TextColor::Foreground | TextColor::Muted)
+            && let Some(color) = ui.visuals().override_text_color
+        {
+            self.color = TextColor::Custom(color);
+        }
         ui.add(Label::new(self.layout_job(&theme, ui.available_width())).wrap())
     }
 }

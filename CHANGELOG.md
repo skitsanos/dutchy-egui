@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.2 — 2026-11-06
+
+- Six card surfaces, four padding tiers, composable headings/descriptions/headers/
+  footers, and explicitly named interactive cards with native keyboard behavior.
+- Scoped surface foreground inheritance for Dutchy and native text; nested cards
+  restore their own foreground and custom text colors remain explicit.
+- Four alert severities, tinted alerts, solid banners, host-owned action/dismiss
+  results, live metadata, and explicit focus restoration after dismissal.
+- Cards/Alerts showcase pages, stable-ID and interaction tests, light/dark and
+  multiple-scale rendering baselines. No additional runtime dependencies.
+
 ## 1.0.1 — 2026-11-06
 
 - Application essentials, first step: form controls and field validation.
