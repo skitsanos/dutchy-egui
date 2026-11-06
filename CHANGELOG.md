@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.9 — 2026-11-06
+
+- Keyed, host-controlled stepper with horizontal, vertical, compact, and position-
+  progress presentations; explicit not-started, current, and completed states.
+- Adaptive columns, wrapped descriptions, compact scrolling, finite empty/single/
+  unknown-key behavior, and optional native navigation requests.
+- Accessible status/current-step metadata, stable identities, keyboard focus,
+  and a validated host workflow with retained input and explicit submission.
+- Interaction regressions and multi-theme/scale rendering. No new dependencies.
+
 ## 1.0.8 — 2026-11-06
 
 - Keyed breadcrumbs with slash/chevron separators, decorative icon roots, a muted

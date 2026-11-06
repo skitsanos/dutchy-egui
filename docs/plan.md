@@ -93,9 +93,11 @@ pushed to main as `4840e10` on 2026-11-06, including revised composite focus cue
 selected tabs use their active mark; accordion keyboard outlines are inset and
 complete, with pointer selection leaving shared borders clean.
 The 1.0.7 menus/dropdowns and close-control step was pushed to main as `198ab48`
-on 2026-11-06. The 1.0.8 step is developed locally on
-`ticket/breadcrumbs-pagination`: keyed hierarchy navigation and bounded numbered/
-compact pagination, with host-owned route/data requests.
-See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md), and
-[menu/dropdown decisions](menus-dropdowns.md), and
-[navigation decisions](breadcrumbs-pagination.md) for behavior and scope boundaries.
+on 2026-11-06. The 1.0.8 breadcrumbs/pagination step was pushed to main as
+`59a80b4` on 2026-11-06. The 1.0.9 step is developed locally on `ticket/stepper`:
+four workflow presentations, explicit host-owned position/completion, optional
+navigation requests, and a form-validated setup example with retained values.
+See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md),
+[menu/dropdown decisions](menus-dropdowns.md),
+[navigation decisions](breadcrumbs-pagination.md), and [stepper decisions](stepper.md)
+for behavior and scope boundaries.

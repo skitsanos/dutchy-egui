@@ -1,7 +1,7 @@
 # Component coverage
 
-Version 1.0.8 adds breadcrumbs and pagination after menus, dropdowns, search,
-accordions, and tabs, following
+Version 1.0.9 adds a controlled stepper after breadcrumbs, pagination, menus,
+dropdowns, search, accordions, and tabs, following
 the core application essentials. Registry groups are not a count of individual
 controls. "Planned" means no public implementation is shipped.
 
@@ -24,7 +24,7 @@ controls. "Planned" means no public implementation is shipped.
 | Modal / Drawer | Planned | Blocking overlays, backdrop, dismissal, focus restoration |
 | Dropdowns | Interaction components | Anchored/context actions, start/end alignment, viewport constraints, scrolling, keyboard/dismissal/focus return; searchable select and native modal command palette with host-owned query/open/selection/actions |
 | Data Table | Planned | Table primitives, empty/loading, host-controlled sort/filter |
-| Stepper | Planned | Horizontal/vertical progress |
+| Stepper | Interaction components | Horizontal/vertical/compact/position progress; keyed host state, explicit completion, optional navigation requests, current/status metadata, narrow adaptation, compact scrolling, empty/single/unknown states and validated host workflow |
 | Tooltips | Application essentials | Text hints; four preferred sides, native constrained placement/hover timing, keyboard focus, Escape dismissal, and merged accessible descriptions |
 | File Upload | Planned | File selection/drop zone/list; application-owned transfer |
 | Image | Planned | Caption/gallery/lightbox; optional loaders |
@@ -43,6 +43,6 @@ protection. Header/sidebar, hero/footer composition, and other web patterns stil
 require work beyond these groups. The application-essentials milestone's core
 scope is implemented, including a public-API form and workspace settings/dashboard
 composition. Partial controls and broader web parity remain explicit above;
-interaction components are underway. General overlays, toasts, and the other
-planned navigation groups remain outstanding. The command palette uses a native
-modal internally without exposing a general modal API.
+interaction components are underway. General overlays, toasts, and the advanced
+component groups remain outstanding. The command palette uses a native modal
+internally without exposing a general modal API.

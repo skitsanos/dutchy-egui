@@ -2,13 +2,13 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.8** continues interaction components with breadcrumbs and pagination,
-following menus, dropdowns, accordions, and tabs.
+Version **1.0.9** continues interaction components with a controlled stepper,
+following breadcrumbs, pagination, menus, dropdowns, accordions, and tabs.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.8"
+dutchy-egui = "1.0.9"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -146,6 +146,16 @@ stable keyboard focus, and explicit empty/invalid/disabled range behavior.
 Both return navigation requests; the host owns routing and data loading.
 See the [navigation guide](docs/breadcrumbs-pagination.md).
 
+## Stepper
+
+`Stepper` presents keyed workflow steps in horizontal, vertical, compact, or
+position-progress variants. Horizontal adapts to vertical in narrow columns;
+compact sequences scroll. `StepperState` explicitly distinguishes not started,
+a current key, and completion. Steps are read-only by default; optional native
+buttons return requests that the host accepts or rejects. Validation, field
+values, submission, and Back/Continue controls stay in the application.
+See the [stepper guide](docs/stepper.md).
+
 ## Showcase
 
 ```sh
@@ -159,7 +169,9 @@ responsive workspace settings/dashboard composition. Accordions and tabbed
 settings/documents demonstrate host-owned state and independent close requests.
 Menus/Dropdowns pages demonstrate actions, context menus, searchable selection,
 and a global command palette. Breadcrumbs/Pagination pages demonstrate deep
-paths and a host-managed record browser. Its renderer is Glow; automated rendering tests use WGPU. Keyboard focus uses
+paths and a host-managed record browser. The Stepper page demonstrates validation,
+Back/revisit data retention, and explicit host completion. Its renderer is Glow;
+automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
 
 ## Fonts and features
@@ -198,6 +210,7 @@ Linux). Review rendering baseline changes visually before accepting updates:
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
+[stepper verification](docs/verification-stepper.md),
 [navigation verification](docs/verification-navigation.md),
 [close-control verification](docs/verification-close-controls.md),
 [menus and dropdowns verification](docs/verification-menus.md),

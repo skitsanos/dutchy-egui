@@ -22,6 +22,7 @@ mod searchable_select;
 mod skeleton;
 mod spinner;
 mod stats;
+mod stepper;
 mod tabs;
 mod tooltip;
 
@@ -48,5 +49,6 @@ pub use spinner::{Spinner, SpinnerSize};
 pub use stats::{
     Stat, StatSize, StatVariant, StatsGrid, StatsLayout, Trend, TrendDirection, TrendSentiment,
 };
+pub use stepper::{Step, Stepper, StepperResponse, StepperState, StepperVariant};
 pub use tabs::{Tab, Tabs, TabsResponse, TabsVariant};
 pub use tooltip::{Tooltip, TooltipPosition};

@@ -7,6 +7,7 @@ mod layout;
 mod loading;
 mod menus;
 mod navigation;
+mod stepping;
 mod surfaces;
 mod tabbed;
 mod typography;
@@ -42,6 +43,7 @@ pub enum Page {
     Dropdowns,
     Breadcrumbs,
     Pagination,
+    Stepper,
     Buttons,
     Badges,
     Motion,
@@ -49,7 +51,7 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 21] = [
+    const ALL: [Self; 22] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
@@ -67,6 +69,7 @@ impl Page {
         Self::Dropdowns,
         Self::Breadcrumbs,
         Self::Pagination,
+        Self::Stepper,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -92,6 +95,7 @@ impl Page {
             Self::Dropdowns => "Dropdowns",
             Self::Breadcrumbs => "Breadcrumbs",
             Self::Pagination => "Pagination",
+            Self::Stepper => "Stepper",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -119,6 +123,7 @@ pub struct Showcase {
     pub tabbed: tabbed::TabbedState,
     pub menus: menus::MenuState,
     pub navigation: navigation::NavigationState,
+    pub stepping: stepping::SteppingState,
 }
 
 impl Default for Showcase {
@@ -142,6 +147,7 @@ impl Default for Showcase {
             tabbed: tabbed::TabbedState::default(),
             menus: menus::MenuState::default(),
             navigation: navigation::NavigationState::default(),
+            stepping: stepping::SteppingState::default(),
         }
     }
 }
@@ -193,6 +199,7 @@ impl Showcase {
                             Page::Dropdowns => menus::dropdowns(ui, &mut self.menus),
                             Page::Breadcrumbs => navigation::breadcrumbs(ui, &mut self.navigation),
                             Page::Pagination => navigation::pagination(ui, &mut self.navigation),
+                            Page::Stepper => stepping::show(ui, &mut self.stepping),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),

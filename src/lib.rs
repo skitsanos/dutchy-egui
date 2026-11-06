@@ -31,8 +31,8 @@ pub use widgets::{
     MenuItem, MenuItemVariant, MenuResponse, Pagination, PaginationResponse, PaginationVariant,
     Progress, ProgressVariant, SearchState, SearchableSelect, SearchableSelectResponse, Skeleton,
     SkeletonGroup, SkeletonVariant, Spinner, SpinnerSize, Stat, StatSize, StatVariant, StatsGrid,
-    StatsLayout, Tab, Tabs, TabsResponse, TabsVariant, Tooltip, TooltipPosition, Trend,
-    TrendDirection, TrendSentiment,
+    StatsLayout, Step, Stepper, StepperResponse, StepperState, StepperVariant, Tab, Tabs,
+    TabsResponse, TabsVariant, Tooltip, TooltipPosition, Trend, TrendDirection, TrendSentiment,
 };
 
 /// Install bundled fonts once and apply a theme. Does not change display scaling.
