@@ -38,5 +38,18 @@ OFL notices with redistributed fonts.
 
 ## Crate dependencies
 
-egui is the direct runtime crate. eframe and egui_kittest are development-only.
-They are MIT OR Apache-2.0 licensed; their dependency licenses remain applicable.
+egui is the default direct runtime crate. Optional `url-images` adds ehttp
+0.7.3 (HTTP transport) and image 0.25.10 (PNG/JPEG codecs). eframe and egui_kittest
+are development-only. These crates use MIT OR Apache-2.0; their transitive
+dependency licenses remain applicable. The loader integration is original code;
+no widget/helper library implementation was copied.
+
+## Online showcase photos
+
+The optional Picsum mode requests images from https://picsum.photos/ at runtime.
+No third-party photographs are bundled in this package. Visible captions credit
+the photographers; the showcase links to their original Unsplash photo pages.
+Provider metadata was verified on 2026-11-06 for IDs 10 (Paul Jarvis), 28 (Jerry
+Adney), 237 (André Spieker), 870 (Joshua Hibbert), 1025 (Matthew Wiebe), and 1043
+(Christian Joudrey). Original offline illustrations remain repository-owned.
+Provider availability and photo rights remain subject to their source terms.

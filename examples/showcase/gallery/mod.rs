@@ -5,6 +5,7 @@ mod help;
 mod insights;
 mod layout;
 mod loading;
+mod media;
 mod menus;
 mod navigation;
 mod notifications;
@@ -51,6 +52,9 @@ pub enum Page {
     Drawers,
     Toasts,
     DataTables,
+    Images,
+    Galleries,
+    Lightboxes,
     Buttons,
     Badges,
     Motion,
@@ -58,7 +62,7 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 26] = [
+    const ALL: [Self; 29] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
@@ -81,6 +85,9 @@ impl Page {
         Self::Drawers,
         Self::Toasts,
         Self::DataTables,
+        Self::Images,
+        Self::Galleries,
+        Self::Lightboxes,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -111,6 +118,9 @@ impl Page {
             Self::Drawers => "Drawers",
             Self::Toasts => "Toasts",
             Self::DataTables => "Data tables",
+            Self::Images => "Images",
+            Self::Galleries => "Galleries",
+            Self::Lightboxes => "Lightboxes",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -142,6 +152,7 @@ pub struct Showcase {
     pub overlays: overlays::OverlayState,
     pub notifications: notifications::NotificationState,
     pub tabular: tabular::TableState,
+    pub media: media::MediaState,
 }
 
 impl Default for Showcase {
@@ -169,6 +180,7 @@ impl Default for Showcase {
             overlays: overlays::OverlayState::default(),
             notifications: notifications::NotificationState::default(),
             tabular: tabular::TableState::default(),
+            media: media::MediaState::default(),
         }
     }
 }
@@ -225,6 +237,9 @@ impl Showcase {
                             Page::Drawers => self.overlays.drawers(ui),
                             Page::Toasts => self.notifications.show(ui),
                             Page::DataTables => self.tabular.show(ui),
+                            Page::Images => self.media.images(ui),
+                            Page::Galleries => self.media.galleries(ui),
+                            Page::Lightboxes => self.media.lightboxes(ui),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),
@@ -237,6 +252,7 @@ impl Showcase {
                         );
                     });
             });
+        self.media.render(ui.ctx());
         self.overlays.render(ui.ctx());
         self.menus.commands(ui.ctx());
         self.notifications.render(ui.ctx());

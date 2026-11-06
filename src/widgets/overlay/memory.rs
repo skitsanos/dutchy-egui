@@ -1,7 +1,7 @@
 use super::OverlayOptions;
 use egui::{Context, Id, LayerId};
 #[derive(Clone, Default)]
-pub(super) struct Memory {
+pub(in crate::widgets) struct Memory {
     was_open: bool,
     pending_entry: bool,
     return_focus: Option<Id>,

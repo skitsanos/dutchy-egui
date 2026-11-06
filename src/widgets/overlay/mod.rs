@@ -1,5 +1,5 @@
 mod content;
-mod memory;
+pub(super) mod memory;
 mod render;
 mod types;
 use crate::tokens::overlay::{DrawerWidth, ModalWidth};
@@ -120,3 +120,5 @@ impl<'a> Drawer<'a> {
             .map(|r| r.map(|(body, footer)| (body, footer.unwrap())))
     }
 }
+
+pub(in crate::widgets) use types::dismissal;

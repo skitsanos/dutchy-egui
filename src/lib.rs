@@ -6,6 +6,8 @@
 pub use egui;
 
 pub mod fonts;
+#[cfg(feature = "url-images")]
+pub mod image_loaders;
 pub mod interaction;
 pub mod layout;
 pub mod text;
@@ -53,5 +55,12 @@ pub use widgets::{
 /// ```
 pub fn install(ctx: &egui::Context, theme: Theme) {
     fonts::install(ctx);
+    #[cfg(feature = "url-images")]
+    image_loaders::install(ctx);
     theme.apply(ctx);
 }
+
+pub use widgets::{
+    Gallery, GalleryItem, GalleryResponse, Image, ImageAspect, ImageFit, ImageResponse,
+    ImageStatus, Lightbox, LightboxResponse,
+};

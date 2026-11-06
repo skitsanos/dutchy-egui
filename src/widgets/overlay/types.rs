@@ -68,3 +68,32 @@ impl<R> OverlayResponse<R> {
         }
     }
 }
+
+pub(in crate::widgets) fn dismissal<T>(
+    modal: &egui::ModalResponse<T>,
+    close: bool,
+    options: &OverlayOptions,
+) -> Option<OverlayDismissal> {
+    if close {
+        return Some(OverlayDismissal::CloseButton);
+    }
+    if modal.response.should_close() {
+        return Some(OverlayDismissal::Content);
+    }
+    if !modal.is_top_modal {
+        return None;
+    }
+    if options.dismiss_on_escape
+        && !modal.any_popup_open
+        && modal
+            .response
+            .ctx
+            .input_mut(|i| i.consume_key(egui::Modifiers::NONE, egui::Key::Escape))
+    {
+        return Some(OverlayDismissal::Escape);
+    }
+    if options.dismiss_on_backdrop && modal.backdrop_response.clicked() {
+        return Some(OverlayDismissal::Backdrop);
+    }
+    None
+}

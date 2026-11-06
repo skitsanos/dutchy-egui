@@ -1,6 +1,6 @@
 [package]
 name = "dutchy-egui"
-version = "1.0.12"
+version = "1.0.13"
 edition = "2024"
 rust-version = "1.95"
 description = "Dutchy Design System for egui: sharp geometry, warm colors, and bold typography"
@@ -18,9 +18,12 @@ include = [
 [features]
 default = ["bundled-fonts"]
 bundled-fonts = []
+url-images = ["dep:ehttp", "dep:image"]
 
 [dependencies]
 egui = "0.37.0"
+ehttp = { version = "0.7.3", optional = true, default-features = false, features = ["streaming"] }
+image = { version = "0.25.10", optional = true, default-features = false, features = ["jpeg", "png"] }
 
 [dev-dependencies]
 eframe = { version = "0.37.0", default-features = false, features = ["accesskit", "glow", "wayland", "x11"] }

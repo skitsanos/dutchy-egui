@@ -3,6 +3,7 @@
 pub mod close;
 mod color;
 pub mod disclosure;
+pub mod image;
 pub mod layout;
 pub mod loading;
 pub mod menu;

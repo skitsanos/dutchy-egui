@@ -44,7 +44,8 @@ closure-based show methods. Values and durable state remain application-owned;
 stateful controls accept stable IDs. Theme updates do not reinstall fonts.
 
 Use the latest stable egui release family and verify current versions whenever
-adding dependencies. egui is the sole direct runtime crate for this milestone.
+adding dependencies. egui is the sole default runtime crate. Optional HTTP(S)
+PNG/JPEG loading uses ehttp and image, with repository-owned integration;
 eframe and egui_kittest are development dependencies. Implement small helpers
 locally; adapt compatible MIT code only with provenance and notices. Keep code
 files near or below 400 lines and favor small functions over complex branching.
@@ -100,13 +101,19 @@ on 2026-11-06, including the wider confirmation refinement. The 1.0.11 toast ste
 pushed to main as `543e7f5` on 2026-11-06: application-owned notification queues,
 typed actions, visible-only expiry, four corners, accessible controls and focus,
 and host Undo/Retry examples. This completes the core interaction-components
-scope. The 1.0.12 step is developed locally on `ticket/data-tables`: keyed custom
-cells, typed host sort/selection requests, scroll coordination, explicit
+scope. The 1.0.12 data-table step was pushed to main as `3645d19` on 2026-11-06:
+keyed custom cells, typed host sort/selection requests, scroll coordination, explicit
 header/density treatments, loading/empty bodies, and a host record-browser
-example. This starts the advanced milestone; partial variants and remaining
-advanced groups stay explicit in the coverage matrix.
+example, including the vertical-centering correction. This starts the advanced
+milestone. The 1.0.13 step is developed locally on `ticket/images-gallery-lightbox`:
+native image-source presentation, optional HTTP(S) PNG/JPEG loading, keyed
+responsive galleries, host loader/retry
+policy and constrained lightboxes with native modality, keyboard operation and
+focus return. Partial variants and remaining advanced groups stay explicit in
+the coverage matrix.
 See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md),
 [menu/dropdown decisions](menus-dropdowns.md),
 [navigation decisions](breadcrumbs-pagination.md), [stepper decisions](stepper.md),
-[overlay decisions](modals-drawers.md), [toast decisions](toasts.md), and [table decisions](data-tables.md) for behavior
-and scope boundaries.
+[overlay decisions](modals-drawers.md), [toast decisions](toasts.md),
+[table decisions](data-tables.md), and [media decisions](images-galleries-lightboxes.md)
+for behavior and scope boundaries.

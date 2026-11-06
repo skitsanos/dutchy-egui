@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.0.13 — 2026-11-06
+
+- Bordered images on native egui sources with explicit aspect/contain/cover,
+  caption/source typography, named loading/error states and expand/retry controls.
+- Keyed responsive galleries with joined/spaced tiles, stable identities,
+  disabled items, empty guidance and host-owned opening requests.
+- Fullscreen in-app lightboxes with native modality, keyed host selection,
+  enabled-item navigation, optional wrapping, constrained captions and focus return.
+- Images/Galleries/Lightboxes showcase pages using original raster illustrations;
+  loader, interaction, fitting, pixel, host-workflow and theme/scale verification.
+- Pending images show a named square spinner and loading label, respecting
+  reduced motion, clipping and completion without moving the image box.
+- Optional `url-images`: asynchronous HTTP(S) PNG/JPEG loading, bounded streamed
+  bodies/decoded pixels/concurrency/cache, explicit retry and safe stale requests.
+  Adds optional ehttp 0.7.3 and image 0.25.10; default dependencies stay unchanged.
+- Picsum source switch and reload across media demo pages, photographer credits,
+  deterministic HTTP integration tests, and native live-provider verification.
+
 ## 1.0.12 — 2026-11-06
 
 - Start advanced components with keyed `DataTable` composition, custom native

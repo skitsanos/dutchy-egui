@@ -1,6 +1,4 @@
-use super::{
-    DrawerSide, OverlayDismissal, OverlayOptions, OverlayResponse, content, memory::Memory,
-};
+use super::{DrawerSide, OverlayOptions, OverlayResponse, content, memory::Memory};
 use crate::{
     Theme,
     tokens::{
@@ -93,7 +91,7 @@ pub(super) fn show<R, F>(
     if !modal.inner.sizing {
         memory.focus(ctx, layer, modal.inner.focus, &config.options);
     }
-    let dismissed = dismissal(&modal, &config.options);
+    let dismissed = super::dismissal(&modal, modal.inner.close, &config.options);
     if dismissed.is_some() {
         *config.open = false;
         ctx.request_repaint();
@@ -153,33 +151,7 @@ fn area(ctx: &Context, root: Id, config: &Config<'_>, width: f32, opening: bool)
         }
     }
 }
-fn dismissal<R>(
-    modal: &egui::ModalResponse<content::Contents<R>>,
-    options: &OverlayOptions,
-) -> Option<OverlayDismissal> {
-    if modal.inner.close {
-        return Some(OverlayDismissal::CloseButton);
-    }
-    if modal.response.should_close() {
-        return Some(OverlayDismissal::Content);
-    }
-    if !modal.is_top_modal {
-        return None;
-    }
-    if options.dismiss_on_escape
-        && !modal.any_popup_open
-        && modal
-            .response
-            .ctx
-            .input_mut(|i| i.consume_key(egui::Modifiers::NONE, egui::Key::Escape))
-    {
-        return Some(OverlayDismissal::Escape);
-    }
-    if options.dismiss_on_backdrop && modal.backdrop_response.clicked() {
-        return Some(OverlayDismissal::Backdrop);
-    }
-    None
-}
+
 fn edge(ctx: &Context, layer: LayerId, rect: egui::Rect, side: DrawerSide) {
     let x = match side {
         DrawerSide::Left => rect.right() - border::ACCENT / 2.0,

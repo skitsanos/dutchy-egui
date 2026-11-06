@@ -1,6 +1,6 @@
 # Component coverage
 
-Version 1.0.12 starts advanced components with data tables after the core
+Version 1.0.13 adds images, galleries and lightboxes after data tables and the core
 interaction and application-essential groups. Registry groups are not a count
 of individual controls. "Planned" means no public implementation is shipped.
 
@@ -26,7 +26,7 @@ of individual controls. "Planned" means no public implementation is shipped.
 | Stepper | Interaction components | Horizontal/vertical/compact/position progress; keyed host state, explicit completion, optional navigation requests, current/status metadata, narrow adaptation, compact scrolling, empty/single/unknown states and validated host workflow |
 | Tooltips | Application essentials | Text hints; four preferred sides, native constrained placement/hover timing, keyboard focus, Escape dismissal, and merged accessible descriptions |
 | File Upload | Planned | File selection/drop zone/list; application-owned transfer |
-| Image | Planned | Caption/gallery/lightbox; optional loaders |
+| Image | Advanced components | Native source/texture presentation, sharp frames, explicit aspect/contain/cover, caption/source, busy/error/retry, keyed responsive galleries and constrained modal lightboxes with keyboard navigation, caption scrolling and focus return. Optional `url-images` installs HTTP(S) PNG/JPEG; other URI/byte loaders stay host-owned. No zoom/pan, slideshow, masonry or drag reorder. |
 | Breadcrumbs | Interaction components | Keyed destinations, current-page metadata, slash/chevron, icon root, muted bar, wrapping and collapsed-ancestor menus; host-owned routing and collapse policy |
 | Flex | Application essentials | Token gaps, row/column/reverse, row wrapping, native cross alignment; centered containers and keyed responsive grids. CSS baseline/distribution modes are outside this scope. |
 | Menu | Interaction components | Keyed actions, consecutive named groups, separators, shortcut hints, optional decorative icons, disabled/destructive states, native pointer/assistive/keyboard input. Nested submenus, checked actions, and menu bars remain planned. |
@@ -43,6 +43,6 @@ require work beyond these groups. The application-essentials milestone's core
 scope is implemented, including a public-API form and workspace settings/dashboard
 composition. Partial controls and broader web parity remain explicit above;
 the core interaction-components scope is implemented, including a public-API
-notification queue with host Undo/Retry actions. Advanced work now includes the data-table scope; image/gallery, file
+notification queue with host Undo/Retry actions. Advanced work includes data tables and image/gallery/lightbox scope; file
 selection/drop zones and Scribble/export remain outstanding. Partial variants and broader web parity remain explicit in
 the matrix; milestone completion does not imply whole-system parity.

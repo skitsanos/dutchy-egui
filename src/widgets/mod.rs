@@ -12,6 +12,7 @@ mod dropdown;
 mod empty_state;
 pub mod forms;
 mod loading_motion;
+mod media;
 pub(crate) mod menu;
 mod nav_icon;
 mod navigation;
@@ -66,4 +67,9 @@ pub use toast::{
 pub use table::{
     DataTable, DataTableResponse, TableAlign, TableColumn, TableColumnWidth, TableDensity,
     TableHeader, TableRowResponse, TableSelection, TableSort, TableSortDirection,
+};
+
+pub use media::{
+    Gallery, GalleryItem, GalleryResponse, Image, ImageAspect, ImageFit, ImageResponse,
+    ImageStatus, Lightbox, LightboxResponse,
 };

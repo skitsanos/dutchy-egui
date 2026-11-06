@@ -2,13 +2,14 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.12** starts the advanced-components milestone with keyed data
-tables, following the core application essentials and interaction components.
+Version **1.0.13** adds images, keyed galleries and fullscreen lightboxes to the
+advanced-components milestone, following data tables and the core application
+essentials and interaction components.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.12"
+dutchy-egui = "1.0.13"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -53,9 +54,10 @@ eight treatments and optional dismissal; the host removes a closable badge when
 its response is clicked. Close buttons on badges, tabs, and alerts share flat
 hover/pressed feedback, pointing cursors, and keyboard focus cues. Spinners respect reduced motion and visibility.
 
-The sole direct runtime crate dependency is **egui 0.37.0**. eframe and
-egui_kittest are development dependencies. The library does not perform network
-requests, manage application state, or require the web design system checkout.
+The default build depends only on **egui 0.37.0** at runtime. Optional
+`url-images` adds **ehttp 0.7.3** and **image 0.25.10** for HTTP(S) PNG/JPEG.
+eframe and egui_kittest are development dependencies. The library keeps
+application state in the host and needs no web design system checkout.
 
 ## Forms
 
@@ -186,10 +188,27 @@ guidance and table accessibility metadata. This first table visits all supplied
 cells each pass; bound or paginate large datasets. See the
 [data table guide](docs/data-tables.md).
 
+## Images, galleries and lightboxes
+
+`Image` presents native egui textures/sources with sharp frames, contain/cover,
+reserved aspects, caption/source typography, animated square-spinner loading
+feedback, accessible loading/failure states,
+and independent expand/retry controls. `Gallery` returns keyed opening requests
+from responsive thumbnails. `Lightbox` binds host-owned selection to a constrained
+native modal with keyboard navigation, caption scrolling and focus return.
+Textures work directly. Enable `url-images` for asynchronous HTTP(S) PNG/JPEG
+loading; `dutchy_egui::install` registers the loader automatically. It includes
+bounded downloads/decoding, cached textures/failures and explicit host retry.
+Other URI/encoded-byte sources use host-installed loaders. See the
+[media guide](docs/images-galleries-lightboxes.md) and
+[URL image guide](docs/url-images.md).
+
 ## Showcase
 
 ```sh
 cargo run --example showcase
+# Include live Picsum photos:
+cargo run --example showcase --features url-images
 ```
 
 The native showcase includes theme/motion switches, component navigation,
@@ -205,7 +224,12 @@ demonstrate confirmation, validated editing, retained preferences, and focus ret
 The Toasts page adds typed Undo/Retry actions, four corners, pending queues, expiry,
 and pause/persistent controls. The Data Tables page adds a host-managed record
 browser with search, typed sorting, selection, pagination, custom cells, disabled
-records and loading, plus a compact inverse table.
+records and loading, plus a compact inverse table. Images/Galleries/Lightboxes
+add original raster artwork, crop/contain comparisons, host loading/retry,
+responsive collections and keyboard-accessible modal viewing. With `url-images`,
+select **Use Picsum photos** on any media page to load credited online samples;
+**Reload photos** explicitly clears those cached URLs. Offline artwork remains
+the initial source, so opening the demo makes no external image requests.
 Its renderer is Glow;
 automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
@@ -246,6 +270,7 @@ Linux). Review rendering baseline changes visually before accepting updates:
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
+[media verification](docs/verification-media.md),
 [data table verification](docs/verification-tables.md),
 [toast verification](docs/verification-toasts.md),
 [overlay verification](docs/verification-overlays.md),
