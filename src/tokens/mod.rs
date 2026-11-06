@@ -1,10 +1,12 @@
 //! Shared design tokens, expressed in egui logical points.
 
 mod color;
+pub mod loading;
 pub mod surface;
 mod typography;
 
 pub use color::{Accent, Mode, Palette};
+pub use loading::ProgressSize;
 pub use surface::CardPadding;
 pub use typography::{Family, Leading, TextSize, Tracking, Weight};
 
@@ -56,6 +58,8 @@ pub mod border {
 
 /// Shared motion timing in seconds.
 pub mod motion {
+    /// Frame interval shared by continuous loading animations.
+    pub const FRAME_INTERVAL: std::time::Duration = std::time::Duration::from_millis(16);
     /// Fast color transition.
     pub const FAST: f32 = 0.15;
     /// Standard transition.
@@ -64,6 +68,10 @@ pub mod motion {
     pub const SLOW: f32 = 0.3;
     /// One square-spinner rotation.
     pub const SPIN: f64 = 0.6;
+    /// Live web skeleton pulse duration.
+    pub const SKELETON_PULSE: f64 = 2.0;
+    /// One indeterminate bar traversal and return.
+    pub const PROGRESS_TRAVEL: f64 = 1.5;
 }
 
 /// Form-control dimensions, shared across implementations.

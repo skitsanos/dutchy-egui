@@ -82,5 +82,6 @@ the coverage matrix and Issues Ledger; version numbers do not imply full parity.
 
 Progress: 1.0.0 visual proof was pushed to main as `f944089` on 2026-11-06.
 The 1.0.1 application-essentials forms/validation step was pushed to main as
-`cefe635` on 2026-11-06. The 1.0.2 cards/alerts step is developed on
-`ticket/cards-alerts`; other essentials remain scheduled next.
+`cefe635` on 2026-11-06. The 1.0.2 cards/alerts step was pushed to main as
+`3c3b5ae` on 2026-11-06. The 1.0.3 progress/skeletons step is developed on
+`ticket/progress-skeletons`; other essentials remain scheduled next.

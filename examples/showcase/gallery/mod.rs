@@ -1,9 +1,11 @@
 mod components;
 mod forms;
+mod loading;
 mod surfaces;
 mod typography;
 
 pub use forms::FormState;
+pub use loading::LoadingState;
 pub use surfaces::SurfacesState;
 
 use dutchy_egui::tokens::{border, space};
@@ -20,6 +22,8 @@ pub enum Page {
     Forms,
     Cards,
     Alerts,
+    Progress,
+    Skeletons,
     Buttons,
     Badges,
     Motion,
@@ -27,12 +31,14 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 9] = [
+    const ALL: [Self; 11] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
         Self::Cards,
         Self::Alerts,
+        Self::Progress,
+        Self::Skeletons,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -46,6 +52,8 @@ impl Page {
             Self::Forms => "Forms",
             Self::Cards => "Cards",
             Self::Alerts => "Alerts",
+            Self::Progress => "Progress",
+            Self::Skeletons => "Skeletons",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -65,6 +73,7 @@ pub struct Showcase {
     pub native_checked: bool,
     pub forms: FormState,
     pub surfaces: SurfacesState,
+    pub loading: LoadingState,
 }
 
 impl Default for Showcase {
@@ -80,6 +89,7 @@ impl Default for Showcase {
             native_checked: true,
             forms: FormState::default(),
             surfaces: SurfacesState::default(),
+            loading: LoadingState::default(),
         }
     }
 }
@@ -119,6 +129,8 @@ impl Showcase {
                             Page::Forms => forms::show(ui, &mut self.forms),
                             Page::Cards => surfaces::cards(ui, &mut self.surfaces),
                             Page::Alerts => surfaces::alerts(ui, &mut self.surfaces),
+                            Page::Progress => loading::progress(ui, &mut self.loading),
+                            Page::Skeletons => loading::skeletons(ui, &mut self.loading),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),

@@ -98,8 +98,7 @@ pub(super) fn paint_spinner(
         return;
     }
     let angle = if animate {
-        ui.ctx()
-            .request_repaint_after(std::time::Duration::from_millis(16));
+        ui.ctx().request_repaint_after(motion::FRAME_INTERVAL);
         ui.input(|input| (input.time.rem_euclid(motion::SPIN) / motion::SPIN) as f32)
             * std::f32::consts::TAU
     } else {

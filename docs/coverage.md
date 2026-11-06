@@ -1,7 +1,7 @@
 # Component coverage
 
-Version 1.0.2 adds cards and alerts after the form controls and validation in
-1.0.1. Registry groups are not a count of individual controls. "Planned"
+Version 1.0.3 adds progress indicators and skeletons after cards, alerts, and
+forms. Registry groups are not a count of individual controls. "Planned"
 means no public implementation is shipped.
 
 | Web registry group | Status | Supported scope / next work |
@@ -12,9 +12,9 @@ means no public implementation is shipped.
 | Badges & Tags | Visual proof | Eight variants, uppercase labels, keyboard-accessible close affordance |
 | Alerts | Application essentials | Four severities, tinted/solid banners, accessible announcements, action/dismiss results, explicit focus-return target |
 | Empty State | Planned | Generic, search, and table patterns |
-| Skeleton | Planned | Card/list/content/table placeholders |
+| Skeleton | Application essentials | Five shapes, count/dimension overrides, named busy groups, card/list/content/table patterns, pause/reduced motion and clipped scheduling |
 | Spinner | Visual proof | Three-sided square; 12/16/20 sizes; color, pause, reduced motion, clipped-widget scheduling |
-| Progress | Planned | Sizes, status, labels, max value |
+| Progress | Application essentials | Determinate/custom maximum and indeterminate; 4/8/16-point tracks; four fills; labels/percentages; sanitized range metadata and reduced motion |
 | Stats | Planned | KPI, trends, compact/detailed variants |
 | Pagination | Planned | Numbered, ellipsis, compact controls |
 | Accordion | Planned | Single/multiple open behavior |
@@ -39,5 +39,5 @@ standard egui styling, shared 32/48/56-point control heights, four-point spacing
 rhythm, zero-radius borders, and reduced motion. Form validation includes
 required/email/number/length/custom rules, host-owned triggers, and stale async
 protection. Header/sidebar, hero/footer composition, and other web patterns still
-require work beyond these groups. Remaining application essentials are progress,
-skeletons, stats, empty states, tooltips, and layout helpers.
+require work beyond these groups. Remaining application essentials are stats,
+empty states, tooltips, and layout helpers.

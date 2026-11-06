@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.3 — 2026-11-06
+
+- Determinate/custom-range and indeterminate progress, three track heights, four
+  fills, labels, percentages, stable IDs, and consistent sanitized accessibility ranges.
+- Five skeleton shapes with counts/dimensions, one named busy group, and
+  card/list/content/table placeholder compositions.
+- Visible-only animation scheduling, explicit pause, reduced motion, and shared
+  loading geometry/motion tokens. No additional runtime dependencies.
+- Progress/Skeletons showcase pages, reserved-height content replacement example,
+  range/accessibility/motion tests, and light/dark rendering at multiple scales.
+
 ## 1.0.2 — 2026-11-06
 
 - Six card surfaces, four padding tiers, composable headings/descriptions/headers/
