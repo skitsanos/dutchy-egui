@@ -2,6 +2,7 @@
 
 mod badge;
 mod button;
+pub mod forms;
 mod spinner;
 
 pub use badge::{Badge, BadgeVariant};

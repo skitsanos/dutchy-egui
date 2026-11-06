@@ -4,7 +4,7 @@ mod gallery;
 
 fn main() -> eframe::Result {
     eframe::run_native(
-        "Dutchy — egui visual proof",
+        "Dutchy — component showcase",
         eframe::NativeOptions {
             viewport: egui::ViewportBuilder::default()
                 .with_inner_size([1200.0, 940.0])

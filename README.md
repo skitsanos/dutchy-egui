@@ -2,13 +2,13 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.0** implements the visual-proof milestone: themes, typography,
-buttons, badges, and a square spinner. The [coverage matrix](docs/coverage.md)
-tracks the remaining design system.
+Version **1.0.1** adds application form controls and field validation to the
+theme, typography, buttons, badges, and square spinner introduced in 1.0.0.
+The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.0"
+dutchy-egui = "1.0.1"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -56,6 +56,19 @@ The sole direct runtime crate dependency is **egui 0.37.0**. eframe and
 egui_kittest are development dependencies. The library does not perform network
 requests, manage application state, or require the web design system checkout.
 
+## Forms
+
+`Input`, `Textarea`, `Checkbox`, `RadioGroup`, and `Select` bind to host-owned
+values and use explicit IDs. `Field` adds labels, required/help/error/pending
+feedback and accessible metadata. Text inputs and select triggers share the
+button height tokens. Read-only inputs allow selection/copy; disabled inputs
+do not edit. Textarea limits/counts use Unicode scalar values.
+
+`validation::Rule` supplies required, basic email, finite decimal number, length,
+and custom predicates. `FieldValidation` tracks explicit change/blur/submit
+triggers and rejects stale async tickets; the application executes async work.
+See the [form API guide](docs/forms.md) for examples and boundaries.
+
 ## Showcase
 
 ```sh
@@ -63,7 +76,8 @@ cargo run --example showcase
 ```
 
 The native showcase includes theme/motion switches, component navigation,
-typography and palette pages, interactive controls, and narrow-window layouts.
+typography and palette pages, an application form with validation, interactive
+controls, and narrow-window layouts.
 Its renderer is Glow; automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
 
@@ -103,7 +117,8 @@ Linux). Review rendering baseline changes visually before accepting updates:
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
-[verification](docs/verification.md). This milestone does not claim whole-system
+[form verification](docs/verification-forms.md) and the earlier
+[visual-proof verification](docs/verification.md). This milestone does not claim whole-system
 parity or blanket contrast compliance; [DS-003](docs/issues/DS-003.md) records
 inherited source-palette contrast limitations.
 

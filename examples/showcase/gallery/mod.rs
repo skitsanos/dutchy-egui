@@ -1,5 +1,8 @@
 mod components;
+mod forms;
 mod typography;
+
+pub use forms::FormState;
 
 use dutchy_egui::tokens::{border, space};
 use dutchy_egui::{
@@ -12,6 +15,7 @@ pub enum Page {
     #[default]
     Overview,
     Typography,
+    Forms,
     Buttons,
     Badges,
     Motion,
@@ -19,9 +23,10 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 6] = [
+    const ALL: [Self; 7] = [
         Self::Overview,
         Self::Typography,
+        Self::Forms,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -32,6 +37,7 @@ impl Page {
         match self {
             Self::Overview => "Overview",
             Self::Typography => "Typography",
+            Self::Forms => "Forms",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -49,6 +55,7 @@ pub struct Showcase {
     pub badge_visible: bool,
     pub native_text: String,
     pub native_checked: bool,
+    pub forms: FormState,
 }
 
 impl Default for Showcase {
@@ -62,6 +69,7 @@ impl Default for Showcase {
             badge_visible: true,
             native_text: "Native egui, Dutchy style".into(),
             native_checked: true,
+            forms: FormState::default(),
         }
     }
 }
@@ -78,6 +86,7 @@ impl Showcase {
     }
 
     pub fn show(&mut self, ui: &mut Ui) {
+        self.forms.tick(ui.ctx());
         self.header(ui);
         let wide = ui.available_width() >= 820.0;
         if wide {
@@ -97,6 +106,7 @@ impl Showcase {
                         match self.page {
                             Page::Overview => components::overview(ui, self),
                             Page::Typography => typography::show(ui),
+                            Page::Forms => forms::show(ui, &mut self.forms),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),
@@ -120,7 +130,7 @@ impl Showcase {
                     ui.add(Text::heading("D. DUTCHY / EGUI").size(TextSize::Xl2));
                     ui.add_space(space::LG);
                     ui.add(
-                        Text::label(concat!("Visual proof · ", env!("CARGO_PKG_VERSION")))
+                        Text::label(concat!("Component library · ", env!("CARGO_PKG_VERSION")))
                             .color(TextColor::Muted),
                     );
                 });

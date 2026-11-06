@@ -64,6 +64,20 @@ pub mod motion {
     pub const SPIN: f64 = 0.6;
 }
 
+/// Form-control dimensions, shared across implementations.
+pub mod control {
+    /// Checkbox/radio square side.
+    pub const INDICATOR: f32 = 20.0;
+    /// Space between an indicator and its label.
+    pub const LABEL_GAP: f32 = 12.0;
+    /// Minimum multiline input height.
+    pub const TEXTAREA_MIN_HEIGHT: f32 = 120.0;
+    /// Default number of multiline rows.
+    pub const TEXTAREA_ROWS: usize = 4;
+    /// Maximum select popup height.
+    pub const SELECT_POPUP_HEIGHT: f32 = 240.0;
+}
+
 /// Shared sizes for buttons and future input/select controls.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum ControlSize {
