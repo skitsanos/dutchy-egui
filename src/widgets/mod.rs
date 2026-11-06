@@ -11,6 +11,7 @@ mod progress;
 mod skeleton;
 mod spinner;
 mod stats;
+mod tooltip;
 
 pub use alert::{Alert, AlertResponse, AlertVariant};
 pub use badge::{Badge, BadgeVariant};
@@ -23,3 +24,4 @@ pub use spinner::{Spinner, SpinnerSize};
 pub use stats::{
     Stat, StatSize, StatVariant, StatsGrid, StatsLayout, Trend, TrendDirection, TrendSentiment,
 };
+pub use tooltip::{Tooltip, TooltipPosition};

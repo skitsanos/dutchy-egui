@@ -1,6 +1,8 @@
 mod components;
 mod forms;
+mod help;
 mod insights;
+mod layout;
 mod loading;
 mod surfaces;
 mod typography;
@@ -12,7 +14,7 @@ pub use surfaces::SurfacesState;
 
 use dutchy_egui::tokens::{border, space};
 use dutchy_egui::{
-    Accent, Button, ButtonVariant, ControlSize, Mode, Text, TextColor, TextSize, Theme,
+    Accent, Button, ButtonVariant, ControlSize, Flex, Mode, Text, TextColor, TextSize, Theme,
 };
 use egui::{Frame, Margin, Stroke, Ui};
 
@@ -28,6 +30,8 @@ pub enum Page {
     Skeletons,
     Stats,
     EmptyStates,
+    Tooltips,
+    Layout,
     Buttons,
     Badges,
     Motion,
@@ -35,7 +39,7 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 13] = [
+    const ALL: [Self; 15] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
@@ -45,6 +49,8 @@ impl Page {
         Self::Skeletons,
         Self::Stats,
         Self::EmptyStates,
+        Self::Tooltips,
+        Self::Layout,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -62,6 +68,8 @@ impl Page {
             Self::Skeletons => "Skeletons",
             Self::Stats => "Stats",
             Self::EmptyStates => "Empty states",
+            Self::Tooltips => "Tooltips",
+            Self::Layout => "Layout",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -83,6 +91,8 @@ pub struct Showcase {
     pub surfaces: SurfacesState,
     pub loading: LoadingState,
     pub insights: InsightsState,
+    pub help: help::HelpState,
+    pub layout: layout::LayoutState,
 }
 
 impl Default for Showcase {
@@ -100,6 +110,8 @@ impl Default for Showcase {
             surfaces: SurfacesState::default(),
             loading: LoadingState::default(),
             insights: InsightsState::default(),
+            help: help::HelpState::default(),
+            layout: layout::LayoutState::default(),
         }
     }
 }
@@ -143,6 +155,8 @@ impl Showcase {
                             Page::Skeletons => loading::skeletons(ui, &mut self.loading),
                             Page::Stats => insights::stats(ui, &mut self.insights),
                             Page::EmptyStates => insights::empty_states(ui, &mut self.insights),
+                            Page::Tooltips => help::show(ui, &mut self.help),
+                            Page::Layout => layout::show(ui, &mut self.layout),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),
@@ -162,7 +176,7 @@ impl Showcase {
         egui::Panel::top("showcase-header")
             .frame(frame(previous, 16))
             .show(ui, |ui| {
-                ui.horizontal_wrapped(|ui| {
+                Flex::row("brand-heading").wrap(true).show(ui, |ui| {
                     ui.add(Text::heading("D. DUTCHY / EGUI").size(TextSize::Xl2));
                     ui.add_space(space::LG);
                     ui.add(
@@ -171,7 +185,7 @@ impl Showcase {
                     );
                 });
                 ui.add_space(space::SM);
-                ui.horizontal_wrapped(|ui| {
+                Flex::row("theme-controls").wrap(true).show(ui, |ui| {
                     for (accent, label) in [
                         (Accent::Orange, "Orange"),
                         (Accent::Purple, "Purple"),
@@ -222,15 +236,19 @@ impl Showcase {
             .resizable(false)
             .frame(frame(self.theme(), 16))
             .show(ui, |ui| {
-                ui.add(Text::label("The system").color(TextColor::Primary));
-                ui.add_space(space::LG);
-                self.navigation(ui, true);
-                ui.add_space(space::SECTION);
-                ui.add(Text::label("01 / Foundation"));
-                ui.add(
-                    Text::new("Zero radius.\nFlat color.\nBold typography.")
-                        .color(TextColor::Muted),
-                );
+                egui::ScrollArea::vertical()
+                    .id_salt("navigation-scroll")
+                    .show(ui, |ui| {
+                        ui.add(Text::label("The system").color(TextColor::Primary));
+                        ui.add_space(space::LG);
+                        self.navigation(ui, true);
+                        ui.add_space(space::SECTION);
+                        ui.add(Text::label("01 / Foundation"));
+                        ui.add(
+                            Text::new("Zero radius.\nFlat color.\nBold typography.")
+                                .color(TextColor::Muted),
+                        );
+                    });
             });
     }
 

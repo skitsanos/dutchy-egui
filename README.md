@@ -2,13 +2,13 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.4** adds stats and empty states to the progress indicators,
-skeletons, cards, alerts, form controls, typography, and theme foundation.
+Version **1.0.5** adds tooltips, Flex composition, centered containers, and
+responsive grids to the application essentials.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.4"
+dutchy-egui = "1.0.5"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -97,6 +97,19 @@ heading metadata, and optional polite announcements. The host owns values,
 navigation, replacement content, and focus after actions.
 See the [stats and empty states guide](docs/stats-empty-states.md).
 
+## Tooltips and layout
+
+`Tooltip` attaches concise hover/focus help to an existing response, merges its
+accessible description, supports four preferred positions, and dismisses on
+Escape. Native egui placement, hover timing, and focus policy still apply.
+Keep essential guidance visible and controls explicitly named.
+
+`Flex` composes native rows/columns with typed spacing, cross alignment, reverse
+directions, and row wrapping. `Container` centers bounded content with shared
+gutters. `ResponsiveGrid` reflows equal-width columns using host-supplied item
+keys, preserving child identities across layout changes. The host owns panels,
+values, and actions. See the [tooltips and layout guide](docs/tooltips-layout.md).
+
 ## Showcase
 
 ```sh
@@ -105,7 +118,8 @@ cargo run --example showcase
 
 The native showcase includes theme/motion switches, component navigation,
 typography and palette pages, an application form with validation, cards, alerts,
-progress, loading-to-content examples, stats, empty states, and narrow-window layouts.
+progress, loading-to-content examples, stats, empty states, tooltips, and a
+responsive workspace settings/dashboard composition.
 Its renderer is Glow; automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
 
@@ -141,10 +155,11 @@ cargo package --allow-dirty
 
 Rendering tests need a WGPU-capable adapter (a software Vulkan adapter works on
 Linux). Review rendering baseline changes visually before accepting updates:
-`UPDATE_SNAPSHOTS=true cargo test --test insights_rendering`, then rerun without that
+`UPDATE_SNAPSHOTS=true cargo test --test layout_rendering`, then rerun without that
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
+[tooltips and layout verification](docs/verification-layout.md),
 [stats and empty states verification](docs/verification-insights.md),
 [loading verification](docs/verification-loading.md),
 [cards and alerts verification](docs/verification-surfaces.md),

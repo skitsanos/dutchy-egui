@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.5 — 2026-11-06
+
+- Inverted text tooltips with four preferred sides, native constrained placement,
+  hover/focus presentation, accessible descriptions, and Escape dismissal.
+- Token-based Flex rows/columns, reverse directions, row wrapping, cross-axis
+  alignment, centered containers, and keyed responsive grids.
+- Tooltips/Layout showcase pages and a host-owned workspace settings/dashboard
+  example; the existing form now uses responsive grid composition.
+- Focus/reflow/interaction tests and light/dark rendering at 1x/1.5x/2x.
+  No new dependencies; egui remains the sole direct runtime crate.
+
 ## 1.0.4 — 2026-11-06
 
 - Host-formatted statistics, four surfaces, regular/small type scales, optional

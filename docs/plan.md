@@ -35,8 +35,9 @@ The library must build independently of that checkout.
 tokens. `theme` adapts tokens to egui defaults. `fonts` installs named static
 faces without weight/fallback ambiguity. `text` builds LayoutJobs for family,
 size, weight, tracking, leading, and color. `interaction` centralizes focus
-outlines. `widgets` contains modular component implementations. Add `layout`
-and optional `integrations` when required by later milestones.
+outlines. `widgets` contains modular component implementations. `layout` composes
+native layouts with shared tokens and stable scopes. Add optional `integrations`
+only when later milestones require them.
 
 Leaf widgets implement egui::Widget and return Response. Containers use
 closure-based show methods. Values and durable state remain application-owned;
@@ -84,5 +85,9 @@ Progress: 1.0.0 visual proof was pushed to main as `f944089` on 2026-11-06.
 The 1.0.1 application-essentials forms/validation step was pushed to main as
 `cefe635` on 2026-11-06. The 1.0.2 cards/alerts step was pushed to main as
 `3c3b5ae` on 2026-11-06. The 1.0.3 progress/skeletons step was pushed to main as
-`d750373` on 2026-11-06. The 1.0.4 stats/empty-states step is developed on
-`ticket/stats-empty-states`; tooltips and layout helpers remain scheduled next.
+`d750373` on 2026-11-06. The 1.0.4 stats/empty-states step was pushed to main as
+`c8c8747` on 2026-11-06. The 1.0.5 tooltips/layout step is developed on
+`ticket/tooltips-layout`, completing the core application-essentials scope with
+a composed workspace settings/dashboard example. See [coverage](coverage.md)
+for partial controls and [tooltips/layout decisions](tooltips-layout.md) for
+the native layout boundary. Interaction components follow next.

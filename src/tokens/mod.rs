@@ -1,12 +1,15 @@
 //! Shared design tokens, expressed in egui logical points.
 
 mod color;
+pub mod layout;
 pub mod loading;
 pub mod metrics;
 pub mod surface;
+pub mod tooltip;
 mod typography;
 
 pub use color::{Accent, Mode, Palette};
+pub use layout::{ColumnWidth, ContainerWidth, Spacing};
 pub use loading::ProgressSize;
 pub use surface::CardPadding;
 pub use typography::{Family, Leading, TextSize, Tracking, Weight};
@@ -17,6 +20,8 @@ pub mod space {
     pub const MICRO: f32 = 2.0;
     /// Base unit.
     pub const XS: f32 = 4.0;
+    /// Tight gap, also used for tooltip vertical padding.
+    pub const TIGHT: f32 = 6.0;
     /// Small gap.
     pub const SM: f32 = 8.0;
     /// Compact padding.

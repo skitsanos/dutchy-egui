@@ -4,8 +4,8 @@ mod state;
 use super::section;
 use dutchy_egui::tokens::space;
 use dutchy_egui::{
-    Button, ButtonVariant, ControlSize, Field, Input, Select, SelectOption, Text, TextColor,
-    TextSize, validation::ValidationTrigger,
+    Button, ButtonVariant, ColumnWidth, ControlSize, Field, Input, ResponsiveGrid, Select,
+    SelectOption, Text, TextColor, TextSize, validation::ValidationTrigger,
 };
 pub use state::FormState;
 
@@ -22,21 +22,23 @@ pub fn show(ui: &mut egui::Ui, state: &mut FormState) {
     Field::new("Validate text fields").show(ui, |ui| {
         ui.add(Select::new("trigger", &mut state.trigger, &triggers).size(ControlSize::Small))
     });
-    if ui.available_width() >= 720.0 {
-        ui.columns(2, |columns| {
-            section(&mut columns[0], "01", "Identity", |ui| {
-                controls::identity(ui, state)
-            });
-            section(&mut columns[1], "02", "Preferences", |ui| {
-                controls::preferences(ui, state)
-            });
-        });
-    } else {
-        section(ui, "01", "Identity", |ui| controls::identity(ui, state));
-        section(ui, "02", "Preferences", |ui| {
-            controls::preferences(ui, state)
-        });
-    }
+    ResponsiveGrid::new("form-sections")
+        .columns(2)
+        .min_column_width(ColumnWidth::Form)
+        .show(
+            ui,
+            &["identity", "preferences"],
+            |key| *key,
+            |ui, key| {
+                if *key == "identity" {
+                    section(ui, "01", "Identity", |ui| controls::identity(ui, state));
+                } else {
+                    section(ui, "02", "Preferences", |ui| {
+                        controls::preferences(ui, state)
+                    });
+                }
+            },
+        );
     section(ui, "03", "Context", |ui| controls::notes(ui, state));
     actions(ui, state);
     sizes(ui);
