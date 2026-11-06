@@ -147,3 +147,7 @@ and keyboard reveal. An overflow menu, icon slots, docking, reorder dragging,
 vertical tabs, and panel-height animation are outside
 this step. This does not complete the entire interaction-components milestone.
 See [coverage](coverage.md) and [verification](verification-disclosures.md).
+
+Tab close controls use the shared flat hover/pressed surface and pointing cursor,
+with their own keyboard focus cue. Hovering close does not select its tab;
+activation still returns a host-owned close request. See [DS-013](issues/DS-013.md).

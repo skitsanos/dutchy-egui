@@ -1,10 +1,9 @@
 use super::{Tab, TabsVariant, focus};
 use crate::{
-    Text, TextColor, TextSize, Theme, Tracking, Weight,
-    interaction::paint_focus,
-    tokens::{border, disclosure as geometry},
+    Text, TextColor, TextSize, Theme, Tracking, Weight, tokens::disclosure as geometry,
+    widgets::close,
 };
-use egui::{Id, Rect, Response, Sense, Stroke, Ui, WidgetInfo, pos2, vec2};
+use egui::{Id, Rect, Response, Sense, Ui, WidgetInfo, pos2, vec2};
 
 fn label(ui: &Ui, text: &str, color: TextColor) -> std::sync::Arc<egui::Galley> {
     let job = Text::new(text.replace('\n', " "))
@@ -114,18 +113,16 @@ pub(super) fn tab<T>(
         ui.painter().rect_filled(line, 0, p.primary);
     }
     if let Some(close) = &close {
-        let icon = close.rect.shrink(geometry::CLOSE_INSET);
-        let color = if close.hovered() || close.has_focus() {
-            p.foreground
-        } else {
-            p.muted_foreground
-        };
-        let stroke = Stroke::new(border::STANDARD, color);
-        ui.painter()
-            .line_segment([icon.left_top(), icon.right_bottom()], stroke);
-        ui.painter()
-            .line_segment([icon.right_top(), icon.left_bottom()], stroke);
-        paint_focus(ui, close, p.primary);
+        close::paint(
+            ui,
+            close,
+            geometry::CLOSE_SIZE - geometry::CLOSE_INSET * 2.0,
+            close::Colors {
+                idle: p.muted_foreground,
+                foreground: p.foreground,
+                focus: p.primary,
+            },
+        );
     }
     (response, close)
 }

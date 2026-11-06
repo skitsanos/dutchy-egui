@@ -1,6 +1,7 @@
 # Component coverage
 
-Version 1.0.6 starts interaction components with accordions and tabs, following
+Version 1.0.7 adds menus, dropdowns, searchable selection, and command search after
+accordions and tabs, following
 the core application essentials. Registry groups are not a count of individual
 controls. "Planned" means no public implementation is shipped.
 
@@ -21,7 +22,7 @@ controls. "Planned" means no public implementation is shipped.
 | Tabs | Interaction components | Underline/segmented, full width or natural width, horizontal overflow, manual keyboard activation, roving focus, disabled items, independent close requests and focus after removal. No docking, reorder dragging, overflow menu, or arbitrary icons yet. |
 | Toasts | Planned | Stack, expiry, dismiss/action behavior |
 | Modal / Drawer | Planned | Blocking overlays, backdrop, dismissal, focus restoration |
-| Dropdowns | Planned | Action menu, searchable select, command palette |
+| Dropdowns | Interaction components | Anchored/context actions, start/end alignment, viewport constraints, scrolling, keyboard/dismissal/focus return; searchable select and native modal command palette with host-owned query/open/selection/actions |
 | Data Table | Planned | Table primitives, empty/loading, host-controlled sort/filter |
 | Stepper | Planned | Horizontal/vertical progress |
 | Tooltips | Application essentials | Text hints; four preferred sides, native constrained placement/hover timing, keyboard focus, Escape dismissal, and merged accessible descriptions |
@@ -29,7 +30,7 @@ controls. "Planned" means no public implementation is shipped.
 | Image | Planned | Caption/gallery/lightbox; optional loaders |
 | Breadcrumbs | Planned | Standard/truncated hierarchy |
 | Flex | Application essentials | Token gaps, row/column/reverse, row wrapping, native cross alignment; centered containers and keyed responsive grids. CSS baseline/distribution modes are outside this scope. |
-| Menu | Planned | Groups, separators, shortcuts, destructive intent |
+| Menu | Interaction components | Keyed actions, consecutive named groups, separators, shortcut hints, optional decorative icons, disabled/destructive states, native pointer/assistive/keyboard input. Nested submenus, checked actions, and menu bars remain planned. |
 | Text | Visual proof | Three roles; four actual weights; 12 sizes; tracking, leading, color, Unicode uppercase, italics, wrapping |
 | Scribble | Planned | Pointer drawing, clear, host-owned strokes, optional export |
 | Textarea | Application essentials (partial) | Multiline, row sizing, Unicode count/limit, read-only/disabled and field feedback. Interactive resize remains planned. |
@@ -42,5 +43,6 @@ protection. Header/sidebar, hero/footer composition, and other web patterns stil
 require work beyond these groups. The application-essentials milestone's core
 scope is implemented, including a public-API form and workspace settings/dashboard
 composition. Partial controls and broader web parity remain explicit above;
-interaction components are underway. Menus, overlays, and the other planned
-navigation groups remain outstanding.
+interaction components are underway. General overlays, toasts, and the other
+planned navigation groups remain outstanding. The command palette uses a native
+modal internally without exposing a general modal API.

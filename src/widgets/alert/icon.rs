@@ -1,9 +1,10 @@
 use super::AlertVariant;
 use crate::{
-    interaction::paint_focus,
-    tokens::{border, surface},
+    ControlSize,
+    tokens::{border, close as geometry, surface},
+    widgets::close,
 };
-use egui::{Color32, Response, Sense, Stroke, Ui, pos2, vec2};
+use egui::{Color32, Response, Sense, Stroke, Ui, WidgetInfo, vec2};
 
 pub(super) fn status(ui: &mut Ui, variant: AlertVariant, color: Color32) {
     let (rect, _) = ui.allocate_exact_size(
@@ -46,23 +47,22 @@ pub(super) fn status(ui: &mut Ui, variant: AlertVariant, color: Color32) {
 }
 
 pub(super) fn dismiss(ui: &mut Ui, label: &str, color: Color32) -> Response {
-    let response = ui
-        .scope(|ui| {
-            ui.spacing_mut().button_padding = egui::Vec2::ZERO;
-            ui.spacing_mut().interact_size = vec2(
-                crate::ControlSize::Small.height(),
-                crate::ControlSize::Small.height(),
-            );
-            ui.add(egui::Button::new("").frame(false))
-                .accessible_name(label)
-        })
-        .inner;
-    let rect = response.rect.shrink(crate::tokens::space::SM);
-    let stroke = Stroke::new(border::STANDARD, color);
-    ui.painter()
-        .line_segment([rect.left_top(), rect.right_bottom()], stroke);
-    ui.painter()
-        .line_segment([pos2(rect.left(), rect.bottom()), rect.right_top()], stroke);
-    paint_focus(ui, &response, color);
+    let (_, rect) = ui.allocate_space(vec2(
+        ControlSize::Small.height(),
+        ControlSize::Small.height(),
+    ));
+    let response = ui.interact(rect, ui.make_persistent_id("dismiss"), Sense::click());
+    response
+        .widget_info(|| WidgetInfo::labeled(egui::accesskit::Role::Button, ui.is_enabled(), label));
+    close::paint(
+        ui,
+        &response,
+        geometry::ALERT_ICON,
+        close::Colors {
+            idle: color.gamma_multiply(geometry::IDLE_OPACITY),
+            foreground: color,
+            focus: color,
+        },
+    );
     response
 }

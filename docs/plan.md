@@ -88,8 +88,11 @@ The 1.0.1 application-essentials forms/validation step was pushed to main as
 `d750373` on 2026-11-06. The 1.0.4 stats/empty-states step was pushed to main as
 `c8c8747` on 2026-11-06. The 1.0.5 tooltips/layout step was pushed to main as
 `954ca23` on 2026-11-06, completing the core application-essentials scope with
-a composed workspace settings/dashboard example. The 1.0.6 interaction-components
-step is developed on `ticket/accordions-tabs`: controlled accordions and tabs,
-stable panels, keyboard navigation, overflow, and host-managed close behavior.
-See [coverage](coverage.md) for remaining groups and [accordion/tab decisions](accordions-tabs.md)
-for behavior and native scope boundaries.
+a composed workspace settings/dashboard example. The 1.0.6 accordion/tab step was
+pushed to main as `4840e10` on 2026-11-06, including revised composite focus cues:
+selected tabs use their active mark; accordion keyboard outlines are inset and
+complete, with pointer selection leaving shared borders clean.
+The 1.0.7 step is developed locally on `ticket/menus-dropdowns`: grouped menus,
+action/context dropdowns, searchable selection, and native modal command search.
+See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md), and
+[menu/dropdown decisions](menus-dropdowns.md) for behavior and scope boundaries.

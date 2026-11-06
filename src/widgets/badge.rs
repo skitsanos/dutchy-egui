@@ -1,7 +1,7 @@
 use crate::{
     Text, TextSize, Theme, Tracking, Weight,
-    interaction::paint_focus,
-    tokens::{border, space},
+    tokens::{border, close as geometry, space},
+    widgets::close,
 };
 use egui::accesskit::Role;
 use egui::{
@@ -156,25 +156,16 @@ impl Widget for Badge<'_> {
                 format!("Dismiss {}", self.label),
             )
         });
-        paint_close(ui, close_rect, color);
-        paint_focus(ui, &close, theme.palette.primary);
+        close::paint(
+            ui,
+            &close,
+            geometry::BADGE_ICON,
+            close::Colors {
+                idle: color.gamma_multiply(geometry::IDLE_OPACITY),
+                foreground: color,
+                focus: theme.palette.primary,
+            },
+        );
         response.union(close)
     }
-}
-
-fn paint_close(ui: &Ui, rect: Rect, color: Color32) {
-    if !ui.is_rect_visible(rect) {
-        return;
-    }
-    let center = rect.center();
-    let half = space::XS;
-    let stroke = Stroke::new(border::STANDARD, color);
-    ui.painter().line_segment(
-        [center - vec2(half, half), center + vec2(half, half)],
-        stroke,
-    );
-    ui.painter().line_segment(
-        [center + vec2(-half, half), center + vec2(half, -half)],
-        stroke,
-    );
 }

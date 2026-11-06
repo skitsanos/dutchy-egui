@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.0.7 — 2026-11-06
+
+- Shared flat hover/pressed feedback and pointing cursors for alert/banner, tab,
+  and removable-tag close controls; disabled controls retain their resting state.
+- Alert dismissal uses a real 32x32-point target with equal 16-point top/right
+  insets, correcting the zero-width blank button and misplaced visible glyph.
+- Grouped menus with stable action IDs, shortcut hints, optional decorative icons,
+  separators, disabled states, and destructive treatment.
+- Anchored and context dropdowns with native constrained placement, scrolling,
+  keyboard navigation, dismissal, and focus return/Tab exit.
+- Searchable selection with separate host-owned query/selection, active-descendant
+  accessibility, filtering, no-match feedback, and explicit commit results.
+- Native modal command palette with optional Cmd/Ctrl+K, grouped results, input
+  blocking, focus confinement, and deferred focus restoration after closing.
+- Menus/Dropdowns showcase pages, host-action examples, interaction tests, and
+  light/dark rendering at 1x/1.5x/2x. No new dependencies.
+
 ## 1.0.6 — 2026-11-06
 
 - Controlled accordions with single/multiple expansion, accent-edge/bordered

@@ -5,6 +5,7 @@ mod help;
 mod insights;
 mod layout;
 mod loading;
+mod menus;
 mod surfaces;
 mod tabbed;
 mod typography;
@@ -36,6 +37,8 @@ pub enum Page {
     Layout,
     Accordions,
     Tabs,
+    Menus,
+    Dropdowns,
     Buttons,
     Badges,
     Motion,
@@ -43,7 +46,7 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 17] = [
+    const ALL: [Self; 19] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
@@ -57,6 +60,8 @@ impl Page {
         Self::Layout,
         Self::Accordions,
         Self::Tabs,
+        Self::Menus,
+        Self::Dropdowns,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -78,6 +83,8 @@ impl Page {
             Self::Layout => "Layout",
             Self::Accordions => "Accordions",
             Self::Tabs => "Tabs",
+            Self::Menus => "Menus",
+            Self::Dropdowns => "Dropdowns",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -103,6 +110,7 @@ pub struct Showcase {
     pub layout: layout::LayoutState,
     pub disclosures: disclosures::DisclosureState,
     pub tabbed: tabbed::TabbedState,
+    pub menus: menus::MenuState,
 }
 
 impl Default for Showcase {
@@ -124,6 +132,7 @@ impl Default for Showcase {
             layout: layout::LayoutState::default(),
             disclosures: disclosures::DisclosureState::default(),
             tabbed: tabbed::TabbedState::default(),
+            menus: menus::MenuState::default(),
         }
     }
 }
@@ -171,6 +180,8 @@ impl Showcase {
                             Page::Layout => layout::show(ui, &mut self.layout),
                             Page::Accordions => disclosures::show(ui, &mut self.disclosures),
                             Page::Tabs => tabbed::show(ui, &mut self.tabbed),
+                            Page::Menus => menus::menus(ui, &mut self.menus),
+                            Page::Dropdowns => menus::dropdowns(ui, &mut self.menus),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),
@@ -183,6 +194,7 @@ impl Showcase {
                         );
                     });
             });
+        self.menus.commands(ui.ctx());
     }
 
     fn header(&mut self, ui: &mut Ui) {

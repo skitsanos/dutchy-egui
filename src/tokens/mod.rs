@@ -1,9 +1,11 @@
 //! Shared design tokens, expressed in egui logical points.
 
+pub mod close;
 mod color;
 pub mod disclosure;
 pub mod layout;
 pub mod loading;
+pub mod menu;
 pub mod metrics;
 pub mod surface;
 pub mod tooltip;
@@ -12,6 +14,7 @@ mod typography;
 pub use color::{Accent, Mode, Palette};
 pub use layout::{ColumnWidth, ContainerWidth, Spacing};
 pub use loading::ProgressSize;
+pub use menu::MenuWidth;
 pub use surface::CardPadding;
 pub use typography::{Family, Leading, TextSize, Tracking, Weight};
 

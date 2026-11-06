@@ -2,13 +2,13 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.6** starts the interaction-components milestone with controlled
-accordions and tabs, following the application essentials.
+Version **1.0.7** continues interaction components with menus, action dropdowns,
+searchable selection, and command search, following controlled accordions and tabs.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.6"
+dutchy-egui = "1.0.7"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -50,7 +50,8 @@ let title = Text::new("Architectural clarity")
 Buttons support Primary, Secondary, Outline, Ghost, and Destructive variants,
 Small/Medium/Large sizes, full width, disabled, and loading states. Badges have
 eight treatments and optional dismissal; the host removes a closable badge when
-its response is clicked. Spinners respect reduced motion and visibility.
+its response is clicked. Close buttons on badges, tabs, and alerts share flat
+hover/pressed feedback, pointing cursors, and keyboard focus cues. Spinners respect reduced motion and visibility.
 
 The sole direct runtime crate dependency is **egui 0.37.0**. eframe and
 egui_kittest are development dependencies. The library does not perform network
@@ -124,6 +125,18 @@ The host removes items and retains or discards their data. Stable panels and
 focus handling support reordering and removal. See the
 [accordions and tabs guide](docs/accordions-tabs.md).
 
+## Menus and dropdowns
+
+`Menu` renders grouped, keyed actions with shortcut hints, decorative icons,
+disabled states, and destructive intent. `Dropdown` anchors these actions to a
+native trigger or context target, with keyboard navigation, constrained placement,
+scrolling, dismissal, and focus return.
+
+`SearchableSelect` keeps editable queries separate from committed values.
+`CommandPalette` provides native modal command search and an optional Cmd/Ctrl+K
+shortcut. The host owns state and executes returned actions. See the
+[menus and dropdowns guide](docs/menus-dropdowns.md).
+
 ## Showcase
 
 ```sh
@@ -135,7 +148,8 @@ typography and palette pages, an application form with validation, cards, alerts
 progress, loading-to-content examples, stats, empty states, tooltips, and a
 responsive workspace settings/dashboard composition. Accordions and tabbed
 settings/documents demonstrate host-owned state and independent close requests.
-Its renderer is Glow; automated rendering tests use WGPU. Keyboard focus uses
+Menus/Dropdowns pages demonstrate actions, context menus, searchable selection,
+and a global command palette. Its renderer is Glow; automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
 
 ## Fonts and features
@@ -170,10 +184,12 @@ cargo package --allow-dirty
 
 Rendering tests need a WGPU-capable adapter (a software Vulkan adapter works on
 Linux). Review rendering baseline changes visually before accepting updates:
-`UPDATE_SNAPSHOTS=true cargo test --test disclosure_rendering`, then rerun without that
+`UPDATE_SNAPSHOTS=true cargo test --test menu_rendering`, then rerun without that
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
+[close-control verification](docs/verification-close-controls.md),
+[menus and dropdowns verification](docs/verification-menus.md),
 [accordions and tabs verification](docs/verification-disclosures.md),
 [tooltips and layout verification](docs/verification-layout.md),
 [stats and empty states verification](docs/verification-insights.md),

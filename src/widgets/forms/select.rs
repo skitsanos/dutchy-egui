@@ -16,7 +16,7 @@ pub struct SelectOption<'a, T> {
     pub label: Cow<'a, str>,
     /// Whether this option can be selected.
     pub enabled: bool,
-    pub(super) id: IdSalt,
+    pub(crate) id: IdSalt,
 }
 
 impl<'a, T> SelectOption<'a, T> {
