@@ -1,10 +1,12 @@
 mod components;
 mod forms;
+mod insights;
 mod loading;
 mod surfaces;
 mod typography;
 
 pub use forms::FormState;
+pub use insights::InsightsState;
 pub use loading::LoadingState;
 pub use surfaces::SurfacesState;
 
@@ -24,6 +26,8 @@ pub enum Page {
     Alerts,
     Progress,
     Skeletons,
+    Stats,
+    EmptyStates,
     Buttons,
     Badges,
     Motion,
@@ -31,7 +35,7 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 11] = [
+    const ALL: [Self; 13] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
@@ -39,6 +43,8 @@ impl Page {
         Self::Alerts,
         Self::Progress,
         Self::Skeletons,
+        Self::Stats,
+        Self::EmptyStates,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -54,6 +60,8 @@ impl Page {
             Self::Alerts => "Alerts",
             Self::Progress => "Progress",
             Self::Skeletons => "Skeletons",
+            Self::Stats => "Stats",
+            Self::EmptyStates => "Empty states",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -74,6 +82,7 @@ pub struct Showcase {
     pub forms: FormState,
     pub surfaces: SurfacesState,
     pub loading: LoadingState,
+    pub insights: InsightsState,
 }
 
 impl Default for Showcase {
@@ -90,6 +99,7 @@ impl Default for Showcase {
             forms: FormState::default(),
             surfaces: SurfacesState::default(),
             loading: LoadingState::default(),
+            insights: InsightsState::default(),
         }
     }
 }
@@ -131,6 +141,8 @@ impl Showcase {
                             Page::Alerts => surfaces::alerts(ui, &mut self.surfaces),
                             Page::Progress => loading::progress(ui, &mut self.loading),
                             Page::Skeletons => loading::skeletons(ui, &mut self.loading),
+                            Page::Stats => insights::stats(ui, &mut self.insights),
+                            Page::EmptyStates => insights::empty_states(ui, &mut self.insights),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),

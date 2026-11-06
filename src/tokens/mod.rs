@@ -2,6 +2,7 @@
 
 mod color;
 pub mod loading;
+pub mod metrics;
 pub mod surface;
 mod typography;
 

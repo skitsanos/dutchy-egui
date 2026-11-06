@@ -2,13 +2,13 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.3** adds progress indicators and skeletons to the cards, alerts,
-form controls, validation, theme, typography, buttons, badges, and square spinner.
+Version **1.0.4** adds stats and empty states to the progress indicators,
+skeletons, cards, alerts, form controls, typography, and theme foundation.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.3"
+dutchy-egui = "1.0.4"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -88,6 +88,15 @@ card/list/content/table compositions. Motion respects reduced motion, pausing,
 and clipping. Real work, completion, and content replacement remain host-owned.
 See the [loading components guide](docs/progress-skeletons.md).
 
+## Stats and empty states
+
+`Stat` and `StatsGrid` present host-formatted KPIs with responsive surfaces,
+compact rows, and explicit trend direction/sentiment. `EmptyState` provides
+generic, search, table-body, and dashboard guidance with independent actions,
+heading metadata, and optional polite announcements. The host owns values,
+navigation, replacement content, and focus after actions.
+See the [stats and empty states guide](docs/stats-empty-states.md).
+
 ## Showcase
 
 ```sh
@@ -96,7 +105,7 @@ cargo run --example showcase
 
 The native showcase includes theme/motion switches, component navigation,
 typography and palette pages, an application form with validation, cards, alerts,
-progress, loading-to-content examples, and narrow-window layouts.
+progress, loading-to-content examples, stats, empty states, and narrow-window layouts.
 Its renderer is Glow; automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
 
@@ -132,10 +141,11 @@ cargo package --allow-dirty
 
 Rendering tests need a WGPU-capable adapter (a software Vulkan adapter works on
 Linux). Review rendering baseline changes visually before accepting updates:
-`UPDATE_SNAPSHOTS=true cargo test --test loading_rendering`, then rerun without that
+`UPDATE_SNAPSHOTS=true cargo test --test insights_rendering`, then rerun without that
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
+[stats and empty states verification](docs/verification-insights.md),
 [loading verification](docs/verification-loading.md),
 [cards and alerts verification](docs/verification-surfaces.md),
 [form verification](docs/verification-forms.md), and the earlier

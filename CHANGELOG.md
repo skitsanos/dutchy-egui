@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.4 — 2026-11-06
+
+- Host-formatted statistics, four surfaces, regular/small type scales, optional
+  accent borders, detailed context, and responsive grid/compact layouts.
+- Explicit trend direction and sentiment, visible text alternatives, and grouped
+  accessibility names/values/context; no inferred arithmetic or formatting.
+- Generic/search/table-body/dashboard empty states with decorative icons, wrapping
+  guidance, independent native actions, disabled states, and optional announcements.
+- Stats/Empty States showcase pages, host-controlled content replacement/focus,
+  behavior tests, and multiple-scale/theme rendering. No new runtime dependencies.
+
 ## 1.0.3 — 2026-11-06
 
 - Determinate/custom-range and indeterminate progress, three track heights, four
