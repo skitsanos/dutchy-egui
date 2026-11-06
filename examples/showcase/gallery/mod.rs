@@ -10,11 +10,13 @@ mod menus;
 mod navigation;
 mod notifications;
 mod overlays;
+mod pages;
 mod stepping;
 mod surfaces;
 mod tabbed;
 mod tabular;
 mod typography;
+mod uploads;
 
 pub use forms::FormState;
 pub use insights::InsightsState;
@@ -27,107 +29,7 @@ use dutchy_egui::{
 };
 use egui::{Frame, Margin, Stroke, Ui};
 
-#[derive(Clone, Copy, Default, PartialEq, Eq)]
-pub enum Page {
-    #[default]
-    Overview,
-    Typography,
-    Forms,
-    Cards,
-    Alerts,
-    Progress,
-    Skeletons,
-    Stats,
-    EmptyStates,
-    Tooltips,
-    Layout,
-    Accordions,
-    Tabs,
-    Menus,
-    Dropdowns,
-    Breadcrumbs,
-    Pagination,
-    Stepper,
-    Modals,
-    Drawers,
-    Toasts,
-    DataTables,
-    Images,
-    Galleries,
-    Lightboxes,
-    Buttons,
-    Badges,
-    Motion,
-    Tokens,
-}
-
-impl Page {
-    const ALL: [Self; 29] = [
-        Self::Overview,
-        Self::Typography,
-        Self::Forms,
-        Self::Cards,
-        Self::Alerts,
-        Self::Progress,
-        Self::Skeletons,
-        Self::Stats,
-        Self::EmptyStates,
-        Self::Tooltips,
-        Self::Layout,
-        Self::Accordions,
-        Self::Tabs,
-        Self::Menus,
-        Self::Dropdowns,
-        Self::Breadcrumbs,
-        Self::Pagination,
-        Self::Stepper,
-        Self::Modals,
-        Self::Drawers,
-        Self::Toasts,
-        Self::DataTables,
-        Self::Images,
-        Self::Galleries,
-        Self::Lightboxes,
-        Self::Buttons,
-        Self::Badges,
-        Self::Motion,
-        Self::Tokens,
-    ];
-
-    fn name(self) -> &'static str {
-        match self {
-            Self::Overview => "Overview",
-            Self::Typography => "Typography",
-            Self::Forms => "Forms",
-            Self::Cards => "Cards",
-            Self::Alerts => "Alerts",
-            Self::Progress => "Progress",
-            Self::Skeletons => "Skeletons",
-            Self::Stats => "Stats",
-            Self::EmptyStates => "Empty states",
-            Self::Tooltips => "Tooltips",
-            Self::Layout => "Layout",
-            Self::Accordions => "Accordions",
-            Self::Tabs => "Tabs",
-            Self::Menus => "Menus",
-            Self::Dropdowns => "Dropdowns",
-            Self::Breadcrumbs => "Breadcrumbs",
-            Self::Pagination => "Pagination",
-            Self::Stepper => "Stepper",
-            Self::Modals => "Modals",
-            Self::Drawers => "Drawers",
-            Self::Toasts => "Toasts",
-            Self::DataTables => "Data tables",
-            Self::Images => "Images",
-            Self::Galleries => "Galleries",
-            Self::Lightboxes => "Lightboxes",
-            Self::Buttons => "Buttons",
-            Self::Badges => "Badges",
-            Self::Motion => "Motion",
-            Self::Tokens => "Tokens",
-        }
-    }
-}
+pub use pages::Page;
 
 pub struct Showcase {
     pub accent: Accent,
@@ -153,6 +55,7 @@ pub struct Showcase {
     pub notifications: notifications::NotificationState,
     pub tabular: tabular::TableState,
     pub media: media::MediaState,
+    pub uploads: uploads::UploadState,
 }
 
 impl Default for Showcase {
@@ -181,6 +84,7 @@ impl Default for Showcase {
             notifications: notifications::NotificationState::default(),
             tabular: tabular::TableState::default(),
             media: media::MediaState::default(),
+            uploads: uploads::UploadState::default(),
         }
     }
 }
@@ -198,6 +102,7 @@ impl Showcase {
 
     pub fn show(&mut self, ui: &mut Ui) {
         self.forms.tick(ui.ctx());
+        self.uploads.tick(ui.ctx());
         self.header(ui);
         let wide = ui.available_width() >= 820.0;
         if wide {
@@ -240,6 +145,7 @@ impl Showcase {
                             Page::Images => self.media.images(ui),
                             Page::Galleries => self.media.galleries(ui),
                             Page::Lightboxes => self.media.lightboxes(ui),
+                            Page::FileUploads => self.uploads.show(ui),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),

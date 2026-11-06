@@ -2,9 +2,9 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.13** adds images, keyed galleries and fullscreen lightboxes to the
-advanced-components milestone, following data tables and the core application
-essentials and interaction components.
+Version **1.0.14** adds file selection, drag-and-drop, metadata validation and
+keyed file lists to the advanced-components milestone. Applications retain file
+handles and own all reading, transfer, retry and cancellation work.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
@@ -203,6 +203,20 @@ Other URI/encoded-byte sources use host-installed loaders. See the
 [media guide](docs/images-galleries-lightboxes.md) and
 [URL image guide](docs/url-images.md).
 
+## File selection and uploads
+
+`FileUpload` provides a dashed drop zone or compact selection control with
+native Enter/Space browsing requests and spatially claimed egui file handles.
+The widget performs no file I/O. `FileRules` validates host metadata against
+extension/MIME alternatives and size/count limits. `FileList` presents keyed
+names/sizes, determinate/indeterminate progress, completion, errors and separate
+remove/cancel/retry requests, with focus return after host removal.
+
+The File Uploads showcase uses **rfd 0.17.2** only as a development dependency
+for the native picker. It inspects metadata off the UI thread and simulates
+transfers locally; no files are uploaded. No new runtime dependency is added.
+See the [file upload guide](docs/file-uploads.md).
+
 ## Showcase
 
 ```sh
@@ -230,6 +244,8 @@ responsive collections and keyboard-accessible modal viewing. With `url-images`,
 select **Use Picsum photos** on any media page to load credited online samples;
 **Reload photos** explicitly clears those cached URLs. Offline artwork remains
 the initial source, so opening the demo makes no external image requests.
+The File Uploads page adds native browsing, drop targets, shared validation,
+background metadata inspection, and explicit local transfer simulation.
 Its renderer is Glow;
 automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.

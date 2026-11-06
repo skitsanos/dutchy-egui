@@ -61,6 +61,10 @@ pub fn install(ctx: &egui::Context, theme: Theme) {
 }
 
 pub use widgets::{
+    FileInfo, FileItem, FileList, FileListResponse, FileRejection, FileRejectionReason, FileRules,
+    FileStatus, FileUpload, FileUploadResponse, FileUploadVariant, FileValidation, file_size,
+};
+pub use widgets::{
     Gallery, GalleryItem, GalleryResponse, Image, ImageAspect, ImageFit, ImageResponse,
     ImageStatus, Lightbox, LightboxResponse,
 };

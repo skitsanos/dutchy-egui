@@ -105,15 +105,23 @@ scope. The 1.0.12 data-table step was pushed to main as `3645d19` on 2026-11-06:
 keyed custom cells, typed host sort/selection requests, scroll coordination, explicit
 header/density treatments, loading/empty bodies, and a host record-browser
 example, including the vertical-centering correction. This starts the advanced
-milestone. The 1.0.13 step is developed locally on `ticket/images-gallery-lightbox`:
+milestone. The 1.0.13 step was pushed to main as `c4a728d` on 2026-11-06:
 native image-source presentation, optional HTTP(S) PNG/JPEG loading, keyed
 responsive galleries, host loader/retry
 policy and constrained lightboxes with native modality, keyboard operation and
-focus return. Partial variants and remaining advanced groups stay explicit in
+focus return. The 1.0.14 file-selection/drop step is local on
+`ticket/file-uploads-drag-drop`: controlled browse/drop requests, metadata rules,
+keyed file lists, host transfer states/actions and a native-picker demonstration.
+The core adds no runtime dependency; rfd 0.17.2 is development-only.
+Post-push cleanup is required by AGENTS.md: after 1.0.13, 81 GiB of generated
+artifacts and 13 obsolete merged local branches were removed; the sole active
+worktree and unmerged Renovate branch were preserved.
+Partial variants and remaining advanced groups stay explicit in
 the coverage matrix.
 See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md),
 [menu/dropdown decisions](menus-dropdowns.md),
 [navigation decisions](breadcrumbs-pagination.md), [stepper decisions](stepper.md),
 [overlay decisions](modals-drawers.md), [toast decisions](toasts.md),
-[table decisions](data-tables.md), and [media decisions](images-galleries-lightboxes.md)
+[table decisions](data-tables.md), [media decisions](images-galleries-lightboxes.md),
+and [file-selection decisions](file-uploads.md)
 for behavior and scope boundaries.

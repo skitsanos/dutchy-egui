@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.14 — 2026-11-06
+
+- Dashed and compact file selection surfaces, native keyboard browse requests,
+  lazy egui 0.37 drop handles, spatial/modal/disabled guards and one claim per frame.
+- Pure metadata policies for extension/MIME alternatives, byte-size boundaries,
+  unknown sizes and retained-count limits, shared by picker/drop batches.
+- Keyed file rows with sizes, ready/determinate/indeterminate/complete/error states,
+  independent remove/cancel/retry actions, hover feedback and removal focus return.
+- Native picker and background metadata showcase using development-only rfd 0.17.2;
+  clearly labelled local transfer simulation, retained host state and retry flows.
+- Theme/scale, narrow-layout, drop routing, keyboard/focus and host-workflow tests.
+  Runtime dependencies are unchanged. Added the post-push cleanup convention.
+
 ## 1.0.13 — 2026-11-06
 
 - Bordered images on native egui sources with explicit aspect/contain/cover,

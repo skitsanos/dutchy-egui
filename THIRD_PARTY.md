@@ -40,7 +40,9 @@ OFL notices with redistributed fonts.
 
 egui is the default direct runtime crate. Optional `url-images` adds ehttp
 0.7.3 (HTTP transport) and image 0.25.10 (PNG/JPEG codecs). eframe and egui_kittest
-are development-only. These crates use MIT OR Apache-2.0; their transitive
+are development-only. The file-selection showcase additionally uses
+MIT-licensed rfd 0.17.2 as a development-only native picker. No rfd/widget helper
+implementation is vendored. These crates use MIT OR Apache-2.0; their transitive
 dependency licenses remain applicable. The loader integration is original code;
 no widget/helper library implementation was copied.
 

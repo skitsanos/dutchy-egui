@@ -16,6 +16,7 @@ pub mod table;
 pub mod toast;
 pub mod tooltip;
 mod typography;
+pub mod upload;
 
 pub use color::{Accent, Mode, Palette};
 pub use layout::{ColumnWidth, ContainerWidth, Spacing};

@@ -29,6 +29,7 @@ mod table;
 mod tabs;
 mod toast;
 mod tooltip;
+mod upload;
 
 pub use accordion::{
     Accordion, AccordionItem, AccordionResponse, AccordionState, AccordionVariant,
@@ -56,6 +57,10 @@ pub use stats::{
 pub use stepper::{Step, Stepper, StepperResponse, StepperState, StepperVariant};
 pub use tabs::{Tab, Tabs, TabsResponse, TabsVariant};
 pub use tooltip::{Tooltip, TooltipPosition};
+pub use upload::{
+    FileInfo, FileItem, FileList, FileListResponse, FileRejection, FileRejectionReason, FileRules,
+    FileStatus, FileUpload, FileUploadResponse, FileUploadVariant, FileValidation, file_size,
+};
 
 pub use overlay::{Drawer, DrawerSide, Modal, OverlayDismissal, OverlayOptions, OverlayResponse};
 
