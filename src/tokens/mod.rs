@@ -11,6 +11,7 @@ pub mod navigation;
 pub mod overlay;
 pub mod stepper;
 pub mod surface;
+pub mod toast;
 pub mod tooltip;
 mod typography;
 

@@ -7,6 +7,7 @@ mod layout;
 mod loading;
 mod menus;
 mod navigation;
+mod notifications;
 mod overlays;
 mod stepping;
 mod surfaces;
@@ -47,6 +48,7 @@ pub enum Page {
     Stepper,
     Modals,
     Drawers,
+    Toasts,
     Buttons,
     Badges,
     Motion,
@@ -54,7 +56,7 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 24] = [
+    const ALL: [Self; 25] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
@@ -75,6 +77,7 @@ impl Page {
         Self::Stepper,
         Self::Modals,
         Self::Drawers,
+        Self::Toasts,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -103,6 +106,7 @@ impl Page {
             Self::Stepper => "Stepper",
             Self::Modals => "Modals",
             Self::Drawers => "Drawers",
+            Self::Toasts => "Toasts",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -132,6 +136,7 @@ pub struct Showcase {
     pub navigation: navigation::NavigationState,
     pub stepping: stepping::SteppingState,
     pub overlays: overlays::OverlayState,
+    pub notifications: notifications::NotificationState,
 }
 
 impl Default for Showcase {
@@ -157,6 +162,7 @@ impl Default for Showcase {
             navigation: navigation::NavigationState::default(),
             stepping: stepping::SteppingState::default(),
             overlays: overlays::OverlayState::default(),
+            notifications: notifications::NotificationState::default(),
         }
     }
 }
@@ -211,6 +217,7 @@ impl Showcase {
                             Page::Stepper => stepping::show(ui, &mut self.stepping),
                             Page::Modals => self.overlays.modals(ui),
                             Page::Drawers => self.overlays.drawers(ui),
+                            Page::Toasts => self.notifications.show(ui),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),
@@ -225,6 +232,7 @@ impl Showcase {
             });
         self.overlays.render(ui.ctx());
         self.menus.commands(ui.ctx());
+        self.notifications.render(ui.ctx());
     }
 
     fn header(&mut self, ui: &mut Ui) {

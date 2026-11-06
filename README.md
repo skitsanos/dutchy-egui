@@ -2,13 +2,14 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.10** continues interaction components with modals and drawers,
-following steppers, breadcrumbs, pagination, menus, dropdowns, accordions, and tabs.
+Version **1.0.11** completes the core interaction-components scope with toasts,
+following modals, drawers, steppers, breadcrumbs, pagination, menus, dropdowns,
+accordions, and tabs.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.10"
+dutchy-egui = "1.0.11"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -166,6 +167,15 @@ Drawers use a reduced-motion-aware entrance. Call them every frame, including
 while closed, to finish focus restoration. The host validates, saves, and retains
 content values. See the [overlay guide](docs/modals-drawers.md).
 
+## Toasts
+
+`ToastQueue<T>` keeps owned notifications and typed action payloads in the host.
+`Toasts` renders a nonblocking corner stack with four severities, solid/outlined
+surfaces, native close/action controls, live metadata, stable IDs, and focus return.
+Visible lifetimes pause during interaction, clipping, inactivity, or modality;
+waiting entries retain their full reading time. The host handles returned actions
+and can replace, dismiss, or clear entries. See the [toast guide](docs/toasts.md).
+
 ## Showcase
 
 ```sh
@@ -182,6 +192,8 @@ and a global command palette. Breadcrumbs/Pagination pages demonstrate deep
 paths and a host-managed record browser. The Stepper page demonstrates validation,
 Back/revisit data retention, and explicit host completion. Modals/Drawers pages
 demonstrate confirmation, validated editing, retained preferences, and focus return.
+The Toasts page adds typed Undo/Retry actions, four corners, pending queues, expiry,
+and pause/persistent controls.
 Its renderer is Glow;
 automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
@@ -222,6 +234,7 @@ Linux). Review rendering baseline changes visually before accepting updates:
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
+[toast verification](docs/verification-toasts.md),
 [overlay verification](docs/verification-overlays.md),
 [stepper verification](docs/verification-stepper.md),
 [navigation verification](docs/verification-navigation.md),

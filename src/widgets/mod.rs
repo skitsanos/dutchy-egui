@@ -25,6 +25,7 @@ mod spinner;
 mod stats;
 mod stepper;
 mod tabs;
+mod toast;
 mod tooltip;
 
 pub use accordion::{
@@ -55,3 +56,8 @@ pub use tabs::{Tab, Tabs, TabsResponse, TabsVariant};
 pub use tooltip::{Tooltip, TooltipPosition};
 
 pub use overlay::{Drawer, DrawerSide, Modal, OverlayDismissal, OverlayOptions, OverlayResponse};
+
+pub use toast::{
+    Toast, ToastAppearance, ToastDismissal, ToastEvent, ToastId, ToastPosition, ToastQueue,
+    ToastResponse, ToastVariant, Toasts, ToastsResponse,
+};

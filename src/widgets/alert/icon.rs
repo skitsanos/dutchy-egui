@@ -6,7 +6,7 @@ use crate::{
 };
 use egui::{Color32, Response, Sense, Stroke, Ui, WidgetInfo, vec2};
 
-pub(super) fn status(ui: &mut Ui, variant: AlertVariant, color: Color32) {
+pub(in crate::widgets) fn status(ui: &mut Ui, variant: AlertVariant, color: Color32) {
     let (rect, _) = ui.allocate_exact_size(
         vec2(surface::STATUS_ICON, surface::STATUS_ICON),
         Sense::hover(),
@@ -46,7 +46,7 @@ pub(super) fn status(ui: &mut Ui, variant: AlertVariant, color: Color32) {
     }
 }
 
-pub(super) fn dismiss(ui: &mut Ui, label: &str, color: Color32) -> Response {
+pub(in crate::widgets) fn dismiss(ui: &mut Ui, label: &str, color: Color32) -> Response {
     let (_, rect) = ui.allocate_space(vec2(
         ControlSize::Small.height(),
         ControlSize::Small.height(),

@@ -36,6 +36,10 @@ pub use widgets::{
     StepperVariant, Tab, Tabs, TabsResponse, TabsVariant, Tooltip, TooltipPosition, Trend,
     TrendDirection, TrendSentiment,
 };
+pub use widgets::{
+    Toast, ToastAppearance, ToastDismissal, ToastEvent, ToastId, ToastPosition, ToastQueue,
+    ToastResponse, ToastVariant, Toasts, ToastsResponse,
+};
 
 /// Install bundled fonts once and apply a theme. Does not change display scaling.
 ///

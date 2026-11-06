@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.11 — 2026-11-06
+
+- Application-owned toast queues with stable keys, replacement/removal, typed
+  single-use action payloads, and manual/expiry dismissal events.
+- Four corner stacks, four severities, solid/outlined treatments, native controls,
+  live metadata, focus retention/return, and scrolling for narrow overflow.
+- Visible-only lifetimes, pending FIFO slots, hover/focus/inactive/modal pause,
+  persistent notifications, and reduced-motion-aware entrance fading.
+- Host Undo/Retry showcase, timing/interaction regressions, and multi-theme/scale
+  rendering; completes the core interaction milestone. No new dependencies.
+
 ## 1.0.10 — 2026-11-06
 
 - Centered modals and full-height left/right overlay drawers with token widths,

@@ -1,4 +1,4 @@
-mod icon;
+pub(super) mod icon;
 
 use crate::{
     Button, ButtonVariant, ControlSize, Text, TextSize, Theme, Weight,
