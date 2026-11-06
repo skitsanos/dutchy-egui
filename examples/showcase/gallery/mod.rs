@@ -1,10 +1,12 @@
 mod components;
+mod disclosures;
 mod forms;
 mod help;
 mod insights;
 mod layout;
 mod loading;
 mod surfaces;
+mod tabbed;
 mod typography;
 
 pub use forms::FormState;
@@ -32,6 +34,8 @@ pub enum Page {
     EmptyStates,
     Tooltips,
     Layout,
+    Accordions,
+    Tabs,
     Buttons,
     Badges,
     Motion,
@@ -39,7 +43,7 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 15] = [
+    const ALL: [Self; 17] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
@@ -51,6 +55,8 @@ impl Page {
         Self::EmptyStates,
         Self::Tooltips,
         Self::Layout,
+        Self::Accordions,
+        Self::Tabs,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -70,6 +76,8 @@ impl Page {
             Self::EmptyStates => "Empty states",
             Self::Tooltips => "Tooltips",
             Self::Layout => "Layout",
+            Self::Accordions => "Accordions",
+            Self::Tabs => "Tabs",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -93,6 +101,8 @@ pub struct Showcase {
     pub insights: InsightsState,
     pub help: help::HelpState,
     pub layout: layout::LayoutState,
+    pub disclosures: disclosures::DisclosureState,
+    pub tabbed: tabbed::TabbedState,
 }
 
 impl Default for Showcase {
@@ -112,6 +122,8 @@ impl Default for Showcase {
             insights: InsightsState::default(),
             help: help::HelpState::default(),
             layout: layout::LayoutState::default(),
+            disclosures: disclosures::DisclosureState::default(),
+            tabbed: tabbed::TabbedState::default(),
         }
     }
 }
@@ -157,6 +169,8 @@ impl Showcase {
                             Page::EmptyStates => insights::empty_states(ui, &mut self.insights),
                             Page::Tooltips => help::show(ui, &mut self.help),
                             Page::Layout => layout::show(ui, &mut self.layout),
+                            Page::Accordions => disclosures::show(ui, &mut self.disclosures),
+                            Page::Tabs => tabbed::show(ui, &mut self.tabbed),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),

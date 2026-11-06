@@ -2,13 +2,13 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.5** adds tooltips, Flex composition, centered containers, and
-responsive grids to the application essentials.
+Version **1.0.6** starts the interaction-components milestone with controlled
+accordions and tabs, following the application essentials.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.5"
+dutchy-egui = "1.0.6"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -110,6 +110,20 @@ gutters. `ResponsiveGrid` reflows equal-width columns using host-supplied item
 keys, preserving child identities across layout changes. The host owns panels,
 values, and actions. See the [tooltips and layout guide](docs/tooltips-layout.md).
 
+## Accordions and tabs
+
+`Accordion` binds keyed items to host-owned single/multiple `AccordionState`.
+Headers expose expansion and their visible regions, wrap in narrow columns, and
+support Enter/Space plus Up/Down/Home/End navigation. Bodies can contain normal
+controls; their data remains with the host when collapsed.
+
+`Tabs` binds keyed `Tab` items to an `Option<T>` selection. Underline and
+segmented strips scroll horizontally as needed. Left/Right/Home/End move focus;
+Enter/Space select. Optional close buttons and Delete return a close request.
+The host removes items and retains or discards their data. Stable panels and
+focus handling support reordering and removal. See the
+[accordions and tabs guide](docs/accordions-tabs.md).
+
 ## Showcase
 
 ```sh
@@ -119,7 +133,8 @@ cargo run --example showcase
 The native showcase includes theme/motion switches, component navigation,
 typography and palette pages, an application form with validation, cards, alerts,
 progress, loading-to-content examples, stats, empty states, tooltips, and a
-responsive workspace settings/dashboard composition.
+responsive workspace settings/dashboard composition. Accordions and tabbed
+settings/documents demonstrate host-owned state and independent close requests.
 Its renderer is Glow; automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
 
@@ -155,10 +170,11 @@ cargo package --allow-dirty
 
 Rendering tests need a WGPU-capable adapter (a software Vulkan adapter works on
 Linux). Review rendering baseline changes visually before accepting updates:
-`UPDATE_SNAPSHOTS=true cargo test --test layout_rendering`, then rerun without that
+`UPDATE_SNAPSHOTS=true cargo test --test disclosure_rendering`, then rerun without that
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
+[accordions and tabs verification](docs/verification-disclosures.md),
 [tooltips and layout verification](docs/verification-layout.md),
 [stats and empty states verification](docs/verification-insights.md),
 [loading verification](docs/verification-loading.md),

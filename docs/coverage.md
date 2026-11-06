@@ -1,8 +1,8 @@
 # Component coverage
 
-Version 1.0.5 adds tooltips and layout helpers after stats, empty states,
-progress, skeletons, cards, alerts, and forms. Registry groups are not a count of individual controls. "Planned"
-means no public implementation is shipped.
+Version 1.0.6 starts interaction components with accordions and tabs, following
+the core application essentials. Registry groups are not a count of individual
+controls. "Planned" means no public implementation is shipped.
 
 | Web registry group | Status | Supported scope / next work |
 | --- | --- | --- |
@@ -17,8 +17,8 @@ means no public implementation is shipped.
 | Progress | Application essentials | Determinate/custom maximum and indeterminate; 4/8/16-point tracks; four fills; labels/percentages; sanitized range metadata and reduced motion |
 | Stats | Application essentials | Host-formatted KPIs, four surfaces, detailed context/accent, explicit direction/sentiment, responsive grids/compact rows and stable identity |
 | Pagination | Planned | Numbered, ellipsis, compact controls |
-| Accordion | Planned | Single/multiple open behavior |
-| Tabs | Planned | Underline/boxed, overflow, optional close |
+| Accordion | Interaction components | Controlled single/multiple expansion, accent-edge/bordered surfaces, keyboard headers, named regions, disabled items, wrapping and stable body scopes |
+| Tabs | Interaction components | Underline/segmented, full width or natural width, horizontal overflow, manual keyboard activation, roving focus, disabled items, independent close requests and focus after removal. No docking, reorder dragging, overflow menu, or arbitrary icons yet. |
 | Toasts | Planned | Stack, expiry, dismiss/action behavior |
 | Modal / Drawer | Planned | Blocking overlays, backdrop, dismissal, focus restoration |
 | Dropdowns | Planned | Action menu, searchable select, command palette |
@@ -42,4 +42,5 @@ protection. Header/sidebar, hero/footer composition, and other web patterns stil
 require work beyond these groups. The application-essentials milestone's core
 scope is implemented, including a public-API form and workspace settings/dashboard
 composition. Partial controls and broader web parity remain explicit above;
-interaction components are the next milestone.
+interaction components are underway. Menus, overlays, and the other planned
+navigation groups remain outstanding.

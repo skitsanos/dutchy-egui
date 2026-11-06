@@ -86,8 +86,10 @@ The 1.0.1 application-essentials forms/validation step was pushed to main as
 `cefe635` on 2026-11-06. The 1.0.2 cards/alerts step was pushed to main as
 `3c3b5ae` on 2026-11-06. The 1.0.3 progress/skeletons step was pushed to main as
 `d750373` on 2026-11-06. The 1.0.4 stats/empty-states step was pushed to main as
-`c8c8747` on 2026-11-06. The 1.0.5 tooltips/layout step is developed on
-`ticket/tooltips-layout`, completing the core application-essentials scope with
-a composed workspace settings/dashboard example. See [coverage](coverage.md)
-for partial controls and [tooltips/layout decisions](tooltips-layout.md) for
-the native layout boundary. Interaction components follow next.
+`c8c8747` on 2026-11-06. The 1.0.5 tooltips/layout step was pushed to main as
+`954ca23` on 2026-11-06, completing the core application-essentials scope with
+a composed workspace settings/dashboard example. The 1.0.6 interaction-components
+step is developed on `ticket/accordions-tabs`: controlled accordions and tabs,
+stable panels, keyboard navigation, overflow, and host-managed close behavior.
+See [coverage](coverage.md) for remaining groups and [accordion/tab decisions](accordions-tabs.md)
+for behavior and native scope boundaries.

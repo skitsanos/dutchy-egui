@@ -39,6 +39,9 @@ so applications can choose appropriate accessible text/fill pairs.
 - Logical points preserve the web scale at 1x; host display scaling remains intact.
 - Shared control heights are 32/48/56; paddings are 16/32/40 horizontally.
 - Borders use 1/2/4/8; focus is a 2-point outline with a 2-point gap.
+  Shared focus cues follow keyboard/assistive input; pointer activation retains
+  native focus without an extra ring. Accordion rings are inset to keep all four
+  edges clear of adjacent fills. Selected tabs use their active mark alone.
 - No gradients, rounded corners, or blurred shadows are introduced.
 - Buttons use egui's standard control for pointer/keyboard semantics inside a
   scoped variant style. Disabled/loading state also honors a disabled parent.

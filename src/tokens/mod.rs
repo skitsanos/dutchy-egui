@@ -1,6 +1,7 @@
 //! Shared design tokens, expressed in egui logical points.
 
 mod color;
+pub mod disclosure;
 pub mod layout;
 pub mod loading;
 pub mod metrics;

@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.6 — 2026-11-06
+
+- Controlled accordions with single/multiple expansion, accent-edge/bordered
+  surfaces, wrapping headers, named regions, and native keyboard actions.
+- Underline/segmented tabs with manual keyboard activation, roving focus,
+  disabled items, stable panel scopes, and horizontal overflow.
+- Independent close requests, Delete shortcut, focus after host removal, and an
+  explicit focus destination when no tabs remain. The host retains all data.
+- Selected tabs use their active underline/surface without an extra focus outline;
+  unselected keyboard targets and close controls retain focus cues.
+- Shared focus-visible behavior distinguishes pointer and keyboard input;
+  accordion focus rings sit inside the header with all four edges visible.
+- Accordions/Tabs showcase pages, focused interaction and motion checks, and
+  light/dark rendering at 1x/1.5x/2x. No new dependencies.
+
 ## 1.0.5 — 2026-11-06
 
 - Inverted text tooltips with four preferred sides, native constrained placement,
