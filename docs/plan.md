@@ -96,13 +96,17 @@ The 1.0.7 menus/dropdowns and close-control step was pushed to main as `198ab48`
 on 2026-11-06. The 1.0.8 breadcrumbs/pagination step was pushed to main as
 `59a80b4` on 2026-11-06. The 1.0.9 stepper step was pushed to main as `82e625c`
 on 2026-11-06. The 1.0.10 modal/drawer step was pushed to main as `8132fac`
-on 2026-11-06, including the wider confirmation refinement. The 1.0.11 step is
-developed locally on `ticket/toasts`: application-owned notification queues,
+on 2026-11-06, including the wider confirmation refinement. The 1.0.11 toast step was
+pushed to main as `543e7f5` on 2026-11-06: application-owned notification queues,
 typed actions, visible-only expiry, four corners, accessible controls and focus,
 and host Undo/Retry examples. This completes the core interaction-components
-scope. Explicit partial variants and advanced groups remain in the coverage matrix.
+scope. The 1.0.12 step is developed locally on `ticket/data-tables`: keyed custom
+cells, typed host sort/selection requests, scroll coordination, explicit
+header/density treatments, loading/empty bodies, and a host record-browser
+example. This starts the advanced milestone; partial variants and remaining
+advanced groups stay explicit in the coverage matrix.
 See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md),
 [menu/dropdown decisions](menus-dropdowns.md),
 [navigation decisions](breadcrumbs-pagination.md), [stepper decisions](stepper.md),
-[overlay decisions](modals-drawers.md), and [toast decisions](toasts.md) for behavior
+[overlay decisions](modals-drawers.md), [toast decisions](toasts.md), and [table decisions](data-tables.md) for behavior
 and scope boundaries.

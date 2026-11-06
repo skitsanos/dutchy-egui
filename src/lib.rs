@@ -37,6 +37,10 @@ pub use widgets::{
     TrendDirection, TrendSentiment,
 };
 pub use widgets::{
+    DataTable, DataTableResponse, TableAlign, TableColumn, TableColumnWidth, TableDensity,
+    TableHeader, TableRowResponse, TableSelection, TableSort, TableSortDirection,
+};
+pub use widgets::{
     Toast, ToastAppearance, ToastDismissal, ToastEvent, ToastId, ToastPosition, ToastQueue,
     ToastResponse, ToastVariant, Toasts, ToastsResponse,
 };

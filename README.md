@@ -2,14 +2,13 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.11** completes the core interaction-components scope with toasts,
-following modals, drawers, steppers, breadcrumbs, pagination, menus, dropdowns,
-accordions, and tabs.
+Version **1.0.12** starts the advanced-components milestone with keyed data
+tables, following the core application essentials and interaction components.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.11"
+dutchy-egui = "1.0.12"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -176,6 +175,17 @@ Visible lifetimes pause during interaction, clipping, inactivity, or modality;
 waiting entries retain their full reading time. The host handles returned actions
 and can replace, dismiss, or clear entries. See the [toast guide](docs/toasts.md).
 
+## Data tables
+
+`DataTable` composes keyed custom cells with fixed/flexible columns, alignment,
+sticky headers, two-axis scrolling, three header surfaces, compact density and
+striped/hover/selected rows. It returns sort and current-view selection requests;
+the host owns typed comparisons, filtering, pagination and actions. Native cell
+editors keep identity across reordering; loading/empty bodies provide constrained
+guidance and table accessibility metadata. This first table visits all supplied
+cells each pass; bound or paginate large datasets. See the
+[data table guide](docs/data-tables.md).
+
 ## Showcase
 
 ```sh
@@ -193,7 +203,9 @@ paths and a host-managed record browser. The Stepper page demonstrates validatio
 Back/revisit data retention, and explicit host completion. Modals/Drawers pages
 demonstrate confirmation, validated editing, retained preferences, and focus return.
 The Toasts page adds typed Undo/Retry actions, four corners, pending queues, expiry,
-and pause/persistent controls.
+and pause/persistent controls. The Data Tables page adds a host-managed record
+browser with search, typed sorting, selection, pagination, custom cells, disabled
+records and loading, plus a compact inverse table.
 Its renderer is Glow;
 automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
@@ -234,6 +246,7 @@ Linux). Review rendering baseline changes visually before accepting updates:
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
+[data table verification](docs/verification-tables.md),
 [toast verification](docs/verification-toasts.md),
 [overlay verification](docs/verification-overlays.md),
 [stepper verification](docs/verification-stepper.md),

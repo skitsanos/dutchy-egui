@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.12 — 2026-11-06
+
+- Start advanced components with keyed `DataTable` composition, custom native
+  cells, fixed/flexible widths, alignment, sticky headers and two-axis scrolling.
+- Host-owned typed sort and current-view selection requests, disabled records,
+  stable editor identity and explicit focus return after row/column removal.
+- Muted/inverse/plain headers, compact density, striped/hover/selected rows,
+  named busy skeletons, constrained empty guidance and semantic table metadata.
+- Vertically centered header/body content, including mixed native controls and
+  wrapped cells; keyed natural-height measurements preserve stable reflow.
+- Data Tables showcase with host search, numeric sorting, pagination, retained
+  selection and independent actions; interaction, geometry and theme/scale checks.
+  No new dependencies. Initial tables are nonvirtualized; hosts bound/page slices.
+
 ## 1.0.11 — 2026-11-06
 
 - Application-owned toast queues with stable keys, replacement/removal, typed

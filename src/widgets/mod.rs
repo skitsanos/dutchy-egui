@@ -24,6 +24,7 @@ mod skeleton;
 mod spinner;
 mod stats;
 mod stepper;
+mod table;
 mod tabs;
 mod toast;
 mod tooltip;
@@ -60,4 +61,9 @@ pub use overlay::{Drawer, DrawerSide, Modal, OverlayDismissal, OverlayOptions, O
 pub use toast::{
     Toast, ToastAppearance, ToastDismissal, ToastEvent, ToastId, ToastPosition, ToastQueue,
     ToastResponse, ToastVariant, Toasts, ToastsResponse,
+};
+
+pub use table::{
+    DataTable, DataTableResponse, TableAlign, TableColumn, TableColumnWidth, TableDensity,
+    TableHeader, TableRowResponse, TableSelection, TableSort, TableSortDirection,
 };

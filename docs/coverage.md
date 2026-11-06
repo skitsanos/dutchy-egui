@@ -1,9 +1,8 @@
 # Component coverage
 
-Version 1.0.11 adds toasts after modals, drawers, a controlled stepper, breadcrumbs,
-pagination, menus, dropdowns, search, accordions, and tabs, following
-the core application essentials. Registry groups are not a count of individual
-controls. "Planned" means no public implementation is shipped.
+Version 1.0.12 starts advanced components with data tables after the core
+interaction and application-essential groups. Registry groups are not a count
+of individual controls. "Planned" means no public implementation is shipped.
 
 | Web registry group | Status | Supported scope / next work |
 | --- | --- | --- |
@@ -23,7 +22,7 @@ controls. "Planned" means no public implementation is shipped.
 | Toasts | Interaction components | Host-owned FIFO queue, typed single-use actions, manual/expiry events, four corners/severities, solid/outline, 1–4 visible slots, persistent/pause policies, live metadata, stable focus, constrained scrolling, and entrance fade. No exit/slide transitions or notification-history service. |
 | Modal / Drawer | Interaction components | Centered dialogs and full-height left/right drawers; three widths each, native blocking/focus confinement, configurable dismissal, replacement focus targets, divided footers, constrained scrolling, and reduced-motion-aware drawer entrances. No docked/top/bottom drawers, resizing, or exit animation. |
 | Dropdowns | Interaction components | Anchored/context actions, start/end alignment, viewport constraints, scrolling, keyboard/dismissal/focus return; searchable select and native modal command palette with host-owned query/open/selection/actions |
-| Data Table | Planned | Table primitives, empty/loading, host-controlled sort/filter |
+| Data Table | Advanced components | Keyed custom cells, fixed/flexible widths, alignment, sticky headers, two-axis scrolling, three header surfaces, compact/striped/hover/selected rows, native sort/selection requests, disabled rows, busy/empty guidance and host filter/pagination composition. Nonvirtualized; no resizing/pinning, dragging, arbitrary spans or multicolumn sort yet. |
 | Stepper | Interaction components | Horizontal/vertical/compact/position progress; keyed host state, explicit completion, optional navigation requests, current/status metadata, narrow adaptation, compact scrolling, empty/single/unknown states and validated host workflow |
 | Tooltips | Application essentials | Text hints; four preferred sides, native constrained placement/hover timing, keyboard focus, Escape dismissal, and merged accessible descriptions |
 | File Upload | Planned | File selection/drop zone/list; application-owned transfer |
@@ -44,6 +43,6 @@ require work beyond these groups. The application-essentials milestone's core
 scope is implemented, including a public-API form and workspace settings/dashboard
 composition. Partial controls and broader web parity remain explicit above;
 the core interaction-components scope is implemented, including a public-API
-notification queue with host Undo/Retry actions. The advanced component groups
-remain outstanding. Partial variants and broader web parity remain explicit in
+notification queue with host Undo/Retry actions. Advanced work now includes the data-table scope; image/gallery, file
+selection/drop zones and Scribble/export remain outstanding. Partial variants and broader web parity remain explicit in
 the matrix; milestone completion does not imply whole-system parity.

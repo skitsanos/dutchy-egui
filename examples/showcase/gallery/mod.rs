@@ -12,6 +12,7 @@ mod overlays;
 mod stepping;
 mod surfaces;
 mod tabbed;
+mod tabular;
 mod typography;
 
 pub use forms::FormState;
@@ -49,6 +50,7 @@ pub enum Page {
     Modals,
     Drawers,
     Toasts,
+    DataTables,
     Buttons,
     Badges,
     Motion,
@@ -56,7 +58,7 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 25] = [
+    const ALL: [Self; 26] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
@@ -78,6 +80,7 @@ impl Page {
         Self::Modals,
         Self::Drawers,
         Self::Toasts,
+        Self::DataTables,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -107,6 +110,7 @@ impl Page {
             Self::Modals => "Modals",
             Self::Drawers => "Drawers",
             Self::Toasts => "Toasts",
+            Self::DataTables => "Data tables",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -137,6 +141,7 @@ pub struct Showcase {
     pub stepping: stepping::SteppingState,
     pub overlays: overlays::OverlayState,
     pub notifications: notifications::NotificationState,
+    pub tabular: tabular::TableState,
 }
 
 impl Default for Showcase {
@@ -163,6 +168,7 @@ impl Default for Showcase {
             stepping: stepping::SteppingState::default(),
             overlays: overlays::OverlayState::default(),
             notifications: notifications::NotificationState::default(),
+            tabular: tabular::TableState::default(),
         }
     }
 }
@@ -218,6 +224,7 @@ impl Showcase {
                             Page::Modals => self.overlays.modals(ui),
                             Page::Drawers => self.overlays.drawers(ui),
                             Page::Toasts => self.notifications.show(ui),
+                            Page::DataTables => self.tabular.show(ui),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),
