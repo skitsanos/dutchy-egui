@@ -1,0 +1,36 @@
+{
+  "google_fonts_revision": "24ddc1f324cac5d9f5aedca126d298f56e3f1640",
+  "fonttools": "4.68.0",
+  "sources": [
+    {
+      "path": "ofl/inter/Inter[opsz,wght].ttf",
+      "sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031",
+      "instances": {
+        "Body-Regular.ttf": "b333b1caf46a08dd121bffcce379792dba44a4b05482d0f22f0d364d712f462a",
+        "Body-Medium.ttf": "15b5291d1aecd404fbf8d597ea75a55f2390d62676d8b7921feec533e88d242a",
+        "Body-SemiBold.ttf": "3e65f73d09667eed029ae4c7c256c5035bd16a9207855a802ad2ec9a1dd6d45f",
+        "Body-Bold.ttf": "495b95f93923bacf2bd9c4815ea9ea938b920f4f2047276b77f9b378e1e767e9"
+      }
+    },
+    {
+      "path": "ofl/spacegrotesk/SpaceGrotesk[wght].ttf",
+      "sha256": "acad6de1fc93436f5c0f1f4137751ef04f1aea3063e7036535970ffcfbd79f72",
+      "instances": {
+        "Display-Regular.ttf": "fadfb446d8873d2678c4a9b51fc6a99a726cd1d5de98a7f972776e4384d81ce8",
+        "Display-Medium.ttf": "737a6581207d1591b569639752f1448571f01bf37c41e87b76bafd5dfc11c103",
+        "Display-SemiBold.ttf": "228aaf1624b9fc9c37a091fb9f650406758df0479b1c4d3d813621b13ca32108",
+        "Display-Bold.ttf": "a11aff19fb84cb1b026bb91268e97cb47970e8729155ba7b2298c6bcaa4d0bb0"
+      }
+    },
+    {
+      "path": "ofl/jetbrainsmono/JetBrainsMono[wght].ttf",
+      "sha256": "48715a42ec242c21e9f02692891e147d022299a52e48d5e413e1a942193ffeda",
+      "instances": {
+        "Mono-Regular.ttf": "5cc8e369fe7452ed016857f3260154e0d26f520ac4654093f834e12681a15452",
+        "Mono-Medium.ttf": "76bbbd3f9baf182ffca92a86286863ab7f1e5b49584892e9322df2a104bba74f",
+        "Mono-SemiBold.ttf": "c96fbb89573a6feaa989129b6853b8b176cb226b2383d8823a74cf5949f627b7",
+        "Mono-Bold.ttf": "3bc8ccfeb320485b0558c961b3ab7318ddf15672ab6662e3c911f0804668e815"
+      }
+    }
+  ]
+}

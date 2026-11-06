@@ -1,0 +1,39 @@
+[package]
+name = "dutchy-egui"
+version = "1.0.0"
+edition = "2024"
+rust-version = "1.95"
+description = "Dutchy Design System for egui: sharp geometry, warm colors, and bold typography"
+license = "MIT"
+repository = "https://github.com/skitsanos/dutchy-egui"
+readme = "README.md"
+keywords = ["egui", "gui", "design-system", "widgets", "theme"]
+categories = ["gui"]
+include = [
+    "src/**", "assets/**", "examples/**", "tests/**", "docs/**",
+    "scripts/prepare_fonts.py", ".clippy.toml", "AGENTS.md", "README.md",
+    "LICENSE", "THIRD_PARTY.md", "CHANGELOG.md", "Cargo.lock",
+]
+
+[features]
+default = ["bundled-fonts"]
+bundled-fonts = []
+
+[dependencies]
+egui = "0.37.0"
+
+[dev-dependencies]
+eframe = { version = "0.37.0", default-features = false, features = ["accesskit", "glow", "wayland", "x11"] }
+egui_kittest = { version = "0.37.0", features = ["eframe", "snapshot", "wgpu"] }
+
+[[example]]
+name = "showcase"
+path = "examples/showcase/main.rs"
+required-features = ["bundled-fonts"]
+
+[lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+
+[lints.clippy]
+cognitive_complexity = "warn"
