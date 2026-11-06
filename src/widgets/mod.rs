@@ -3,6 +3,7 @@
 mod accordion;
 mod alert;
 mod badge;
+mod breadcrumbs;
 mod button;
 mod card;
 mod close;
@@ -12,7 +13,9 @@ mod empty_state;
 pub mod forms;
 mod loading_motion;
 pub(crate) mod menu;
+mod nav_icon;
 mod navigation;
+mod pagination;
 mod progress;
 pub(crate) mod search;
 mod searchable_select;
@@ -27,12 +30,16 @@ pub use accordion::{
 };
 pub use alert::{Alert, AlertResponse, AlertVariant};
 pub use badge::{Badge, BadgeVariant};
+pub use breadcrumbs::{
+    BreadcrumbIconPainter, BreadcrumbItem, BreadcrumbSeparator, Breadcrumbs, BreadcrumbsResponse,
+};
 pub use button::{Button, ButtonVariant};
 pub use card::{Card, CardVariant};
 pub use command_palette::{CommandPalette, CommandPaletteResponse};
 pub use dropdown::{Dropdown, DropdownAlign, DropdownResponse};
 pub use empty_state::{EmptyState, EmptyStateIcon, EmptyStateResponse, EmptyStateVariant};
 pub use menu::{Menu, MenuIconPainter, MenuItem, MenuItemVariant, MenuResponse};
+pub use pagination::{Pagination, PaginationResponse, PaginationVariant};
 pub use progress::{Progress, ProgressVariant};
 pub use search::SearchState;
 pub use searchable_select::{SearchableSelect, SearchableSelectResponse};

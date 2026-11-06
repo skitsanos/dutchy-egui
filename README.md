@@ -2,13 +2,13 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.7** continues interaction components with menus, action dropdowns,
-searchable selection, and command search, following controlled accordions and tabs.
+Version **1.0.8** continues interaction components with breadcrumbs and pagination,
+following menus, dropdowns, accordions, and tabs.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.7"
+dutchy-egui = "1.0.8"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -137,6 +137,15 @@ scrolling, dismissal, and focus return.
 shortcut. The host owns state and executes returned actions. See the
 [menus and dropdowns guide](docs/menus-dropdowns.md).
 
+## Breadcrumbs and pagination
+
+`Breadcrumbs` presents keyed destinations with slash/chevron separators, optional
+icons, a muted bar, and collapsed ancestors in a host-controlled dropdown.
+`Pagination` provides numbered/ellipsis or compact controls, current-page metadata,
+stable keyboard focus, and explicit empty/invalid/disabled range behavior.
+Both return navigation requests; the host owns routing and data loading.
+See the [navigation guide](docs/breadcrumbs-pagination.md).
+
 ## Showcase
 
 ```sh
@@ -149,7 +158,8 @@ progress, loading-to-content examples, stats, empty states, tooltips, and a
 responsive workspace settings/dashboard composition. Accordions and tabbed
 settings/documents demonstrate host-owned state and independent close requests.
 Menus/Dropdowns pages demonstrate actions, context menus, searchable selection,
-and a global command palette. Its renderer is Glow; automated rendering tests use WGPU. Keyboard focus uses
+and a global command palette. Breadcrumbs/Pagination pages demonstrate deep
+paths and a host-managed record browser. Its renderer is Glow; automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
 
 ## Fonts and features
@@ -188,6 +198,7 @@ Linux). Review rendering baseline changes visually before accepting updates:
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
+[navigation verification](docs/verification-navigation.md),
 [close-control verification](docs/verification-close-controls.md),
 [menus and dropdowns verification](docs/verification-menus.md),
 [accordions and tabs verification](docs/verification-disclosures.md),

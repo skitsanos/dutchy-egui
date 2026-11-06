@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.8 — 2026-11-06
+
+- Keyed breadcrumbs with slash/chevron separators, decorative icon roots, a muted
+  bar, wrapping labels, and host-controlled collapsed-ancestor menus.
+- Numbered/ellipsis and compact pagination with typed page requests, current-page
+  metadata, disabled endpoints, empty/invalid ranges, and bounded large counts.
+- Native keyboard behavior, stable navigation identities, host-owned route/data
+  examples, and multi-theme/scale rendering. No new dependencies.
+
 ## 1.0.7 — 2026-11-06
 
 - Shared flat hover/pressed feedback and pointing cursors for alert/banner, tab,

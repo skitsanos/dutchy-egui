@@ -154,6 +154,9 @@ fn showcase_navigation_and_theme_switches_update_the_host_state() {
     harness.run();
     assert_eq!(harness.state().mode, Mode::Dark);
     assert!(harness.ctx.global_style().visuals.dark_mode);
+    // The component list now overflows the sidebar at this viewport height.
+    harness.get_by_label("BADGES").scroll_to_me();
+    harness.run_steps(3);
     harness.get_by_label("BADGES").click();
     harness.run();
     harness.get_by_label("Dismiss Removable tag").click();

@@ -1,7 +1,7 @@
 # Component coverage
 
-Version 1.0.7 adds menus, dropdowns, searchable selection, and command search after
-accordions and tabs, following
+Version 1.0.8 adds breadcrumbs and pagination after menus, dropdowns, search,
+accordions, and tabs, following
 the core application essentials. Registry groups are not a count of individual
 controls. "Planned" means no public implementation is shipped.
 
@@ -17,7 +17,7 @@ controls. "Planned" means no public implementation is shipped.
 | Spinner | Visual proof | Three-sided square; 12/16/20 sizes; color, pause, reduced motion, clipped-widget scheduling |
 | Progress | Application essentials | Determinate/custom maximum and indeterminate; 4/8/16-point tracks; four fills; labels/percentages; sanitized range metadata and reduced motion |
 | Stats | Application essentials | Host-formatted KPIs, four surfaces, detailed context/accent, explicit direction/sentiment, responsive grids/compact rows and stable identity |
-| Pagination | Planned | Numbered, ellipsis, compact controls |
+| Pagination | Interaction components | Numbered/ellipsis and compact controls; current-page metadata, stable focus, disabled endpoints, empty/invalid ranges, bounded large counts, wrapping, and host-owned page/data requests |
 | Accordion | Interaction components | Controlled single/multiple expansion, accent-edge/bordered surfaces, keyboard headers, named regions, disabled items, wrapping and stable body scopes |
 | Tabs | Interaction components | Underline/segmented, full width or natural width, horizontal overflow, manual keyboard activation, roving focus, disabled items, independent close requests and focus after removal. No docking, reorder dragging, overflow menu, or arbitrary icons yet. |
 | Toasts | Planned | Stack, expiry, dismiss/action behavior |
@@ -28,7 +28,7 @@ controls. "Planned" means no public implementation is shipped.
 | Tooltips | Application essentials | Text hints; four preferred sides, native constrained placement/hover timing, keyboard focus, Escape dismissal, and merged accessible descriptions |
 | File Upload | Planned | File selection/drop zone/list; application-owned transfer |
 | Image | Planned | Caption/gallery/lightbox; optional loaders |
-| Breadcrumbs | Planned | Standard/truncated hierarchy |
+| Breadcrumbs | Interaction components | Keyed destinations, current-page metadata, slash/chevron, icon root, muted bar, wrapping and collapsed-ancestor menus; host-owned routing and collapse policy |
 | Flex | Application essentials | Token gaps, row/column/reverse, row wrapping, native cross alignment; centered containers and keyed responsive grids. CSS baseline/distribution modes are outside this scope. |
 | Menu | Interaction components | Keyed actions, consecutive named groups, separators, shortcut hints, optional decorative icons, disabled/destructive states, native pointer/assistive/keyboard input. Nested submenus, checked actions, and menu bars remain planned. |
 | Text | Visual proof | Three roles; four actual weights; 12 sizes; tracking, leading, color, Unicode uppercase, italics, wrapping |

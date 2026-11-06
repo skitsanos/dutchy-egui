@@ -7,6 +7,7 @@ pub mod layout;
 pub mod loading;
 pub mod menu;
 pub mod metrics;
+pub mod navigation;
 pub mod surface;
 pub mod tooltip;
 mod typography;

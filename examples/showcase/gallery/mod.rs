@@ -6,6 +6,7 @@ mod insights;
 mod layout;
 mod loading;
 mod menus;
+mod navigation;
 mod surfaces;
 mod tabbed;
 mod typography;
@@ -39,6 +40,8 @@ pub enum Page {
     Tabs,
     Menus,
     Dropdowns,
+    Breadcrumbs,
+    Pagination,
     Buttons,
     Badges,
     Motion,
@@ -46,7 +49,7 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 19] = [
+    const ALL: [Self; 21] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
@@ -62,6 +65,8 @@ impl Page {
         Self::Tabs,
         Self::Menus,
         Self::Dropdowns,
+        Self::Breadcrumbs,
+        Self::Pagination,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -85,6 +90,8 @@ impl Page {
             Self::Tabs => "Tabs",
             Self::Menus => "Menus",
             Self::Dropdowns => "Dropdowns",
+            Self::Breadcrumbs => "Breadcrumbs",
+            Self::Pagination => "Pagination",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -111,6 +118,7 @@ pub struct Showcase {
     pub disclosures: disclosures::DisclosureState,
     pub tabbed: tabbed::TabbedState,
     pub menus: menus::MenuState,
+    pub navigation: navigation::NavigationState,
 }
 
 impl Default for Showcase {
@@ -133,6 +141,7 @@ impl Default for Showcase {
             disclosures: disclosures::DisclosureState::default(),
             tabbed: tabbed::TabbedState::default(),
             menus: menus::MenuState::default(),
+            navigation: navigation::NavigationState::default(),
         }
     }
 }
@@ -182,6 +191,8 @@ impl Showcase {
                             Page::Tabs => tabbed::show(ui, &mut self.tabbed),
                             Page::Menus => menus::menus(ui, &mut self.menus),
                             Page::Dropdowns => menus::dropdowns(ui, &mut self.menus),
+                            Page::Breadcrumbs => navigation::breadcrumbs(ui, &mut self.navigation),
+                            Page::Pagination => navigation::pagination(ui, &mut self.navigation),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),

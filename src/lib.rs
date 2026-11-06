@@ -24,13 +24,15 @@ pub use tokens::{
 pub use widgets::forms::{Checkbox, Field, Input, RadioGroup, Select, SelectOption, Textarea};
 pub use widgets::{
     Accordion, AccordionItem, AccordionResponse, AccordionState, AccordionVariant, Alert,
-    AlertResponse, AlertVariant, Badge, BadgeVariant, Button, ButtonVariant, Card, CardVariant,
-    CommandPalette, CommandPaletteResponse, Dropdown, DropdownAlign, DropdownResponse, EmptyState,
-    EmptyStateIcon, EmptyStateResponse, EmptyStateVariant, Menu, MenuIconPainter, MenuItem,
-    MenuItemVariant, MenuResponse, Progress, ProgressVariant, SearchState, SearchableSelect,
-    SearchableSelectResponse, Skeleton, SkeletonGroup, SkeletonVariant, Spinner, SpinnerSize, Stat,
-    StatSize, StatVariant, StatsGrid, StatsLayout, Tab, Tabs, TabsResponse, TabsVariant, Tooltip,
-    TooltipPosition, Trend, TrendDirection, TrendSentiment,
+    AlertResponse, AlertVariant, Badge, BadgeVariant, BreadcrumbIconPainter, BreadcrumbItem,
+    BreadcrumbSeparator, Breadcrumbs, BreadcrumbsResponse, Button, ButtonVariant, Card,
+    CardVariant, CommandPalette, CommandPaletteResponse, Dropdown, DropdownAlign, DropdownResponse,
+    EmptyState, EmptyStateIcon, EmptyStateResponse, EmptyStateVariant, Menu, MenuIconPainter,
+    MenuItem, MenuItemVariant, MenuResponse, Pagination, PaginationResponse, PaginationVariant,
+    Progress, ProgressVariant, SearchState, SearchableSelect, SearchableSelectResponse, Skeleton,
+    SkeletonGroup, SkeletonVariant, Spinner, SpinnerSize, Stat, StatSize, StatVariant, StatsGrid,
+    StatsLayout, Tab, Tabs, TabsResponse, TabsVariant, Tooltip, TooltipPosition, Trend,
+    TrendDirection, TrendSentiment,
 };
 
 /// Install bundled fonts once and apply a theme. Does not change display scaling.
