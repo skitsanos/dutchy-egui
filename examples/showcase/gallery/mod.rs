@@ -7,6 +7,7 @@ mod layout;
 mod loading;
 mod menus;
 mod navigation;
+mod overlays;
 mod stepping;
 mod surfaces;
 mod tabbed;
@@ -44,6 +45,8 @@ pub enum Page {
     Breadcrumbs,
     Pagination,
     Stepper,
+    Modals,
+    Drawers,
     Buttons,
     Badges,
     Motion,
@@ -51,7 +54,7 @@ pub enum Page {
 }
 
 impl Page {
-    const ALL: [Self; 22] = [
+    const ALL: [Self; 24] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
@@ -70,6 +73,8 @@ impl Page {
         Self::Breadcrumbs,
         Self::Pagination,
         Self::Stepper,
+        Self::Modals,
+        Self::Drawers,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -96,6 +101,8 @@ impl Page {
             Self::Breadcrumbs => "Breadcrumbs",
             Self::Pagination => "Pagination",
             Self::Stepper => "Stepper",
+            Self::Modals => "Modals",
+            Self::Drawers => "Drawers",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",
@@ -124,6 +131,7 @@ pub struct Showcase {
     pub menus: menus::MenuState,
     pub navigation: navigation::NavigationState,
     pub stepping: stepping::SteppingState,
+    pub overlays: overlays::OverlayState,
 }
 
 impl Default for Showcase {
@@ -148,6 +156,7 @@ impl Default for Showcase {
             menus: menus::MenuState::default(),
             navigation: navigation::NavigationState::default(),
             stepping: stepping::SteppingState::default(),
+            overlays: overlays::OverlayState::default(),
         }
     }
 }
@@ -200,6 +209,8 @@ impl Showcase {
                             Page::Breadcrumbs => navigation::breadcrumbs(ui, &mut self.navigation),
                             Page::Pagination => navigation::pagination(ui, &mut self.navigation),
                             Page::Stepper => stepping::show(ui, &mut self.stepping),
+                            Page::Modals => self.overlays.modals(ui),
+                            Page::Drawers => self.overlays.drawers(ui),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),
@@ -212,6 +223,7 @@ impl Showcase {
                         );
                     });
             });
+        self.overlays.render(ui.ctx());
         self.menus.commands(ui.ctx());
     }
 

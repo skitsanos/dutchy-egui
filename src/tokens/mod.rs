@@ -8,6 +8,7 @@ pub mod loading;
 pub mod menu;
 pub mod metrics;
 pub mod navigation;
+pub mod overlay;
 pub mod stepper;
 pub mod surface;
 pub mod tooltip;
@@ -17,6 +18,7 @@ pub use color::{Accent, Mode, Palette};
 pub use layout::{ColumnWidth, ContainerWidth, Spacing};
 pub use loading::ProgressSize;
 pub use menu::MenuWidth;
+pub use overlay::{DrawerWidth, ModalWidth};
 pub use surface::CardPadding;
 pub use typography::{Family, Leading, TextSize, Tracking, Weight};
 

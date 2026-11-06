@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.10 — 2026-11-06
+
+- Centered modals and full-height left/right overlay drawers with token widths,
+  sharp borders, named titles, native input blocking, and optional divided footers.
+- Host-owned visibility/content, configurable close/Escape/backdrop dismissal,
+  initial focus and deferred return focus, including replacement targets.
+- Viewport-constrained scrolling with a persistent header, native Tab traversal,
+  popup-first Escape, and reduced-motion-aware drawer entrances.
+- Wider confirmation with inline desktop actions, validated profile, and retained
+  preference showcase flows;
+  interaction/motion regressions and theme/scale baselines. No new dependencies.
+
 ## 1.0.9 — 2026-11-06
 
 - Keyed, host-controlled stepper with horizontal, vertical, compact, and position-

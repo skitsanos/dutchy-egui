@@ -15,6 +15,7 @@ mod loading_motion;
 pub(crate) mod menu;
 mod nav_icon;
 mod navigation;
+mod overlay;
 mod pagination;
 mod progress;
 pub(crate) mod search;
@@ -52,3 +53,5 @@ pub use stats::{
 pub use stepper::{Step, Stepper, StepperResponse, StepperState, StepperVariant};
 pub use tabs::{Tab, Tabs, TabsResponse, TabsVariant};
 pub use tooltip::{Tooltip, TooltipPosition};
+
+pub use overlay::{Drawer, DrawerSide, Modal, OverlayDismissal, OverlayOptions, OverlayResponse};

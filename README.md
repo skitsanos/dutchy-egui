@@ -2,13 +2,13 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.9** continues interaction components with a controlled stepper,
-following breadcrumbs, pagination, menus, dropdowns, accordions, and tabs.
+Version **1.0.10** continues interaction components with modals and drawers,
+following steppers, breadcrumbs, pagination, menus, dropdowns, accordions, and tabs.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.9"
+dutchy-egui = "1.0.10"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -156,6 +156,16 @@ buttons return requests that the host accepts or rejects. Validation, field
 values, submission, and Back/Continue controls stay in the application.
 See the [stepper guide](docs/stepper.md).
 
+## Modals and drawers
+
+`Modal` provides a centered dialog; `Drawer` attaches a full-height overlay to
+either viewport edge. Both bind host-owned visibility and use native egui
+modality, a named dialog/title, shared close feedback, optional divided footers,
+constrained scrolling, configurable dismissal, and initial/return focus policy.
+Drawers use a reduced-motion-aware entrance. Call them every frame, including
+while closed, to finish focus restoration. The host validates, saves, and retains
+content values. See the [overlay guide](docs/modals-drawers.md).
+
 ## Showcase
 
 ```sh
@@ -170,7 +180,9 @@ settings/documents demonstrate host-owned state and independent close requests.
 Menus/Dropdowns pages demonstrate actions, context menus, searchable selection,
 and a global command palette. Breadcrumbs/Pagination pages demonstrate deep
 paths and a host-managed record browser. The Stepper page demonstrates validation,
-Back/revisit data retention, and explicit host completion. Its renderer is Glow;
+Back/revisit data retention, and explicit host completion. Modals/Drawers pages
+demonstrate confirmation, validated editing, retained preferences, and focus return.
+Its renderer is Glow;
 automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
 
@@ -210,6 +222,7 @@ Linux). Review rendering baseline changes visually before accepting updates:
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
+[overlay verification](docs/verification-overlays.md),
 [stepper verification](docs/verification-stepper.md),
 [navigation verification](docs/verification-navigation.md),
 [close-control verification](docs/verification-close-controls.md),

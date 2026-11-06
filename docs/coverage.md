@@ -1,7 +1,7 @@
 # Component coverage
 
-Version 1.0.9 adds a controlled stepper after breadcrumbs, pagination, menus,
-dropdowns, search, accordions, and tabs, following
+Version 1.0.10 adds modals and drawers after a controlled stepper, breadcrumbs,
+pagination, menus, dropdowns, search, accordions, and tabs, following
 the core application essentials. Registry groups are not a count of individual
 controls. "Planned" means no public implementation is shipped.
 
@@ -21,7 +21,7 @@ controls. "Planned" means no public implementation is shipped.
 | Accordion | Interaction components | Controlled single/multiple expansion, accent-edge/bordered surfaces, keyboard headers, named regions, disabled items, wrapping and stable body scopes |
 | Tabs | Interaction components | Underline/segmented, full width or natural width, horizontal overflow, manual keyboard activation, roving focus, disabled items, independent close requests and focus after removal. No docking, reorder dragging, overflow menu, or arbitrary icons yet. |
 | Toasts | Planned | Stack, expiry, dismiss/action behavior |
-| Modal / Drawer | Planned | Blocking overlays, backdrop, dismissal, focus restoration |
+| Modal / Drawer | Interaction components | Centered dialogs and full-height left/right drawers; three widths each, native blocking/focus confinement, configurable dismissal, replacement focus targets, divided footers, constrained scrolling, and reduced-motion-aware drawer entrances. No docked/top/bottom drawers, resizing, or exit animation. |
 | Dropdowns | Interaction components | Anchored/context actions, start/end alignment, viewport constraints, scrolling, keyboard/dismissal/focus return; searchable select and native modal command palette with host-owned query/open/selection/actions |
 | Data Table | Planned | Table primitives, empty/loading, host-controlled sort/filter |
 | Stepper | Interaction components | Horizontal/vertical/compact/position progress; keyed host state, explicit completion, optional navigation requests, current/status metadata, narrow adaptation, compact scrolling, empty/single/unknown states and validated host workflow |
@@ -43,6 +43,6 @@ protection. Header/sidebar, hero/footer composition, and other web patterns stil
 require work beyond these groups. The application-essentials milestone's core
 scope is implemented, including a public-API form and workspace settings/dashboard
 composition. Partial controls and broader web parity remain explicit above;
-interaction components are underway. General overlays, toasts, and the advanced
-component groups remain outstanding. The command palette uses a native modal
-internally without exposing a general modal API.
+interaction components are underway. Toasts and the advanced component groups
+remain outstanding. Command search and general overlays both use native egui
+modality; their APIs keep command execution and content state with the host.
