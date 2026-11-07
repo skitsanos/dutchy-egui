@@ -147,8 +147,10 @@ edge rasterization; pixel-identical screenshot/export parity is not promised.
 `png-export` adds the existing optional image 0.25.10 codec with PNG only. It does
 not enable HTTP/JPEG or bundled fonts. SVG and CPU previews need no extra runtime
 crate; the default dependency remains egui. `url-images` still enables HTTP(S)
-PNG/JPEG independently. egui 0.37.0, image 0.25.10 and development-only rfd 0.17.2
-were confirmed as current stable releases through crates.io on 2026-11-06.
+PNG/JPEG independently. egui 0.37.0 and image 0.25.10 were confirmed as current
+stable releases through crates.io on 2026-11-06. Development-only rfd was
+upgraded to 0.18.0, verified as current stable on 2026-11-07; see
+[the upgrade verification](verification-rfd-1.0.21.md).
 
 ## Showcase and reference
 

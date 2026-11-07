@@ -44,7 +44,7 @@ egui is the default direct runtime crate. Optional `url-images` adds ehttp
 model, capture and raster/SVG helpers are repository-owned implementations.
 eframe and egui_kittest
 are development-only. The file-selection showcase additionally uses
-MIT-licensed rfd 0.17.2 as a development-only native picker. No rfd/widget helper
+MIT-licensed rfd 0.18.0 as a development-only native picker. No rfd/widget helper
 implementation is vendored. These crates use MIT OR Apache-2.0; their transitive
 dependency licenses remain applicable. The loader integration is original code;
 no widget/helper library implementation was copied.

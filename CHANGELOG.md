@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.21 — 2026-11-07
+
+- Upgrade the showcase-only native file-dialog dependency `rfd` from 0.17.2
+  to 0.18.0 through Renovate PR #2. Refresh its lockfile entries and current
+  documentation; the library adds no runtime dependency (DS-055).
+- Ignore local demo-video work under `/media/`.
+
 ## 1.0.20 — 2026-11-07
 
 - Form primitives: `Switch` (sliding square thumb, Switch role), `Kbd` key

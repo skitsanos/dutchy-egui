@@ -120,7 +120,7 @@ scrolling away from it is never undone.
 
 ## Showcase and scope
 
-The File Uploads page opens the current stable [rfd 0.17.2](https://docs.rs/rfd/0.17.2/rfd/) picker on the native
+The File Uploads page opens the current stable [rfd 0.18.0](https://docs.rs/rfd/0.18.0/rfd/) picker on the native
 UI thread. This is a development-only integration, not a runtime library helper.
 File metadata inspection runs on a worker and wakes egui on completion. Picker
 and dropped native paths share rules for PDF/PNG/JPEG/TXT, ten MB and five files.

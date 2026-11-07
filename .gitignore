@@ -1,4 +1,5 @@
 /target/
+/media/
 .DS_Store
 **/snapshots/**/*.diff.png
 **/snapshots/**/*.new.png

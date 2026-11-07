@@ -225,7 +225,7 @@ extension/MIME alternatives and size/count limits. `FileList` presents keyed
 names/sizes, determinate/indeterminate progress, completion, errors and separate
 remove/cancel/retry requests, with focus return after host removal.
 
-The File Uploads showcase uses **rfd 0.17.2** only as a development dependency
+The File Uploads showcase uses **rfd 0.18.0** only as a development dependency
 for the native picker. It inspects metadata off the UI thread and simulates
 transfers locally; no files are uploaded. No new runtime dependency is added.
 See the [file upload guide](docs/file-uploads.md).
