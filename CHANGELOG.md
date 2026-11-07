@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.19 — 2026-11-07
+
+- Opt-in Scribble pointer smoothing: `Scribble::smoothing` with tokenized
+  `ScribbleSmoothing::{Off, Light, Regular, Strong}` levels. A distance-based
+  pulled-string stabilizer, a midpoint quadratic B-spline fit and bounded
+  simplification are baked into committed points, so history and SVG/raster/PNG
+  exports are unchanged polylines. The live stroke draws the same curve; keyboard
+  strokes stay exact. `ScribbleSmoothing::smooth` exposes the pipeline to hosts.
+  The default stays `Off`; the showcase adds a "Smooth pointer strokes" toggle
+  (DS-046).
+
 ## 1.0.18 — 2026-11-07
 
 - The showcase sidebar reveals page buttons when keyboard or assistive focus

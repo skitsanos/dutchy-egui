@@ -70,7 +70,8 @@ pub(super) fn render(
     }
     Ok(image)
 }
-fn distance(point: Pos2, a: Pos2, b: Pos2) -> f32 {
+/// Distance from `point` to the segment `a`–`b`.
+pub(super) fn distance(point: Pos2, a: Pos2, b: Pos2) -> f32 {
     let delta = b - a;
     let t = if delta.length_sq() > 0.0 {
         ((point - a).dot(delta) / delta.length_sq()).clamp(0.0, 1.0)

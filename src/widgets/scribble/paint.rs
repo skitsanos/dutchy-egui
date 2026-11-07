@@ -60,7 +60,7 @@ pub(super) fn show(
         polyline(
             &painter,
             &transform,
-            &draft.points,
+            &draft.preview(),
             draft.brush.ink(),
             draft.brush.pen_width().points(),
         );

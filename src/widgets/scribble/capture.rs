@@ -1,15 +1,22 @@
 use super::{ScribbleAction, keyboard};
 use crate::{
-    ScribbleBrush, ScribbleDrawing, ScribbleError, ScribbleStroke,
-    scribble::{MAX_POINTS, MAX_STROKE_POINTS},
+    ScribbleBrush, ScribbleDrawing, ScribbleError, ScribbleSmoothing, ScribbleStroke,
+    scribble::{MAX_POINTS, MAX_STROKE_POINTS, Stabilizer, fit, simplify},
     tokens::scribble as tokens,
 };
 use egui::{Event, Pos2, Rect, Response, Ui, emath::RectTransform};
+use std::borrow::Cow;
 
 #[derive(Clone, Copy, PartialEq)]
 pub(super) enum Source {
     Pointer,
     Keyboard,
+}
+/// Brush and smoothing captured when a gesture starts.
+#[derive(Clone, Copy)]
+pub(super) struct Pen {
+    pub brush: ScribbleBrush,
+    pub smoothing: ScribbleSmoothing,
 }
 #[derive(Clone)]
 pub(super) struct Draft {
@@ -18,6 +25,40 @@ pub(super) struct Draft {
     pub source: Source,
     pub revision: u64,
     pub generation: std::sync::Weak<()>,
+    /// Present only for smoothed pointer gestures; keyboard input stays exact.
+    stabilizer: Option<Stabilizer>,
+}
+impl Draft {
+    /// Live geometry, matching the committed stroke up to simplification.
+    pub fn preview(&self) -> Cow<'_, [Pos2]> {
+        match &self.stabilizer {
+            Some(stabilizer) => Cow::Owned(fit(&stabilizer.trail(&self.points))),
+            None => Cow::Borrowed(&self.points),
+        }
+    }
+    /// Smoothed points when they fit the remaining capacity, else the stored points.
+    fn commit(self, drawing: &ScribbleDrawing) -> Vec<Pos2> {
+        let Some(stabilizer) = self.stabilizer else {
+            return self.points;
+        };
+        let smoothed = simplify(&fit(&stabilizer.trail(&self.points)));
+        if smoothed.len() <= capacity(drawing) {
+            smoothed
+        } else {
+            // Stored points were capped while capturing, so they always fit.
+            self.points
+        }
+    }
+    fn push(&mut self, point: Pos2, drawing: &ScribbleDrawing) -> Result<(), ScribbleError> {
+        if self.points.len() >= capacity(drawing) {
+            return Err(ScribbleError::Capacity("gesture points"));
+        }
+        self.points.push(point);
+        Ok(())
+    }
+}
+fn capacity(drawing: &ScribbleDrawing) -> usize {
+    MAX_STROKE_POINTS.min(MAX_POINTS.saturating_sub(drawing.point_count()))
 }
 #[derive(Clone, Default)]
 pub(super) struct State {
@@ -34,20 +75,19 @@ pub(super) struct Outcome {
     pub keyboard_used: bool,
 }
 impl State {
-    pub fn start(
-        &mut self,
-        point: Pos2,
-        brush: ScribbleBrush,
-        source: Source,
-        drawing: &ScribbleDrawing,
-    ) {
+    pub fn start(&mut self, point: Pos2, pen: Pen, source: Source, drawing: &ScribbleDrawing) {
         self.cursor = Some(point);
+        let stabilizer = match source {
+            Source::Pointer => Stabilizer::new(pen.smoothing, point),
+            Source::Keyboard => None,
+        };
         self.draft = Some(Draft {
             points: vec![point],
-            brush,
+            brush: pen.brush,
             source,
             revision: drawing.revision(),
             generation: drawing.generation(),
+            stabilizer,
         });
     }
     pub fn append(&mut self, point: Pos2, drawing: &ScribbleDrawing) -> Result<(), ScribbleError> {
@@ -55,23 +95,22 @@ impl State {
         let Some(draft) = &mut self.draft else {
             return Ok(());
         };
-        if draft
-            .points
-            .last()
-            .is_some_and(|last| last.distance(point) < tokens::SAMPLE_DISTANCE)
-        {
+        let Some(&last) = draft.points.last() else {
             return Ok(());
+        };
+        let next = match &mut draft.stabilizer {
+            Some(stabilizer) => stabilizer.advance(point, last),
+            None => (last.distance(point) >= tokens::SAMPLE_DISTANCE).then_some(point),
+        };
+        match next {
+            Some(next) => draft.push(next, drawing),
+            None => Ok(()),
         }
-        let remaining = MAX_POINTS.saturating_sub(drawing.point_count());
-        if draft.points.len() >= MAX_STROKE_POINTS.min(remaining) {
-            return Err(ScribbleError::Capacity("gesture points"));
-        }
-        draft.points.push(point);
-        Ok(())
     }
     pub fn finish(&mut self, drawing: &mut ScribbleDrawing, outcome: &mut Outcome) {
         if let Some(draft) = self.draft.take() {
-            match ScribbleStroke::new(draft.points, draft.brush)
+            let brush = draft.brush;
+            match ScribbleStroke::new(draft.commit(drawing), brush)
                 .and_then(|stroke| drawing.push(stroke))
             {
                 Ok(()) => outcome.strokes += 1,
@@ -90,7 +129,7 @@ pub(super) fn update(
     canvas: &Response,
     drawing: &mut ScribbleDrawing,
     state: &mut State,
-    brush: ScribbleBrush,
+    pen: Pen,
     editable: bool,
 ) -> Outcome {
     let mut outcome = Outcome::default();
@@ -114,7 +153,7 @@ pub(super) fn update(
     }
     let events = ui.input(|input| input.raw.events.clone());
     for event in events {
-        process(ui, canvas, drawing, state, brush, &mut outcome, event);
+        process(ui, canvas, drawing, state, pen, &mut outcome, event);
     }
     if state
         .draft
@@ -131,7 +170,7 @@ fn process(
     canvas: &Response,
     drawing: &mut ScribbleDrawing,
     state: &mut State,
-    brush: ScribbleBrush,
+    pen: Pen,
     outcome: &mut Outcome,
     event: Event,
 ) {
@@ -146,12 +185,7 @@ fn process(
         } => {
             if accepts(ui, canvas, pos) {
                 canvas.request_focus();
-                state.start(
-                    transform.transform_pos(pos),
-                    brush,
-                    Source::Pointer,
-                    drawing,
-                );
+                state.start(transform.transform_pos(pos), pen, Source::Pointer, drawing);
             }
         }
         Event::PointerMoved(pos) if state.is_pointer() => {
@@ -188,7 +222,7 @@ fn process(
             ..
         } if canvas.has_focus() => {
             outcome.keyboard_used |=
-                keyboard::key(ui, drawing, state, brush, outcome, key, modifiers);
+                keyboard::key(ui, drawing, state, pen, outcome, key, modifiers);
         }
         _ => {}
     }

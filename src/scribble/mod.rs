@@ -4,9 +4,12 @@
 mod data;
 mod export;
 mod raster;
+mod smooth;
 mod types;
 
 pub use data::{ScribbleDrawing, ScribbleSnapshot};
+pub use smooth::ScribbleSmoothing;
+pub(crate) use smooth::{Stabilizer, fit, simplify};
 pub use types::{
     ScribbleBrush, ScribbleError, ScribbleExportOptions, ScribbleStroke, ScribbleWidth,
 };

@@ -3,8 +3,8 @@ pub mod sample;
 use super::section;
 use dutchy_egui::{
     Alert, AlertVariant, Button, ButtonVariant, Checkbox, ControlSize, Scribble, ScribbleAction,
-    ScribbleBrush, ScribbleDrawing, ScribbleExportOptions, ScribbleResponse, ScribbleWidth,
-    Spinner, Text, TextColor,
+    ScribbleBrush, ScribbleDrawing, ScribbleExportOptions, ScribbleResponse, ScribbleSmoothing,
+    ScribbleWidth, Spinner, Text, TextColor,
     tokens::{border, scribble as tokens, space},
 };
 use egui::{Context, TextureHandle, Ui};
@@ -21,6 +21,7 @@ pub struct SketchState {
     pub read_only: bool,
     accent_ink: bool,
     bold: bool,
+    smooth: bool,
     paper: bool,
     pending: Option<jobs::Task>,
     preview: Option<(u64, TextureHandle)>,
@@ -110,6 +111,11 @@ impl SketchState {
             ));
             ui.add(Checkbox::new("bold-ink", &mut self.bold, "Use bold pen"));
             ui.add(Checkbox::new(
+                "smooth-ink",
+                &mut self.smooth,
+                "Smooth pointer strokes",
+            ));
+            ui.add(Checkbox::new(
                 "paper-export",
                 &mut self.paper,
                 "Include paper in export",
@@ -142,6 +148,11 @@ impl SketchState {
             let response = Scribble::new("main-pad", &mut self.drawing)
                 .label("Project drawing")
                 .brush(brush)
+                .smoothing(if self.smooth {
+                    ScribbleSmoothing::Regular
+                } else {
+                    ScribbleSmoothing::Off
+                })
                 .enabled(!self.disabled)
                 .read_only(self.read_only)
                 .exports_enabled(self.pending.is_none())

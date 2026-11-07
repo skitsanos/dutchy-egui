@@ -43,7 +43,10 @@ pub(super) fn show(config: Scribble<'_>, ui: &mut Ui) -> ScribbleResponse {
             &canvas,
             config.drawing,
             &mut state,
-            config.brush,
+            capture::Pen {
+                brush: config.brush,
+                smoothing: config.smoothing,
+            },
             editable,
         );
         if outcome.strokes > 0 {

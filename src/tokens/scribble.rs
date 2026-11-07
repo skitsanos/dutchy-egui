@@ -14,6 +14,14 @@ pub const INK: egui::Color32 = Palette::new(Accent::Orange, Mode::Light).foregro
 pub const MUTED_INK: egui::Color32 = Palette::new(Accent::Orange, Mode::Light).muted_foreground;
 /// Smallest stored movement, in drawing units.
 pub const SAMPLE_DISTANCE: f32 = 0.5;
+/// Light pointer-smoothing stabilizer string, in drawing units.
+pub const SMOOTH_LIGHT: f32 = 2.0;
+/// Regular pointer-smoothing stabilizer string, in drawing units.
+pub const SMOOTH_REGULAR: f32 = 4.0;
+/// Strong pointer-smoothing stabilizer string, in drawing units.
+pub const SMOOTH_STRONG: f32 = 8.0;
+/// Maximum curve-flattening and simplification error, in drawing units.
+pub const SMOOTH_TOLERANCE: f32 = 0.25;
 /// Ordinary arrow-key movement, in drawing units.
 pub const KEY_STEP: f32 = space::XS;
 /// Shift + arrow-key movement, in drawing units.

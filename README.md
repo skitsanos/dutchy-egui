@@ -227,7 +227,9 @@ See the [file upload guide](docs/file-uploads.md).
 `Scribble` records pointer or keyboard strokes in a host-owned `ScribbleDrawing`.
 Logical coordinates and per-stroke brushes survive resizing and theme changes.
 Clear/undo/redo and export controls return host requests; completed strokes update
-the bound model. Read-only views retain inspection and exports.
+the bound model. Read-only views retain inspection and exports. Opt-in
+`ScribbleSmoothing` stabilizes and curve-fits pointer strokes when they are
+committed; keyboard strokes stay exact.
 
 Immutable snapshots produce self-contained SVG or an egui CPU raster with
 transparent/paper backgrounds. `png-export` additionally encodes PNG bytes.

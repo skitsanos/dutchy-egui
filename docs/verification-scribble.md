@@ -137,3 +137,25 @@ package with PNG but no fonts/HTTP. The consumer generated 1200×400 SVG, transp
 PNG and paper PNG from sample strokes. Archive comparison matched 429 source/
 assets/docs files; fonts, licenses, notices and all new guides are included, while
 generated target outputs and snapshot backups are excluded.
+
+## 1.0.19 pointer smoothing
+
+Opt-in `ScribbleSmoothing` is covered by unit tests in `src/scribble/smooth.rs`
+and by `tests/scribble_smoothing.rs`: pass-through, endpoint anchoring, tremor
+and turn-angle reduction per level, in-bounds output at the drawing edges,
+widget/`smooth()` equivalence, level capture at gesture start, dots and exact
+keyboard strokes. A WGPU check at 1x and 2x shows that live and committed
+smoothed ink match (0 pixels beyond a one-pixel tolerance); removing the
+preview's catch-up tail made it fail. Existing Scribble baselines passed
+unchanged on Mesa lavapipe. Evidence and limits are recorded in
+[DS-046](issues/DS-046.md).
+
+Checks on 2026-11-07 (Linux container, Mesa lavapipe for WGPU): formatting,
+the three Clippy configurations and rustdoc with `-D warnings` pass. The
+no-default-features suite passes (262 tests). The all-features suite passes
+358 tests; the only failures are 2 `tests/media_rendering.rs` image snapshots
+(`image-expand-hover`, `images-light-1x`, 234 pixels each). They fail
+identically on an untouched 1.0.18 checkout in the same container, so they
+come from the software renderer, not this change. They still need confirming
+on the reference renderer. The wasm check was not run because the
+`wasm32-unknown-unknown` target is not installed here.

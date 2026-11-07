@@ -4,7 +4,7 @@ mod paint;
 mod render;
 mod toolbar;
 
-use crate::{ScribbleBrush, ScribbleDrawing, ScribbleError};
+use crate::{ScribbleBrush, ScribbleDrawing, ScribbleError, ScribbleSmoothing};
 use egui::{IdSalt, Response, Ui};
 use std::borrow::Cow;
 
@@ -50,6 +50,7 @@ pub struct Scribble<'a> {
     label: Cow<'a, str>,
     placeholder: Option<Cow<'a, str>>,
     brush: ScribbleBrush,
+    smoothing: ScribbleSmoothing,
     width: Option<f32>,
     enabled: bool,
     read_only: bool,
@@ -66,6 +67,7 @@ impl<'a> Scribble<'a> {
             label: "Drawing".into(),
             placeholder: None,
             brush: Default::default(),
+            smoothing: Default::default(),
             width: None,
             enabled: true,
             read_only: false,
@@ -88,6 +90,12 @@ impl<'a> Scribble<'a> {
     /// Brush for newly started strokes; completed strokes retain their own brush.
     pub fn brush(mut self, brush: ScribbleBrush) -> Self {
         self.brush = brush;
+        self
+    }
+    /// Smoothing for newly started pointer strokes (default: off). Applied once
+    /// when a stroke is committed; keyboard strokes always keep exact positions.
+    pub fn smoothing(mut self, smoothing: ScribbleSmoothing) -> Self {
+        self.smoothing = smoothing;
         self
     }
     /// Preferred outer width, constrained to the available column and drawing aspect.

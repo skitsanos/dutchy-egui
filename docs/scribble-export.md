@@ -46,6 +46,33 @@ resizing the canvas cancels pointer gestures; keyboard drafts retain their logic
 coordinates across layout changes.
 A brush change during a gesture applies only to the next stroke.
 
+### Pointer smoothing
+
+`.smoothing(ScribbleSmoothing::Regular)` smooths newly started pointer strokes;
+the default is `Off`, which stores samples as captured. `Light`, `Regular` and
+`Strong` set a pulled-string stabilizer of 2, 4 or 8 drawing units
+(`tokens::scribble::SMOOTH_*`): the pen trails the pointer and moves only when
+the string is taut, so tremor shorter than the string never reaches the stroke.
+The stabilizer is distance-based, so results do not depend on event rate, frame
+timing or display scale. Ink trails the pointer by up to the string length and
+tight loops smaller than it close up; stronger levels trade detail for calm.
+
+On commit, the stabilized points plus the last pointer sample (so ink ends under
+the pointer) are fitted with a midpoint quadratic B-spline, flattened within
+0.25 drawing units (`SMOOTH_TOLERANCE`), and simplified within the same
+tolerance. The fit keeps both endpoints, never overshoots and stays inside the
+samples' bounding box. The live stroke draws the same fitted curve, so ink does
+not jump on release. If the smoothed stroke would exceed the remaining point
+capacity, the stabilized samples are committed instead.
+
+Smoothing is captured when a gesture starts, like the brush, and is baked into
+the stored points: history, snapshots and SVG/raster/PNG exports remain ordinary
+polylines, and changing the level never alters existing ink. Keyboard strokes
+always keep their exact positions, and clicks still make dots.
+`ScribbleSmoothing::smooth` applies the identical pipeline to host-supplied
+samples. Variable-width or tapered ends are not implemented. See
+[DS-046](issues/DS-046.md).
+
 The named, focusable Canvas exposes stroke/point counts and keyboard help.
 Editable canvases retain arrow focus; Tab leaves the canvas normally:
 
@@ -137,5 +164,6 @@ Reviewed web `components/scribble.md`, `src/components/Scribble/index.tsx` and
 clear, a sharp paper surface and PNG output, while adding vector export, bounded
 host history and keyboard drawing. Controls sit below the canvas to avoid hiding
 ink. No third-party widget/helper code was copied. Pressure/tilt, multitouch,
-eraser, undo persistence, smoothing and arbitrary shape tools are outside scope.
+eraser, undo persistence, tapered/variable-width ends and arbitrary shape tools
+are outside scope; pointer smoothing was added in 1.0.19.
 See [DS-025](issues/DS-025.md) and [verification](verification-scribble.md).

@@ -1,8 +1,8 @@
 use super::{
     ScribbleAction,
-    capture::{Outcome, Source, State},
+    capture::{Outcome, Pen, Source, State},
 };
-use crate::{ScribbleBrush, ScribbleDrawing, tokens::scribble as tokens};
+use crate::{ScribbleDrawing, tokens::scribble as tokens};
 use egui::{Key, Modifiers, Ui, Vec2, vec2};
 
 pub(super) const HELP: &str = "Arrow keys move the pen. Space starts or finishes a stroke. Enter adds a dot or finishes. Escape cancels. Delete clears; Ctrl/Cmd+Z undoes, Shift+Ctrl/Cmd+Z redoes.";
@@ -10,7 +10,7 @@ pub(super) fn key(
     ui: &Ui,
     drawing: &mut ScribbleDrawing,
     state: &mut State,
-    brush: ScribbleBrush,
+    pen: Pen,
     outcome: &mut Outcome,
     key: Key,
     modifiers: Modifiers,
@@ -18,7 +18,7 @@ pub(super) fn key(
     let handled = if modifiers.command || modifiers.ctrl {
         shortcut(state, outcome, key, modifiers.shift)
     } else if !modifiers.alt {
-        edit(drawing, state, brush, outcome, key, modifiers.shift)
+        edit(drawing, state, pen, outcome, key, modifiers.shift)
     } else {
         false
     };
@@ -42,7 +42,7 @@ fn shortcut(state: &mut State, outcome: &mut Outcome, key: Key, shift: bool) -> 
 fn edit(
     drawing: &mut ScribbleDrawing,
     state: &mut State,
-    brush: ScribbleBrush,
+    pen: Pen,
     outcome: &mut Outcome,
     key: Key,
     shift: bool,
@@ -76,12 +76,12 @@ fn edit(
             if state.draft.is_some() {
                 state.finish(drawing, outcome);
             } else {
-                state.start(state.cursor.unwrap(), brush, Source::Keyboard, drawing);
+                state.start(state.cursor.unwrap(), pen, Source::Keyboard, drawing);
             }
         }
         Key::Enter => {
             if state.draft.is_none() {
-                state.start(state.cursor.unwrap(), brush, Source::Keyboard, drawing);
+                state.start(state.cursor.unwrap(), pen, Source::Keyboard, drawing);
             }
             state.finish(drawing, outcome);
         }

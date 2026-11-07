@@ -19,8 +19,8 @@ pub mod widgets;
 
 pub use layout::{Container, CrossAlign, Flex, FlexDirection, ResponsiveGrid};
 pub use scribble::{
-    ScribbleBrush, ScribbleDrawing, ScribbleError, ScribbleExportOptions, ScribbleSnapshot,
-    ScribbleStroke, ScribbleWidth,
+    ScribbleBrush, ScribbleDrawing, ScribbleError, ScribbleExportOptions, ScribbleSmoothing,
+    ScribbleSnapshot, ScribbleStroke, ScribbleWidth,
 };
 pub use text::{Text, TextColor};
 pub use theme::Theme;
