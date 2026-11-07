@@ -1,4 +1,4 @@
-#[derive(Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum Page {
     #[default]
     Overview,
@@ -35,41 +35,47 @@ pub enum Page {
 }
 
 impl Page {
-    pub(super) const ALL: [Self; 31] = [
-        Self::Overview,
-        Self::Typography,
-        Self::Forms,
-        Self::Cards,
+    /// Foundation pages lead the navigation in reading order.
+    pub(crate) const FOUNDATION: [Self; 3] = [Self::Overview, Self::Typography, Self::Tokens];
+
+    /// Component pages follow, sorted by display name.
+    pub(crate) const COMPONENTS: [Self; 28] = [
+        Self::Accordions,
         Self::Alerts,
+        Self::Badges,
+        Self::Breadcrumbs,
+        Self::Buttons,
+        Self::Cards,
+        Self::DataTables,
+        Self::Drawers,
+        Self::Dropdowns,
+        Self::EmptyStates,
+        Self::FileUploads,
+        Self::Forms,
+        Self::Galleries,
+        Self::Images,
+        Self::Layout,
+        Self::Lightboxes,
+        Self::Menus,
+        Self::Modals,
+        Self::Motion,
+        Self::Pagination,
         Self::Progress,
+        Self::Scribble,
         Self::Skeletons,
         Self::Stats,
-        Self::EmptyStates,
-        Self::Tooltips,
-        Self::Layout,
-        Self::Accordions,
-        Self::Tabs,
-        Self::Menus,
-        Self::Dropdowns,
-        Self::Breadcrumbs,
-        Self::Pagination,
         Self::Stepper,
-        Self::Modals,
-        Self::Drawers,
+        Self::Tabs,
         Self::Toasts,
-        Self::DataTables,
-        Self::Images,
-        Self::Galleries,
-        Self::Lightboxes,
-        Self::FileUploads,
-        Self::Scribble,
-        Self::Buttons,
-        Self::Badges,
-        Self::Motion,
-        Self::Tokens,
+        Self::Tooltips,
     ];
 
-    pub(super) fn name(self) -> &'static str {
+    /// Every page in navigation order.
+    pub(crate) fn all() -> impl Iterator<Item = Self> {
+        Self::FOUNDATION.into_iter().chain(Self::COMPONENTS)
+    }
+
+    pub(crate) fn name(self) -> &'static str {
         match self {
             Self::Overview => "Overview",
             Self::Typography => "Typography",

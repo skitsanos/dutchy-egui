@@ -35,7 +35,7 @@ of individual controls. "Planned" means no public implementation is shipped.
 | Scribble | Advanced components | Pointer/dot and keyboard drawing, host-owned bounded strokes/history, undoable clear, fixed paper, captured brushes, read-only/disabled, immutable snapshots, SVG/CPU raster/optional PNG and native demo Save As. No pressure/tilt, multitouch, eraser, smoothing, history persistence or shape editor. |
 | Textarea | Application essentials (partial) | Multiline, row sizing, Unicode count/limit, read-only/disabled and field feedback. Interactive resize remains planned. |
 
-Foundation support: six accent/mode combinations, custom semantic palette,
+Foundation support: ten accent/mode combinations, custom semantic palette,
 standard egui styling, shared 32/48/56-point control heights, four-point spacing
 rhythm, zero-radius borders, and reduced motion. Form validation includes
 required/email/number/length/custom rules, host-owned triggers, and stale async

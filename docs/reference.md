@@ -12,6 +12,8 @@ with those values. The port rounds the CSS values into sRGB bytes:
 | Orange | #F97415 | hsl(25 95% 53%) |
 | Purple | #8249DF | hsl(263 70% 58%) |
 | Crimson | #EB1414 | hsl(0 84% 50%) |
+| Blue | #2463EB | hsl(221 83% 53%), port addition |
+| Green | #0D9165 | hsl(160 84% 31%), port addition |
 | Background | #FAF8F5 | hsl(40 30% 97%) |
 | Foreground | #120F0C | hsl(25 20% 6%) |
 | Border | #E7DFDA | hsl(25 20% 88%) |
@@ -23,6 +25,15 @@ with those values. The port rounds the CSS values into sRGB bytes:
 | Success | #16A249 | hsl(142 76% 36%) |
 | Warning | #F59F0A | hsl(38 92% 50%) |
 | Info | #0973DC | hsl(210 92% 45%) |
+
+Delft Blue and Emerald Green are accents of this port: the web stylesheet
+defines only orange, purple and crimson. Blue neighbours the Info status hue
+(221 against 210) and Green the Success hue (160 against 142), as Crimson
+neighbours Destructive; each accent differs from its status neighbour in
+lightness so the pair stays distinguishable side by side. Both fills reach at
+least 3.8:1 against each neutral background, and white text reaches 5.2:1 on
+Blue and 4.0:1 on Green. `Accent::ALL` lists every preset in documented order
+for theme pickers.
 
 Light colors match the measured localhost reference. Dark neutrals use the
 documented #0A0A0A background, #FAFAFA foreground, #262626 muted surface, #A3A3A3

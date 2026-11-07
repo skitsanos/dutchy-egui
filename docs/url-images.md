@@ -4,7 +4,7 @@ Enable the optional integration:
 
 ```toml
 [dependencies]
-dutchy-egui = { version = "1.0.16", features = ["url-images"] }
+dutchy-egui = { version = "1.0.17", features = ["url-images"] }
 ```
 
 ```rust

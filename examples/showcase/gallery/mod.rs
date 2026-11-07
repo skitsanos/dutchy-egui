@@ -188,6 +188,8 @@ impl Showcase {
                         (Accent::Orange, "Orange"),
                         (Accent::Purple, "Purple"),
                         (Accent::Crimson, "Crimson"),
+                        (Accent::Blue, "Blue"),
+                        (Accent::Green, "Green"),
                     ] {
                         let variant = if accent == self.accent {
                             ButtonVariant::Primary
@@ -234,24 +236,24 @@ impl Showcase {
             .resizable(false)
             .frame(frame(self.theme(), 16))
             .show(ui, |ui| {
-                egui::ScrollArea::vertical()
-                    .id_salt("navigation-scroll")
-                    .show(ui, |ui| {
+                ui.with_layout(egui::Layout::bottom_up(egui::Align::Min), |ui| {
+                    foundation(ui);
+                    ui.with_layout(egui::Layout::top_down(egui::Align::Min), |ui| {
                         ui.add(Text::label("The system").color(TextColor::Primary));
                         ui.add_space(space::LG);
-                        self.navigation(ui, true);
-                        ui.add_space(space::SECTION);
-                        ui.add(Text::label("01 / Foundation"));
-                        ui.add(
-                            Text::new("Zero radius.\nFlat color.\nBold typography.")
-                                .color(TextColor::Muted),
-                        );
+                        egui::ScrollArea::vertical()
+                            .id_salt("navigation-scroll")
+                            .show(ui, |ui| self.navigation(ui, true));
                     });
+                });
             });
     }
 
     fn navigation(&mut self, ui: &mut Ui, full_width: bool) {
-        for page in Page::ALL {
+        for page in Page::all() {
+            if full_width && page == Page::COMPONENTS[0] {
+                ui.add_space(space::MD);
+            }
             let variant = if page == self.page {
                 ButtonVariant::Secondary
             } else {
@@ -270,6 +272,18 @@ impl Showcase {
             }
         }
     }
+}
+
+/// The sidebar footer, pinned under the scrolling page list. Laid out bottom-up:
+/// tagline, label, then a divider the list scrolls beneath.
+fn foundation(ui: &mut Ui) {
+    ui.add(Text::new("Zero radius.\nFlat color.\nBold typography.").color(TextColor::Muted));
+    ui.add(Text::label("01 / Foundation"));
+    ui.add_space(space::LG);
+    let (_, rect) = ui.allocate_space(egui::vec2(ui.available_width(), border::THIN));
+    ui.painter()
+        .rect_filled(rect, 0, Theme::from_context(ui.ctx()).palette.border);
+    ui.add_space(space::LG);
 }
 
 fn frame(theme: Theme, inset: i8) -> Frame {

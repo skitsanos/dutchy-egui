@@ -63,6 +63,8 @@ fn states_render_across_accents_modes_and_display_scales() {
         (Accent::Purple, Mode::Light, 1.5, "purple-light-1_5x"),
         (Accent::Crimson, Mode::Light, 2.0, "crimson-light-2x"),
         (Accent::Orange, Mode::Dark, 1.0, "orange-dark-1x"),
+        (Accent::Blue, Mode::Light, 1.5, "blue-light-1_5x"),
+        (Accent::Green, Mode::Dark, 2.0, "green-dark-2x"),
     ] {
         let theme = Theme::new(accent, mode).with_reduced_motion(true);
         let mut harness = Harness::builder()
@@ -150,10 +152,22 @@ fn showcase_navigation_and_theme_switches_update_the_host_state() {
     harness.get_by_label("Purple").click();
     harness.run();
     assert_eq!(harness.state().accent, Accent::Purple);
+    harness.get_by_label("Blue").click();
+    harness.run();
+    assert_eq!(harness.state().accent, Accent::Blue);
+    assert_eq!(
+        harness.ctx.global_style().visuals.selection.bg_fill,
+        Accent::Blue.color()
+    );
+    save_proof(&mut harness, "showcase-blue-light");
+    harness.get_by_label("Green").click();
+    harness.run();
+    assert_eq!(harness.state().accent, Accent::Green);
     harness.get_by_label("Dark mode").click();
     harness.run();
     assert_eq!(harness.state().mode, Mode::Dark);
     assert!(harness.ctx.global_style().visuals.dark_mode);
+    save_proof(&mut harness, "showcase-green-dark");
     // The component list now overflows the sidebar at this viewport height.
     harness.get_by_label("Badges").scroll_to_me();
     harness.run_steps(3);
@@ -165,4 +179,109 @@ fn showcase_navigation_and_theme_switches_update_the_host_state() {
     harness.get_by_label("Restore tag").click();
     harness.run();
     assert!(harness.state().badge_visible);
+}
+
+#[test]
+fn showcase_navigation_leads_with_the_foundation_pages() {
+    let mut harness = Harness::builder()
+        .with_size([1200.0, 940.0])
+        .with_theme(egui::Theme::Light)
+        .build_eframe(|cc| {
+            common::install(&cc.egui_ctx, Theme::default().with_reduced_motion(true));
+            gallery::Showcase {
+                reduced_motion: true,
+                ..Default::default()
+            }
+        });
+    harness.run();
+    let top = |label: &str| {
+        harness
+            .get_by_role_and_label(egui::accesskit::Role::Button, label)
+            .rect()
+            .top()
+    };
+    assert!(top("Overview") < top("Typography"));
+    assert!(top("Typography") < top("Tokens"));
+    assert!(
+        top("Tokens") < top("Accordions"),
+        "foundation pages lead the navigation"
+    );
+    assert!(top("Accordions") < top("Alerts"));
+    assert!(top("Alerts") < top("Badges"));
+    assert!(
+        top("Tooltips") > top("Toasts"),
+        "component pages are sorted by name"
+    );
+}
+
+#[test]
+fn showcase_page_groups_cover_every_page_once_in_sorted_order() {
+    use gallery::Page;
+    assert_eq!(
+        Page::FOUNDATION,
+        [Page::Overview, Page::Typography, Page::Tokens]
+    );
+    let names: Vec<&str> = Page::COMPONENTS.iter().map(|page| page.name()).collect();
+    assert!(
+        names.windows(2).all(|pair| pair[0] < pair[1]),
+        "component pages are sorted by display name: {names:?}"
+    );
+    // Thirty-one pages exist; a new page must join one of the two groups.
+    assert_eq!(Page::all().count(), 31);
+    for page in Page::all() {
+        assert_eq!(Page::all().filter(|other| *other == page).count(), 1);
+    }
+}
+
+fn save_proof(harness: &mut Harness<'_, gallery::Showcase>, name: &str) {
+    std::fs::create_dir_all("target/visual-proof").unwrap();
+    harness
+        .render()
+        .unwrap()
+        .save(format!("target/visual-proof/{name}.png"))
+        .unwrap();
+}
+
+#[test]
+fn showcase_sidebar_pins_the_foundation_footer_and_scrolls_the_pages() {
+    let mut harness = Harness::builder()
+        .with_size([1200.0, 600.0])
+        .with_theme(egui::Theme::Light)
+        .build_eframe(|cc| {
+            common::install(&cc.egui_ctx, Theme::default().with_reduced_motion(true));
+            gallery::Showcase {
+                reduced_motion: true,
+                ..Default::default()
+            }
+        });
+    harness.run();
+    let footer = harness.get_by_label("01 / Foundation").rect();
+    assert!(
+        footer.bottom() <= 600.0,
+        "the footer stays inside the viewport: {footer:?}"
+    );
+    assert!(
+        button_rect(&harness, "Tooltips").bottom() > footer.top(),
+        "the page list overflows beneath the footer"
+    );
+    harness
+        .get_by_role_and_label(egui::accesskit::Role::Button, "Tooltips")
+        .scroll_to_me();
+    harness.run_steps(3);
+    assert_eq!(
+        harness.get_by_label("01 / Foundation").rect(),
+        footer,
+        "the footer does not move while the list scrolls"
+    );
+    assert!(
+        button_rect(&harness, "Tooltips").bottom() <= footer.top(),
+        "the scrolled page sits above the footer"
+    );
+    save_proof(&mut harness, "showcase-short");
+}
+
+fn button_rect(harness: &Harness<'_, gallery::Showcase>, label: &str) -> egui::Rect {
+    harness
+        .get_by_role_and_label(egui::accesskit::Role::Button, label)
+        .rect()
 }

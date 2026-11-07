@@ -25,7 +25,8 @@ The library must build independently of that checkout.
   in the web effects documentation are an intentional difference.
 - Share Small/Medium/Large control heights across buttons, inputs, and selects.
   Initial contract: 32/48/56 logical points; future text controls reuse it.
-- Orange, purple, crimson accents are independent of light/dark mode. Dark
+- Orange, purple, crimson, blue and green accents are independent of light/dark
+  mode; blue and green are port additions recorded in the reference. Dark
   neutrals follow the documented dark palette; complete semantic mappings
   explicitly because the current web stylesheet has no dark overrides.
 
@@ -131,7 +132,9 @@ install, then the remaining appearance and behavior entries (tooltips, alerts,
 spacing, media, stats, navigation, disclosures, table headers, uploads and
 Scribble). DS-003 and DS-027 are closed as design decisions that keep the
 source status and accent colors; the table row-naming item of DS-043 stays open
-in the ledger.
+in the ledger. The 1.0.17 step adds the Delft Blue and Emerald Green accents
+with `Accent::ALL`, and orders the showcase navigation as Overview, Typography,
+Tokens and then the component pages by name.
 See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md),
 [menu/dropdown decisions](menus-dropdowns.md),
 [navigation decisions](breadcrumbs-pagination.md), [stepper decisions](stepper.md),

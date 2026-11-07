@@ -10,15 +10,30 @@ pub enum Accent {
     Purple,
     /// Crimson Red, HSL(0, 84%, 50%).
     Crimson,
+    /// Delft Blue, HSL(221, 83%, 53%). A port addition; see `docs/reference.md`.
+    Blue,
+    /// Emerald Green, HSL(160, 84%, 31%). A port addition; see `docs/reference.md`.
+    Green,
 }
 
 impl Accent {
+    /// Every preset in documented order, for theme pickers.
+    pub const ALL: [Self; 5] = [
+        Self::Orange,
+        Self::Purple,
+        Self::Crimson,
+        Self::Blue,
+        Self::Green,
+    ];
+
     /// Preset's sRGB color, rounded from the canonical HSL token.
     pub const fn color(self) -> Color32 {
         match self {
             Self::Orange => Color32::from_rgb(249, 116, 21),
             Self::Purple => Color32::from_rgb(130, 73, 223),
             Self::Crimson => Color32::from_rgb(235, 20, 20),
+            Self::Blue => Color32::from_rgb(36, 99, 235),
+            Self::Green => Color32::from_rgb(13, 145, 101),
         }
     }
 
@@ -28,6 +43,8 @@ impl Accent {
             Self::Orange => "Dutch Orange",
             Self::Purple => "Royal Purple",
             Self::Crimson => "Crimson Red",
+            Self::Blue => "Delft Blue",
+            Self::Green => "Emerald Green",
         }
     }
 }
@@ -110,5 +127,53 @@ impl Palette {
 impl Default for Palette {
     fn default() -> Self {
         Self::new(Accent::Orange, Mode::Light)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn presets_are_listed_once_with_distinct_colors_and_names() {
+        assert_eq!(
+            Accent::ALL,
+            [
+                Accent::Orange,
+                Accent::Purple,
+                Accent::Crimson,
+                Accent::Blue,
+                Accent::Green
+            ]
+        );
+        for (index, accent) in Accent::ALL.iter().enumerate() {
+            for other in &Accent::ALL[index + 1..] {
+                assert_ne!(accent.color(), other.color(), "{accent:?} vs {other:?}");
+                assert_ne!(accent.name(), other.name(), "{accent:?} vs {other:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn blue_and_green_round_their_hsl_tokens() {
+        assert_eq!(Accent::Blue.color(), Color32::from_rgb(36, 99, 235));
+        assert_eq!(Accent::Blue.name(), "Delft Blue");
+        assert_eq!(Accent::Green.color(), Color32::from_rgb(13, 145, 101));
+        assert_eq!(Accent::Green.name(), "Emerald Green");
+    }
+
+    #[test]
+    fn new_accents_drive_the_primary_token_in_both_modes() {
+        for mode in [Mode::Light, Mode::Dark] {
+            assert_eq!(
+                Palette::new(Accent::Blue, mode).primary,
+                Accent::Blue.color()
+            );
+            assert_eq!(
+                Palette::new(Accent::Green, mode).primary,
+                Accent::Green.color()
+            );
+            assert_eq!(Palette::new(Accent::Green, mode).on_primary, Color32::WHITE);
+        }
     }
 }

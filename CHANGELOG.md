@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.17 — 2026-11-07
+
+- Delft Blue (hsl 221 83% 53%) and Emerald Green (hsl 160 84% 31%) accents,
+  additions of this port recorded in the reference; `Accent::ALL` lists the
+  five presets for theme pickers; Blue/light 1.5x and Green/dark 2x baselines.
+- The showcase navigation leads with Overview, Typography and Tokens, then the
+  component pages sorted by name; the switcher offers all five accents. The
+  sidebar pins its foundation footer and scrolls the page list above it.
+
 ## 1.0.16 — 2026-11-07
 
 - Focused file-row actions, image expand/retry controls, toast controls and

@@ -2,16 +2,17 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.16** fixes scroll, focus, composition and accessibility defects
-found by the ledger verification audit (DS-028). Version 1.0.15 added Scribble:
-pointer/keyboard drawing, host-owned history, immutable export snapshots, SVG,
-CPU previews and optional PNG export.
+Version **1.0.17** adds the Delft Blue and Emerald Green accents, lists the
+presets through `Accent::ALL`, and leads the showcase navigation with Overview,
+Typography and Tokens before the component pages sorted by name. Version 1.0.16
+fixed scroll, focus, composition and accessibility defects found by the ledger
+verification audit (DS-028).
 The core advanced-component inventory is implemented; supported scope remains explicit.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.16"
+dutchy-egui = "1.0.17"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -35,8 +36,9 @@ fn content(ui: &mut egui::Ui) {
 
 Call `install` during application setup. To change colors or motion later, call
 `Theme::apply`; font installation is separate and preserves host fonts. A theme
-can use Orange, Purple, or Crimson accents in either Light or Dark mode.
-Customize semantic colors through `theme.palette` before applying it.
+can use the Orange, Purple, Crimson, Blue, or Green accent in either Light or
+Dark mode; `Accent::ALL` lists them for a theme picker. Customize semantic
+colors through `theme.palette` before applying it.
 
 ```rust
 use dutchy_egui::{Family, Leading, Text, TextSize, Tracking, Weight};

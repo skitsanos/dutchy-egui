@@ -26,7 +26,7 @@ the declared Rust compatibility. The direct runtime dependency is egui only.
 Reviewed WGPU image baselines in `tests/snapshots/`:
 
 - Orange/light at 1x; Purple/light at 1.5x; Crimson/light at 2x.
-- Orange/dark at 1x.
+- Orange/dark at 1x; Blue/light at 1.5x; Green/dark at 2x.
 - Keyboard-focus and hover states.
 
 The images cover all five button variants in normal/disabled/loading states,
