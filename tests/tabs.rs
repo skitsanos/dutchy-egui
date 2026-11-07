@@ -103,11 +103,11 @@ fn harness() -> Harness<'static, State> {
 #[test]
 fn arrows_skip_disabled_tabs_and_enter_space_activate_without_leaking_to_neighbors() {
     let mut h = harness();
-    h.get_by_role_and_label(Role::Tab, "OVERVIEW").focus();
+    h.get_by_role_and_label(Role::Tab, "Overview").focus();
     h.run_steps(2);
     h.key_press(Key::ArrowRight);
     h.run_steps(2);
-    assert!(h.get_by_role_and_label(Role::Tab, "SETTINGS").is_focused());
+    assert!(h.get_by_role_and_label(Role::Tab, "Settings").is_focused());
     assert_eq!(h.state().selected, Some(1));
     h.key_press(Key::Space);
     h.run_steps(2);
@@ -117,7 +117,7 @@ fn arrows_skip_disabled_tabs_and_enter_space_activate_without_leaking_to_neighbo
     h.key_press(Key::End);
     h.run_steps(2);
     assert!(
-        h.get_by_role_and_label(Role::Tab, "ACTIVITY LOG")
+        h.get_by_role_and_label(Role::Tab, "Activity log")
             .is_focused()
     );
     h.key_press(Key::Enter);
@@ -125,7 +125,7 @@ fn arrows_skip_disabled_tabs_and_enter_space_activate_without_leaking_to_neighbo
     assert_eq!(h.state().selected, Some(4));
     h.key_press(Key::ArrowRight);
     h.run_steps(2);
-    assert!(h.get_by_role_and_label(Role::Tab, "OVERVIEW").is_focused());
+    assert!(h.get_by_role_and_label(Role::Tab, "Overview").is_focused());
     h.key_press(Key::Home);
     h.run_steps(2);
     assert_eq!(h.state().selected, Some(4));
@@ -139,7 +139,7 @@ fn tab_order_enters_once_and_panels_have_selected_relationships() {
     h.run_steps(2);
     h.key_press(Key::Tab);
     h.run_steps(2);
-    assert!(h.get_by_role_and_label(Role::Tab, "OVERVIEW").is_focused());
+    assert!(h.get_by_role_and_label(Role::Tab, "Overview").is_focused());
     h.key_press(Key::ArrowRight);
     h.run_steps(2);
     h.key_press(Key::Tab);
@@ -148,11 +148,11 @@ fn tab_order_enters_once_and_panels_have_selected_relationships() {
     h.key_press(Key::Tab);
     h.run_steps(2);
     assert!(
-        h.get_by_role_and_label(Role::TabPanel, "OVERVIEW")
+        h.get_by_role_and_label(Role::TabPanel, "Overview")
             .is_focused()
     );
-    let tab = h.get_by_role_and_label(Role::Tab, "OVERVIEW");
-    let panel = h.get_by_role_and_label(Role::TabPanel, "OVERVIEW");
+    let tab = h.get_by_role_and_label(Role::Tab, "Overview");
+    let panel = h.get_by_role_and_label(Role::TabPanel, "Overview");
     assert_eq!(tab.accesskit_node().is_selected(), Some(true));
     assert_eq!(
         tab.accesskit_node()
@@ -170,7 +170,7 @@ fn tab_order_enters_once_and_panels_have_selected_relationships() {
         &[tab.accesskit_node().id()]
     );
     assert_eq!(
-        h.get_by_role_and_label(Role::Tab, "SETTINGS")
+        h.get_by_role_and_label(Role::Tab, "Settings")
             .accesskit_node()
             .is_selected(),
         Some(false)
@@ -185,14 +185,14 @@ fn close_requests_are_independent_and_host_removal_restores_focus() {
     assert_eq!(h.state().closed, Some(3));
     assert_eq!(h.state().selected, Some(1));
     assert_eq!(h.state().items.len(), 4);
-    h.get_by_role_and_label(Role::Tab, "SETTINGS").click();
+    h.get_by_role_and_label(Role::Tab, "Settings").click();
     h.run_steps(2);
     assert_eq!(h.state().selected, Some(3));
     h.state_mut().remove = true;
     h.key_press(Key::Delete);
     h.run_steps(3);
     assert_eq!(h.state().selected, Some(1));
-    assert!(h.get_by_role_and_label(Role::Tab, "OVERVIEW").is_focused());
+    assert!(h.get_by_role_and_label(Role::Tab, "Overview").is_focused());
     h.state_mut().items.retain(|item| item.id == 1);
     h.run_steps(2);
     h.key_press(Key::Delete);
@@ -230,14 +230,14 @@ fn keyboard_focus_scrolls_overflow_tabs_into_view_without_changing_selection() {
     let mut h = harness();
     h.state_mut().width = 260.0;
     h.run_steps(2);
-    h.get_by_role_and_label(Role::Tab, "OVERVIEW").focus();
+    h.get_by_role_and_label(Role::Tab, "Overview").focus();
     h.run_steps(2);
     h.key_press(Key::End);
     h.run_steps(4);
-    let rect = h.get_by_role_and_label(Role::Tab, "ACTIVITY LOG").rect();
+    let rect = h.get_by_role_and_label(Role::Tab, "Activity log").rect();
     assert!(h.state().viewport.height() <= dutchy_egui::tokens::disclosure::TAB_HEIGHT + 1.0);
     assert!(
-        h.get_by_role_and_label(Role::Tab, "ACTIVITY LOG")
+        h.get_by_role_and_label(Role::Tab, "Activity log")
             .is_focused()
     );
     assert!(
@@ -252,12 +252,12 @@ fn keyboard_focus_scrolls_overflow_tabs_into_view_without_changing_selection() {
 #[test]
 fn disabled_parent_and_disabled_tabs_do_not_select_close_or_edit() {
     let mut h = harness();
-    h.get_by_role_and_label(Role::Tab, "RESERVED").click();
+    h.get_by_role_and_label(Role::Tab, "Reserved").click();
     h.run();
     assert_eq!(h.state().selected, Some(1));
     h.state_mut().disabled = true;
     h.run();
-    for label in ["OVERVIEW", "SETTINGS"] {
+    for label in ["Overview", "Settings"] {
         assert!(
             h.get_by_role_and_label(Role::Tab, label)
                 .accesskit_node()
@@ -321,4 +321,24 @@ fn tab_strip_keeps_its_height_below_a_vertical_scroll_areas_initial_bounds() {
         );
     h.run_steps(2);
     assert!((h.state().height() - dutchy_egui::tokens::disclosure::TAB_HEIGHT).abs() <= 1.0);
+}
+
+#[test]
+fn arrow_keys_stay_put_on_a_focused_close_button() {
+    let mut h = harness();
+    h.get_by_role_and_label(Role::Tab, "Overview").focus();
+    h.run_steps(2);
+    h.key_press(Key::ArrowRight);
+    h.run_steps(2);
+    h.key_press(Key::Tab);
+    h.run_steps(2);
+    assert!(h.get_by_label("Close Settings").is_focused());
+    for key in [Key::ArrowRight, Key::ArrowLeft] {
+        h.key_press(key);
+        h.run_steps(2);
+        assert!(
+            h.get_by_label("Close Settings").is_focused(),
+            "{key:?} must not move focus off the close button"
+        );
+    }
 }

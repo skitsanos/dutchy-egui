@@ -129,14 +129,14 @@ fn intrinsic_image_has_alt_caption_source_and_an_independent_native_expansion_bu
     assert_eq!(h.state().status, Some(ImageStatus::Ready));
     let image = h.get_by_role_and_label(Role::Image, "Test artwork");
     assert_eq!(image.rect().size(), egui::vec2(300.0, 150.0));
-    assert!(h.query_by_label("FIXTURE SOURCE").is_some());
+    assert!(h.query_by_label("Fixture source").is_some());
     let caption = h.get_by_role(Role::FigureCaption).rect();
     assert!(
         (caption.top() - image.rect().bottom() - dutchy_egui::tokens::image::CAPTION_GAP).abs()
             < 0.6,
         "{caption:?}"
     );
-    assert!(h.get_by_label("FIXTURE SOURCE").rect().right() <= image.rect().right() + 0.5);
+    assert!(h.get_by_label("Fixture source").rect().right() <= image.rect().right() + 0.5);
     image.click();
     h.run_steps(2);
     assert_eq!(h.state().expands, 0);
@@ -312,11 +312,65 @@ fn inverse_card_captions_inherit_text_colors_while_error_content_keeps_its_own_s
         })
     };
     assert!(any_pixel(h.get_by_label("Inverse caption").rect(), true));
-    assert!(any_pixel(h.get_by_label("ARCHIVE").rect(), true));
+    assert!(any_pixel(h.get_by_label("Archive").rect(), true));
     assert!(any_pixel(
         h.get_by_role_and_label(Role::Image, "Card image")
             .rect()
             .shrink(8.0),
         false
     ));
+}
+
+fn galleys<'a>(shape: &'a egui::Shape, out: &mut Vec<&'a egui::Galley>) {
+    match shape {
+        egui::Shape::Text(text) => out.push(&text.galley),
+        egui::Shape::Vec(shapes) => shapes.iter().for_each(|shape| galleys(shape, out)),
+        _ => {}
+    }
+}
+#[test]
+fn caption_source_uses_wider_tracking() {
+    let mut h = harness();
+    h.state_mut().caption = true;
+    h.run_steps(2);
+    let mut painted = Vec::new();
+    for clipped in &h.output().shapes {
+        galleys(&clipped.shape, &mut painted);
+    }
+    let spacing = painted
+        .iter()
+        .find(|galley| galley.job.text.contains("FIXTURE SOURCE"))
+        .map(|galley| galley.job.sections[0].format.extra_letter_spacing)
+        .expect("the source credit is painted");
+    let expected = dutchy_egui::Tracking::Wider.em() * 12.0;
+    assert!(
+        (spacing - expected).abs() < 1e-3,
+        "credit tracking {spacing} should be {expected}"
+    );
+}
+
+/// Fill alpha of the square control painted inside `area` with the given extent.
+fn control_alpha(
+    shapes: &[egui::epaint::ClippedShape],
+    area: egui::Rect,
+    extent: f32,
+) -> Option<u8> {
+    shapes.iter().find_map(|clipped| match &clipped.shape {
+        egui::Shape::Rect(shape)
+            if area.contains_rect(shape.rect)
+                && (shape.rect.width() - extent).abs() < 0.5
+                && (shape.rect.height() - extent).abs() < 0.5 =>
+        {
+            Some(shape.fill.a())
+        }
+        _ => None,
+    })
+}
+#[test]
+fn standalone_expand_controls_keep_the_eighty_percent_inverse_fill() {
+    let mut h = harness();
+    h.run_steps(3);
+    let figure = h.state().rect.expect("image rect recorded");
+    let alpha = control_alpha(&h.output().shapes, figure, 40.0).expect("expand control painted");
+    assert_eq!(alpha, (0.8 * 255.0 + 0.5) as u8);
 }

@@ -4,7 +4,7 @@ use super::{
     selection::{self, Checked},
 };
 use crate::{
-    Text, TextSize, Theme, Tracking,
+    Family, Text, TextSize, Theme, Tracking, Weight,
     interaction::paint_focus_inside,
     tokens::{border, table as geometry},
 };
@@ -108,9 +108,13 @@ fn sort_cell<R, C: Clone + PartialEq>(
     } else {
         0.0
     };
-    let job = Text::heading(column.label.as_ref())
+    // Live `th`: bold body face, 12 points, uppercase, 0.05 em tracking.
+    let job = Text::new(column.label.as_ref())
+        .family(Family::Body)
         .size(TextSize::Xs)
-        .tracking(Tracking::Wide)
+        .weight(Weight::Bold)
+        .tracking(Tracking::Wider)
+        .uppercase(true)
         .layout_job(
             &Theme::from_context(ui.ctx()),
             (width - f32::from(margin.left + margin.right) - reserve).max(0.0),
@@ -152,10 +156,12 @@ fn sort_cell<R, C: Clone + PartialEq>(
     let p = Theme::from_context(ui.ctx()).palette;
     let color = if response.enabled() && response.hovered() && column.sortable {
         p.primary
-    } else if config.header == TableHeader::Inverse {
-        p.background
     } else {
-        p.muted_foreground
+        match config.header {
+            TableHeader::Inverse => p.background,
+            TableHeader::Muted => p.foreground,
+            TableHeader::Plain => p.muted_foreground,
+        }
     };
     let content = rect.shrink2(vec2(f32::from(margin.left), f32::from(margin.top)));
     let text_width = galley.size().x + reserve;
@@ -190,20 +196,32 @@ fn sort_cell<R, C: Clone + PartialEq>(
         .then(|| next_sort(&column.key, config.sort))
 }
 fn arrow(ui: &Ui, center: egui::Pos2, direction: Option<TableSortDirection>, color: egui::Color32) {
-    let half = geometry::SORT_ICON / 3.0;
-    let y = if direction == Some(TableSortDirection::Descending) {
-        -half
-    } else {
-        half
+    // Live 12-point double-arrow glyph: 30 % at rest, full strength when the
+    // column is sorted, rotated a half turn for descending order.
+    let scale = geometry::SORT_ICON / 24.0;
+    let descending = direction == Some(TableSortDirection::Descending);
+    let point = |x: f32, y: f32| {
+        let offset = vec2(x - 12.0, y - 12.0) * scale;
+        if descending {
+            center - offset
+        } else {
+            center + offset
+        }
     };
-    ui.painter().add(egui::Shape::line(
-        vec![
-            center + vec2(-half, y),
-            center - vec2(0.0, y),
-            center + vec2(half, y),
-        ],
-        egui::Stroke::new(border::STANDARD, color),
-    ));
+    let color = if direction.is_some() {
+        color
+    } else {
+        color.gamma_multiply(geometry::SORT_IDLE_OPACITY)
+    };
+    let stroke = egui::Stroke::new(border::THIN, color);
+    for points in [
+        vec![point(7.0, 16.0), point(7.0, 4.0)],
+        vec![point(3.0, 8.0), point(7.0, 4.0), point(11.0, 8.0)],
+        vec![point(17.0, 4.0), point(17.0, 16.0)],
+        vec![point(13.0, 12.0), point(17.0, 16.0), point(21.0, 12.0)],
+    ] {
+        ui.painter().add(egui::Shape::line(points, stroke));
+    }
 }
 pub(super) fn selection_cell(
     ui: &mut Ui,

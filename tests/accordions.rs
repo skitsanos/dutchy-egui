@@ -83,9 +83,9 @@ fn harness() -> Harness<'static, State> {
 fn single_and_multiple_expansion_are_host_owned_and_child_actions_do_not_toggle() {
     let mut h = harness();
     assert_eq!(h.state().rendered, [1]);
-    let trigger = h.get_by_role_and_label(Role::Button, "IDENTITY");
+    let trigger = h.get_by_role_and_label(Role::Button, "Identity");
     assert_eq!(trigger.accesskit_node().data().is_expanded(), Some(true));
-    let region = h.get_by_role_and_label(Role::Region, "IDENTITY");
+    let region = h.get_by_role_and_label(Role::Region, "Identity");
     assert_eq!(
         trigger
             .accesskit_node()
@@ -106,19 +106,19 @@ fn single_and_multiple_expansion_are_host_owned_and_child_actions_do_not_toggle(
     h.run_steps(2);
     assert_eq!(h.state().actions, 1);
     assert!(h.state().open.is_open(&1));
-    h.get_by_role_and_label(Role::Button, "PREFERENCES").click();
+    h.get_by_role_and_label(Role::Button, "Preferences").click();
     h.run_steps(2);
     assert_eq!(h.state().open, AccordionState::Single(Some(3)));
     assert_eq!(h.state().rendered, [3]);
     assert!(h.query_by_label("Name").is_none());
-    h.get_by_role_and_label(Role::Button, "PREFERENCES").focus();
+    h.get_by_role_and_label(Role::Button, "Preferences").focus();
     h.run();
     h.key_press(Key::Space);
     h.run_steps(2);
     assert_eq!(h.state().open, AccordionState::Single(None));
     h.state_mut().open = AccordionState::Multiple(vec![1, 99]);
     h.run();
-    h.get_by_role_and_label(Role::Button, "PREFERENCES").click();
+    h.get_by_role_and_label(Role::Button, "Preferences").click();
     h.run_steps(2);
     assert_eq!(h.state().open, AccordionState::Multiple(vec![1, 99, 3]));
     h.check_accessibility();
@@ -127,12 +127,12 @@ fn single_and_multiple_expansion_are_host_owned_and_child_actions_do_not_toggle(
 #[test]
 fn keyboard_navigation_skips_disabled_headers_without_changing_expansion() {
     let mut h = harness();
-    h.get_by_role_and_label(Role::Button, "IDENTITY").focus();
+    h.get_by_role_and_label(Role::Button, "Identity").focus();
     h.run_steps(2);
     h.key_press(Key::ArrowDown);
     h.run_steps(2);
     assert!(
-        h.get_by_role_and_label(Role::Button, "PREFERENCES")
+        h.get_by_role_and_label(Role::Button, "Preferences")
             .is_focused()
     );
     assert_eq!(h.state().open, AccordionState::Single(Some(1)));
@@ -142,19 +142,19 @@ fn keyboard_navigation_skips_disabled_headers_without_changing_expansion() {
     h.key_press(Key::ArrowDown);
     h.run_steps(2);
     assert!(
-        h.get_by_role_and_label(Role::Button, "IDENTITY")
+        h.get_by_role_and_label(Role::Button, "Identity")
             .is_focused()
     );
     h.key_press(Key::End);
     h.run_steps(2);
     assert!(
-        h.get_by_role_and_label(Role::Button, "PREFERENCES")
+        h.get_by_role_and_label(Role::Button, "Preferences")
             .is_focused()
     );
     h.key_press(Key::Home);
     h.run_steps(2);
     assert!(
-        h.get_by_role_and_label(Role::Button, "IDENTITY")
+        h.get_by_role_and_label(Role::Button, "Identity")
             .is_focused()
     );
 }
@@ -176,7 +176,7 @@ fn body_focus_and_host_edits_survive_reordering_width_and_sibling_changes() {
     h.run();
     assert_eq!(h.state().input, "Ada");
     assert!(
-        h.get_by_role_and_label(Role::Region, "IDENTITY")
+        h.get_by_role_and_label(Role::Region, "Identity")
             .rect()
             .right()
             <= 268.1
@@ -186,13 +186,13 @@ fn body_focus_and_host_edits_survive_reordering_width_and_sibling_changes() {
 #[test]
 fn disabled_parents_disable_headers_and_panel_controls_and_empty_groups_are_safe() {
     let mut h = harness();
-    h.get_by_role_and_label(Role::Button, "RESTRICTED").click();
+    h.get_by_role_and_label(Role::Button, "Restricted").click();
     h.run();
     assert_eq!(h.state().open, AccordionState::Single(Some(1)));
     h.state_mut().disabled = true;
     h.run();
     assert!(h.get_by_label("Name").accesskit_node().is_disabled());
-    for label in ["IDENTITY", "PREFERENCES"] {
+    for label in ["Identity", "Preferences"] {
         assert!(
             h.get_by_role_and_label(Role::Button, label)
                 .accesskit_node()
@@ -252,4 +252,34 @@ fn chevrons_stop_repainting_when_settled_clipped_or_motion_is_reduced() {
     assert!(transition_delay(true, false, false) > Duration::from_millis(100));
     assert!(transition_delay(false, true, false) > Duration::from_millis(100));
     assert!(transition_delay(false, false, true) > Duration::from_millis(100));
+}
+
+#[test]
+fn bordered_headers_use_wide_tracking() {
+    let mut h = harness();
+    h.state_mut().variant = AccordionVariant::Bordered;
+    h.run_steps(2);
+    let spacing = common::galleys(&h.output().shapes)
+        .into_iter()
+        .find(|galley| galley.job.text == "IDENTITY")
+        .map(|galley| galley.job.sections[0].format.extra_letter_spacing)
+        .expect("header painted");
+    assert!((spacing - 0.025 * 14.0).abs() < 1e-3, "tracking {spacing}");
+}
+#[test]
+fn the_accent_edge_lights_while_the_open_body_is_hovered() {
+    let mut h = harness();
+    h.run_steps(2);
+    let body = h.get_by_role_and_label(Role::Region, "Identity");
+    let center = body.rect().center();
+    body.hover();
+    h.run_steps(2);
+    let primary = Theme::default().palette.primary;
+    let lit = h.output().shapes.iter().any(|clipped| {
+        matches!(&clipped.shape, egui::Shape::Rect(shape)
+            if (shape.rect.width() - 4.0).abs() < 0.5
+                && shape.fill == primary
+                && shape.rect.y_range().contains(center.y))
+    });
+    assert!(lit, "hovering the open body lights the item's accent edge");
 }

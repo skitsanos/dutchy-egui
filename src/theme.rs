@@ -42,12 +42,18 @@ impl Theme {
     }
 
     /// Install style and widget tokens. Does not modify fonts or display scale.
+    ///
+    /// `Mode` decides the palette, so the style is installed for both egui
+    /// themes: a later theme-preference change (a host following the system
+    /// theme, a test harness) cannot drop native widgets back to egui defaults.
     pub fn apply(self, ctx: &Context) {
         ctx.set_theme(match self.mode {
             Mode::Light => egui::Theme::Light,
             Mode::Dark => egui::Theme::Dark,
         });
-        ctx.set_global_style(self.style());
+        let style = self.style();
+        ctx.set_style_of(egui::Theme::Light, style.clone());
+        ctx.set_style_of(egui::Theme::Dark, style);
         ctx.data_mut(|data| data.insert_temp(theme_id(), self));
         ctx.request_repaint();
     }

@@ -228,7 +228,9 @@ fn narrow_viewport_contains_the_table_chrome_and_empty_guidance() {
             "{name}: {rect:?}"
         );
     }
-    let text = h.get_by_label("NO DATA AVAILABLE").rect();
+    let text = h
+        .get_by_role_and_label(Role::Heading, "No data available")
+        .rect();
     assert!(text.left() >= 8.0 && text.right() <= 272.5, "{text:?}");
     let guidance = h
         .get_by_label("Try adjusting your search or filters.")
@@ -284,9 +286,12 @@ fn finish_host_workflow(h: &mut Harness<'_, gallery::Showcase>) {
     h.run_steps(2);
     h.get_by_label("Search records").type_text("zzzz");
     h.run_steps(3);
-    assert!(h.query_by_label("NO MATCHING RECORDS").is_some());
+    assert!(
+        h.query_by_role_and_label(Role::Heading, "No matching records")
+            .is_some()
+    );
     assert!(h.state().tabular.selected.contains(&1));
-    h.get_by_label("CLEAR SEARCH").click();
+    h.get_by_label("Clear search").click();
     h.run_steps(3);
     h.get_by_label("Loading records").click();
     h.run_steps(3);

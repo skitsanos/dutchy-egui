@@ -52,3 +52,30 @@ fn focus_cues_follow_keyboard_and_pointer_mode_without_removing_focus() {
     ));
     assert!(draw(&ctx, vec![Event::PointerMoved(Pos2::ZERO)]));
 }
+
+#[test]
+fn text_ime_and_clipboard_input_restore_keyboard_mode() {
+    let ctx = Context::default();
+    common::install(&ctx, Theme::default());
+    for event in [
+        Event::Text("a".into()),
+        Event::Ime(egui::ImeEvent::Preedit {
+            text: "a".into(),
+            active_range_chars: None,
+        }),
+        Event::Paste("a".into()),
+        Event::Copy,
+        Event::Cut,
+    ] {
+        assert!(!draw(
+            &ctx,
+            vec![Event::PointerButton {
+                pos: Pos2::ZERO,
+                button: PointerButton::Primary,
+                pressed: true,
+                modifiers: Modifiers::NONE
+            }]
+        ));
+        assert!(draw(&ctx, vec![event.clone()]), "{event:?}");
+    }
+}

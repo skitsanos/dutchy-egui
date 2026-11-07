@@ -15,7 +15,7 @@ impl SkeletonGroup<'_> {
                 ui.add(Skeleton::new().width(width * loading::TITLE_FRACTION));
                 ui.add(Skeleton::new().height(space::MD));
                 ui.add(Skeleton::new().height(space::MD).width(width * (5.0 / 6.0)));
-                ui.add_space(space::LG);
+                crate::layout::gap_after(ui, space::LG);
                 ui.add(
                     Skeleton::new()
                         .width(loading::ACTION_WIDTH)

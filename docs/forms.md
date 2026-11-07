@@ -9,7 +9,8 @@ use their labels as salts; use `SelectOption::id_salt` for repeated/changing lab
 Keep parent UI namespaces stable too.
 
 Field returns the actual control Response, preserving changed, focus, and blur
-events. Clicking an input's visible label focuses its control.
+events. Clicking an input's visible label focuses its control. Labels sit 8
+points above their control, item spacing included.
 
 ```rust
 use dutchy_egui::{Field, Input};
@@ -55,6 +56,10 @@ and cannot edit. Counts/limits use Unicode scalar values, rather than bytes,
 UTF-16 units, or grapheme clusters; combining marks count separately. Limits do
 not truncate host-supplied values: application validation handles those values.
 
+Inside Dark/Primary cards and solid banners, field, checkbox, and radio labels
+follow the surface's scoped text color. Inputs, textareas, and select triggers
+keep their light fill with foreground text, as on the web.
+
 ```rust
 use dutchy_egui::{Select, SelectOption};
 let choices = [SelectOption::new("editor", "Editor"),
@@ -89,7 +94,8 @@ For asynchronous checks:
 
 Pending feedback includes busy metadata. Errors expose named live alerts and
 invalid/error-description metadata. Feedback never moves focus. Palette contrast
-limitations remain recorded in DS-003.
+limitations remain recorded in DS-003 and DS-027; the error message follows
+`palette.destructive`, which hosts may override before installing the theme.
 
 The showcase availability check is a deterministic one-second demonstration:
 `taken@…` is rejected, with no network request. Editing/resetting while pending

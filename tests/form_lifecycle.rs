@@ -118,7 +118,7 @@ fn labels_focus_editors_and_stable_ids_survive_inserted_siblings() {
             },
             State::default(),
         );
-    h.get_by_role_and_label(egui::accesskit::Role::Label, "ACCOUNT NAME")
+    h.get_by_role_and_label(egui::accesskit::Role::Label, "Account name")
         .click();
     h.run();
     assert!(h.get_by_label("Account name").is_focused());
@@ -132,4 +132,27 @@ fn labels_focus_editors_and_stable_ids_survive_inserted_siblings() {
     );
     assert_eq!(h.get_by_label("Choice").accesskit_node().id(), select_id);
     assert!(h.get_by_label("Account name").is_focused());
+}
+
+#[test]
+fn field_labels_sit_eight_points_above_their_controls() {
+    let mut h = Harness::builder()
+        .with_theme(egui::Theme::Light)
+        .with_context_setup(|ctx| common::install(ctx, Theme::default()))
+        .build_ui_state(
+            |ui, state: &mut State| {
+                Field::new("Account name")
+                    .show(ui, |ui| ui.add(Input::new("name", &mut state.value)));
+            },
+            State::default(),
+        );
+    h.run_steps(2);
+    let label = h
+        .get_by_role_and_label(egui::accesskit::Role::Label, "Account name")
+        .rect();
+    let editor = h
+        .get_by_role_and_label(egui::accesskit::Role::TextInput, "Account name")
+        .rect();
+    let gap = editor.top() - label.bottom();
+    assert!((gap - 8.0).abs() < 0.5, "label to control gap {gap}");
 }

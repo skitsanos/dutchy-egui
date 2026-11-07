@@ -170,10 +170,10 @@ fn application_form_validates_and_resets_through_its_public_controls() {
     h.key_press(egui::Key::Enter);
     h.run();
     assert_eq!(h.state().forms.role, Some("editor"));
-    h.get_by_label("VALIDATE FORM").click();
+    h.get_by_label("Validate form").click();
     h.run();
     assert!(h.state().forms.submitted && h.state().forms.is_valid());
-    h.get_by_label("RESET FORM").click();
+    h.get_by_label("Reset form").click();
     h.run();
     assert!(h.state().forms.email.is_empty());
     assert!(!h.state().forms.name_check.touched());

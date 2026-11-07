@@ -1,7 +1,7 @@
 use super::{
     DataTable, DataTableResponse, TableSelection, cells,
     focus::Focus,
-    header,
+    header, heights,
     model::{Layout, Row},
     row, state,
 };
@@ -19,13 +19,16 @@ pub(super) fn show<'a, R, C: Clone + PartialEq, K: egui::AsIdSalt + Clone>(
     let rows = if config.loading || config.columns.is_empty() {
         Vec::new()
     } else {
+        let mut seen = Vec::new();
         config
             .rows
             .iter()
             .map(|record| {
                 let key = key(record);
+                let id = IdSalt::new(&key);
                 Row {
-                    id: IdSalt::new(&key),
+                    id,
+                    scope: row::scope(root, id, &mut seen),
                     key,
                     enabled: config
                         .row_enabled
@@ -90,7 +93,6 @@ pub(super) fn show<'a, R, C: Clone + PartialEq, K: egui::AsIdSalt + Clone>(
                                             return Vec::new();
                                         }
                                         let view = row::View {
-                                            root,
                                             config: &config,
                                             layout: &layout,
                                         };
@@ -110,11 +112,11 @@ pub(super) fn show<'a, R, C: Clone + PartialEq, K: egui::AsIdSalt + Clone>(
                                             .iter()
                                             .map(|row| row.response.clone())
                                             .collect();
-                                        row::reveal_focus(ui, &responses);
+                                        row::reveal_focus(ui, &responses, &headers.responses);
                                         rendered
                                     });
                                 // Reveal a focused header only after the body scroll area has consumed its own target.
-                                row::reveal_focus(ui, &headers.responses);
+                                row::reveal_focus(ui, &headers.responses, &[]);
                                 (headers, body.inner)
                             });
                         ui.ctx().accesskit_node_builder(table.response.id, |node| {
@@ -155,6 +157,8 @@ pub(super) fn show<'a, R, C: Clone + PartialEq, K: egui::AsIdSalt + Clone>(
             })
             .inner
     });
+    let scopes: Vec<_> = rows.iter().map(|row| row.scope).collect();
+    heights::evict_stale(ui.ctx(), root, &scopes);
     result.response.widget_info(|| {
         egui::WidgetInfo::labeled(
             egui::accesskit::Role::Group,

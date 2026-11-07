@@ -139,7 +139,7 @@ fn example_card_and_alert_actions_update_only_host_owned_state() {
                 ..Default::default()
             }
         });
-    h.get_by_label("PIN PROJECT").click();
+    h.get_by_label("Pin project").click();
     h.run();
     assert_eq!((h.state().surfaces.pins, h.state().surfaces.opens), (1, 0));
     h.get_by_label("Open Project Phoenix").focus();
@@ -147,9 +147,9 @@ fn example_card_and_alert_actions_update_only_host_owned_state() {
     h.key_press(egui::Key::Enter);
     h.run();
     assert_eq!(h.state().surfaces.opens, 1);
-    h.get_by_label("ALERTS").click();
+    h.get_by_label("Alerts").click();
     h.run();
-    h.get_by_label("RETRY CONNECTION").click();
+    h.get_by_label("Retry connection").click();
     h.run();
     assert_eq!(h.state().surfaces.retries, 1);
     h.get_by_label("Dismiss Connection interrupted").focus();
@@ -157,12 +157,12 @@ fn example_card_and_alert_actions_update_only_host_owned_state() {
     h.key_press(egui::Key::Space);
     h.run_steps(2);
     assert!(!h.state().surfaces.alert_visible);
-    assert!(h.get_by_label("RESTORE CONNECTION ALERT").is_focused());
-    h.get_by_label("RESTORE CONNECTION ALERT").click();
+    assert!(h.get_by_label("Restore connection alert").is_focused());
+    h.get_by_label("Restore connection alert").click();
     h.run();
     assert!(h.state().surfaces.alert_visible);
     h.get_by_label("Dismiss New in the library").click();
     h.run_steps(2);
     assert!(!h.state().surfaces.banner_visible);
-    assert!(h.get_by_label("RESTORE BANNER").is_focused());
+    assert!(h.get_by_label("Restore banner").is_focused());
 }

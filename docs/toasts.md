@@ -72,7 +72,8 @@ BottomRight is the default. Preferred width is 384 points, clamped to the viewpo
 with 24-point gutters. Entries have 12-point gaps and oldest-first reading order.
 Three slots are visible by default; `max_visible(n)` clamps to 1–4. Additional
 entries wait in FIFO order without aging. Long stacks/content scroll within the
-available height. Keyboard focus reveals an off-screen control without animation.
+available height. Keyboard focus reveals an off-screen control once, without animation; manual
+scrolling is never undone.
 
 `ToastAppearance::Solid` follows the live source: inverse information fill or
 solid status color, uppercase bold 14-point text, 24x16 padding, and a translucent
@@ -85,6 +86,8 @@ shadows are introduced. Source-palette contrast limits remain in
 [DS-003](issues/DS-003.md); applications can override semantic colors.
 
 Entry fades over the shared 300ms motion token; reduced motion makes it immediate.
+The fade advances by the queue's guarded clock delta, so a stalled or rewound
+host clock pauses it without hiding the toast.
 There is no slide or exit animation. Removing an entry immediately frees its
 slot. Settled persistent/paused entries request no lifetime or animation frames.
 

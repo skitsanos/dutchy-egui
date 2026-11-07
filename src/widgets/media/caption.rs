@@ -14,7 +14,7 @@ pub(super) fn show(ui: &mut Ui, caption: Option<&str>, source: Option<&str>, col
             Text::new(source)
                 .family(Family::Mono)
                 .size(TextSize::Xs)
-                .tracking(Tracking::Wide)
+                .tracking(Tracking::Wider)
                 .uppercase(true)
                 .color(color)
         });

@@ -1,6 +1,6 @@
 use super::{FileUpload, FileUploadVariant, icon};
 use crate::{
-    ControlSize, Text, TextSize, Theme,
+    ControlSize, Text, TextSize, Theme, Tracking, Weight,
     interaction::paint_focus_inside,
     tokens::{border, space, upload as tokens},
 };
@@ -24,8 +24,12 @@ pub(super) fn allocate(ui: &mut Ui, config: &FileUpload<'_>) -> Layout {
     };
     let inset = if compact { space::MD } else { tokens::PADDING }.min(width / 4.0);
     let width_text = (width - inset * 2.0).max(1.0);
-    let mut job = Text::label(config.label.as_ref())
+    // Live instruction: bold 14-point body face, uppercase, 0.05 em tracking.
+    let mut job = Text::new(config.label.as_ref())
         .size(TextSize::Sm)
+        .weight(Weight::Bold)
+        .tracking(Tracking::Wider)
+        .uppercase(true)
         .color(p.foreground)
         .layout_job(&theme, width_text);
     job.halign = egui::Align::Center;
@@ -71,7 +75,7 @@ pub(super) fn show(ui: &Ui, layout: &Layout, response: &Response, emphasized: bo
         painter.rect_filled(
             rect,
             0,
-            p.primary
+            p.muted
                 .gamma_multiply(if response.is_pointer_button_down_on() {
                     tokens::PRESSED_TINT
                 } else {

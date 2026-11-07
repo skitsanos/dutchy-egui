@@ -1,7 +1,7 @@
 pub(super) mod icon;
 
 use crate::{
-    Button, ButtonVariant, ControlSize, Text, TextSize, Theme, Weight,
+    Button, ButtonVariant, ControlSize, Text, TextColor, TextSize, Theme, Weight,
     tokens::{border, space, surface},
 };
 use egui::accesskit::{Live, Role};
@@ -155,7 +155,11 @@ impl<'a> Alert<'a> {
                 if !self.enabled {
                     ui.disable();
                 }
-                ui.visuals_mut().override_text_color = Some(text);
+                // Banners carry inverse text for host content too; tinted alerts
+                // keep the surface's foreground and muted message.
+                if self.banner {
+                    ui.visuals_mut().override_text_color = Some(text);
+                }
                 self.body(ui, fill, text, accent)
             },
         );
@@ -188,6 +192,16 @@ impl<'a> Alert<'a> {
                 (ui.available_width() - surface::STATUS_ICON - space::MD - close_width).max(0.0);
             let mut dismissed = false;
             let mut action = false;
+            let (title_color, message_color, idle) = if self.banner {
+                (
+                    TextColor::Custom(text),
+                    TextColor::Custom(text),
+                    text.gamma_multiply(crate::tokens::close::IDLE_OPACITY),
+                )
+            } else {
+                let p = Theme::from_context(ui.ctx()).palette;
+                (TextColor::Foreground, TextColor::Muted, p.muted_foreground)
+            };
             ui.horizontal_top(|ui| {
                 icon::status(ui, self.variant, if self.banner { text } else { accent });
                 ui.vertical(|ui| {
@@ -195,9 +209,14 @@ impl<'a> Alert<'a> {
                     ui.add(
                         Text::new(self.title.as_deref().unwrap_or(self.variant.name()))
                             .size(TextSize::Sm)
-                            .weight(Weight::Bold),
+                            .weight(Weight::Bold)
+                            .color(title_color),
                     );
-                    ui.add(Text::new(self.message.as_ref()).size(TextSize::Sm));
+                    ui.add(
+                        Text::new(self.message.as_ref())
+                            .size(TextSize::Sm)
+                            .color(message_color),
+                    );
                     if let Some(label) = &self.action {
                         ui.add_space(space::SM);
                         action = ui
@@ -220,6 +239,7 @@ impl<'a> Alert<'a> {
                             "Dismiss {}",
                             self.title.as_deref().unwrap_or(self.variant.name())
                         ),
+                        idle,
                         text,
                     )
                     .clicked();

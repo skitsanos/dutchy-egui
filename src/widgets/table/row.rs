@@ -11,9 +11,23 @@ use crate::{
 };
 use egui::{Id, Response, Ui, UiBuilder};
 pub(super) struct View<'v, 'a, R, C> {
-    pub root: Id,
     pub config: &'v DataTable<'a, R, C>,
     pub layout: &'v Layout,
+}
+/// Row scopes derive from host keys; a repeated key gets an occurrence salt so
+/// two rows never share identity, measurements, or widget IDs.
+pub(super) fn scope(root: Id, id: egui::IdSalt, seen: &mut Vec<(Id, usize)>) -> Id {
+    let base = root.with(("row", id));
+    match seen.iter_mut().find(|(seen, _)| *seen == base) {
+        Some((_, count)) => {
+            *count += 1;
+            base.with(("duplicate", *count))
+        }
+        None => {
+            seen.push((base, 0));
+            base
+        }
+    }
 }
 pub(super) fn show<'a, R, C: Clone + PartialEq, K: Clone>(
     ui: &mut Ui,
@@ -24,10 +38,9 @@ pub(super) fn show<'a, R, C: Clone + PartialEq, K: Clone>(
     focus: &mut Focus,
     cell: &mut impl FnMut(&mut Ui, &'a R, &C),
 ) -> TableRowResponse<K> {
-    let root = view.root;
     let config = view.config;
     let layout = view.layout;
-    let row_id = root.with(("row", state.id));
+    let row_id = state.scope;
     let ids: Vec<_> = if layout.selection {
         std::iter::once(row_id.with("selection"))
             .chain(
@@ -125,16 +138,21 @@ fn paint(ui: &Ui, shape: egui::layers::ShapeIdx, rect: egui::Rect, striped: bool
         ui.painter().rect_filled(edge, 0, p.primary);
     }
 }
-pub(super) fn reveal_focus(ui: &Ui, responses: &[Response]) {
+/// Reveal a focused control inside `owners` once it gains focus or layout
+/// moves it; user scrolling never pulls it back. Controls inside `excluded`
+/// cells (the sticky header) are skipped even when scrolled rows overlap them.
+pub(super) fn reveal_focus(ui: &Ui, owners: &[Response], excluded: &[Response]) {
     if let Some(response) = ui
         .memory(|m| m.focused())
         .and_then(|id| ui.ctx().read_response(id))
         && response.layer_id == ui.layer_id()
-        && responses
+        && !excluded
             .iter()
-            .any(|row| row.rect.contains_rect(response.rect))
-        && !ui.clip_rect().contains_rect(response.rect)
+            .any(|cell| cell.rect.contains_rect(response.rect))
+        && owners
+            .iter()
+            .any(|owner| owner.rect.contains_rect(response.rect))
     {
-        response.scroll_to_me_animation(None, egui::style::ScrollAnimation::none());
+        crate::interaction::reveal_focused(ui, &response, ui.max_rect().min);
     }
 }

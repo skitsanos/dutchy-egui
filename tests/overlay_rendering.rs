@@ -159,15 +159,15 @@ fn example(page: gallery::Page) -> Harness<'static, gallery::Showcase> {
 #[test]
 fn showcase_confirmation_only_runs_the_host_action_when_confirmed() {
     let mut h = example(gallery::Page::Modals);
-    h.get_by_label("OPEN CONFIRMATION").click();
+    h.get_by_label("Open confirmation").click();
     h.run_steps(5);
-    h.get_by_label("CANCEL ARCHIVE").click();
+    h.get_by_label("Cancel archive").click();
     h.run_steps(4);
     assert_eq!(h.state().overlays.archives, 0);
-    assert!(h.get_by_label("OPEN CONFIRMATION").is_focused());
-    h.get_by_label("OPEN CONFIRMATION").click();
+    assert!(h.get_by_label("Open confirmation").is_focused());
+    h.get_by_label("Open confirmation").click();
     h.run_steps(4);
-    h.get_by_label("ARCHIVE PROJECT").click();
+    h.get_by_label("Archive project").click();
     h.run_steps(4);
     assert_eq!(h.state().overlays.archives, 1);
     assert!(!h.state().overlays.confirm_open);
@@ -175,26 +175,26 @@ fn showcase_confirmation_only_runs_the_host_action_when_confirmed() {
 #[test]
 fn showcase_profile_validation_and_drawer_drafts_remain_host_owned() {
     let mut h = example(gallery::Page::Modals);
-    h.get_by_label("EDIT PROFILE").click();
+    h.get_by_label("Edit profile").click();
     h.run_steps(4);
     h.state_mut().overlays.draft_name.clear();
     h.run();
-    h.get_by_label("SAVE PROFILE").click();
+    h.get_by_label("Save profile").click();
     h.run_steps(3);
     assert!(h.state().overlays.edit_open);
     assert!(h.get_by_label("Profile name").is_focused());
     h.get_by_label("Profile name").type_text("Grace Hopper");
     h.run();
-    h.get_by_label("SAVE PROFILE").click();
+    h.get_by_label("Save profile").click();
     h.run_steps(4);
     assert_eq!(h.state().overlays.saved_name, "Grace Hopper");
-    assert!(h.get_by_label("EDIT PROFILE").is_focused());
+    assert!(h.get_by_label("Edit profile").is_focused());
     drawer_workflow(&mut h);
 }
 fn drawer_workflow(h: &mut Harness<'_, gallery::Showcase>) {
     h.state_mut().page = gallery::Page::Drawers;
     h.run_steps(3);
-    h.get_by_label("OPEN LEFT DRAWER").click();
+    h.get_by_label("Open left drawer").click();
     h.run_steps(4);
     assert!(
         h.query_by_role_and_label(Role::Dialog, "Workspace preferences")
@@ -204,14 +204,14 @@ fn drawer_workflow(h: &mut Harness<'_, gallery::Showcase>) {
     h.run();
     h.get_by_label("Close Workspace preferences").click();
     h.run_steps(4);
-    assert!(h.get_by_label("OPEN LEFT DRAWER").is_focused());
-    h.get_by_label("OPEN RIGHT DRAWER").click();
+    assert!(h.get_by_label("Open left drawer").is_focused());
+    h.get_by_label("Open right drawer").click();
     h.run_steps(4);
     assert_eq!(h.state().overlays.draft_workspace, "Retained draft");
-    h.get_by_label("APPLY PREFERENCES").scroll_to_me();
+    h.get_by_label("Apply preferences").scroll_to_me();
     h.run_steps(8);
-    h.get_by_label("APPLY PREFERENCES").click();
+    h.get_by_label("Apply preferences").click();
     h.run_steps(4);
     assert_eq!(h.state().overlays.preference_saves, 1);
-    assert!(h.get_by_label("OPEN RIGHT DRAWER").is_focused());
+    assert!(h.get_by_label("Open right drawer").is_focused());
 }

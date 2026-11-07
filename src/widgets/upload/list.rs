@@ -122,9 +122,10 @@ impl<'a, K: egui::AsIdSalt + Clone> FileList<'a, K> {
                 if !self.enabled {
                     ui.disable();
                 }
+                let anchor = ui.max_rect().min;
                 for item in self.items {
                     let id = root.with(&item.key);
-                    let (action, retry) = rows::show(ui, id, item);
+                    let (action, retry) = rows::show(ui, id, item, anchor);
                     if let Some(action) = action {
                         if action.enabled() {
                             controls.push(action.id);

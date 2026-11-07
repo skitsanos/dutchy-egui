@@ -1,5 +1,46 @@
 # Changelog
 
+## 1.0.16 — 2026-11-07
+
+- Focused file-row actions, image expand/retry controls, toast controls and
+  table cells reveal once (focus arrival or layout move) and never pull a
+  scroll area back; the table body ignores focus inside its sticky header.
+- Field, checkbox and radio labels follow inverse card and banner text colors;
+  editors and select triggers keep foreground text on their light fill.
+- Duplicate table row keys receive occurrence salts instead of looping
+  repaints; row height measurements are evicted when rows leave the view.
+- The command palette and overlays stop repainting while another modal is on
+  top; overlays enter once they are the topmost modal.
+- Accessible names keep the host's casing for buttons, tabs, accordions,
+  breadcrumbs, badges, headings, field labels and uppercase text.
+- The theme style is installed for both egui themes, so preference changes no
+  longer drop native widgets to egui defaults; six baselines refreshed.
+- Spaced galleries paint nothing between tiles and border each tile; source
+  credits use wider tracking; gallery expand controls use the live 70 % fill;
+  URL image decoding reports a codec panic as a failure instead of hanging.
+- Toast entrance fades follow the queue's guarded clock; file sizes round
+  before choosing a unit; a capped Scribble gesture commits its points; the
+  drop zone and file rows follow the live component.
+- Field, progress, card, skeleton and empty-state gaps render as documented
+  with item spacing absorbed; card footers use a one-point border divider and
+  card titles drop heading tracking.
+- Tooltips follow the live stylesheet: 12/6 padding, 256-point text width
+  within the viewport minus 32, 0.02 em letter spacing.
+- Tinted alerts keep foreground titles and muted messages, status glyphs are
+  circle-backed, and the resting dismiss glyph is muted.
+- Bordered accordion headers use wide tracking, the accent edge lights over
+  the open body, arrows lock on focused tab close buttons, and text, IME and
+  clipboard events restore the keyboard focus cue.
+- Table headers use the bold body face with wider tracking, muted headers keep
+  foreground text, and sort glyphs follow the live double arrow.
+- Compact pagination summaries bold their numbers, page numbers rest on the
+  foreground, collapsed breadcrumb buttons rest on the border color, and
+  compact stat labels are bold with a 6-point trend gap.
+- Ledger verification audit (DS-028) with entries DS-027 to DS-044; DS-003 and
+  DS-027 closed as design decisions (source status and accent colors kept, host
+  palette overrides for stricter ratios); DS-029, DS-030, DS-033 to DS-036 and
+  DS-039 to DS-044 resolved or resolved for their defects; baselines refreshed.
+
 ## 1.0.15 — 2026-11-07
 
 - Scribble canvas with ordered primary-pointer capture, dots, keyboard drawing,

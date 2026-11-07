@@ -16,37 +16,47 @@ pub(in crate::widgets) fn status(ui: &mut Ui, variant: AlertVariant, color: Colo
     let line = |points| {
         ui.painter().add(egui::Shape::line(points, stroke));
     };
+    let dot = |center| {
+        ui.painter().rect_filled(
+            egui::Rect::from_center_size(center, vec2(border::STANDARD, border::STANDARD)),
+            0,
+            color,
+        );
+    };
+    // Circle-backed glyphs follow the live info, check-circle, alert-circle
+    // and x-circle icons; proportions are the icons' 24-unit paths.
+    ui.painter().circle_stroke(
+        rect.center(),
+        rect.width() / 2.0 - border::STANDARD / 2.0,
+        stroke,
+    );
     match variant {
-        AlertVariant::Success => line(vec![point(0.1, 0.5), point(0.4, 0.8), point(0.9, 0.2)]),
+        AlertVariant::Success => line(vec![
+            point(0.375, 0.5),
+            point(0.46, 0.585),
+            point(0.625, 0.415),
+        ]),
         AlertVariant::Error => {
-            line(vec![point(0.2, 0.2), point(0.8, 0.8)]);
-            line(vec![point(0.2, 0.8), point(0.8, 0.2)]);
+            line(vec![point(0.375, 0.375), point(0.625, 0.625)]);
+            line(vec![point(0.375, 0.625), point(0.625, 0.375)]);
         }
-        AlertVariant::Info | AlertVariant::Warning => {
-            if variant == AlertVariant::Warning {
-                line(vec![
-                    point(0.5, 0.05),
-                    point(0.95, 0.9),
-                    point(0.05, 0.9),
-                    point(0.5, 0.05),
-                ]);
-            }
-            let (dot, a, b) = if variant == AlertVariant::Info {
-                (point(0.5, 0.15), point(0.5, 0.4), point(0.5, 0.85))
-            } else {
-                (point(0.5, 0.72), point(0.5, 0.3), point(0.5, 0.5))
-            };
-            ui.painter().rect_filled(
-                egui::Rect::from_center_size(dot, vec2(border::STANDARD, border::STANDARD)),
-                0,
-                color,
-            );
-            line(vec![a, b]);
+        AlertVariant::Info => {
+            dot(point(0.5, 0.33));
+            line(vec![point(0.5, 0.5), point(0.5, 0.7)]);
+        }
+        AlertVariant::Warning => {
+            line(vec![point(0.5, 0.3), point(0.5, 0.5)]);
+            dot(point(0.5, 0.67));
         }
     }
 }
 
-pub(in crate::widgets) fn dismiss(ui: &mut Ui, label: &str, color: Color32) -> Response {
+pub(in crate::widgets) fn dismiss(
+    ui: &mut Ui,
+    label: &str,
+    idle: Color32,
+    color: Color32,
+) -> Response {
     let (_, rect) = ui.allocate_space(vec2(
         ControlSize::Small.height(),
         ControlSize::Small.height(),
@@ -59,7 +69,7 @@ pub(in crate::widgets) fn dismiss(ui: &mut Ui, label: &str, color: Color32) -> R
         &response,
         geometry::ALERT_ICON,
         close::Colors {
-            idle: color.gamma_multiply(geometry::IDLE_OPACITY),
+            idle,
             foreground: color,
             focus: color,
         },

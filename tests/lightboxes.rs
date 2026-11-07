@@ -178,8 +178,10 @@ fn backdrop_blocks_underlying_actions_and_image_surface_does_not_dismiss() {
     assert!(h.state().selected.is_some());
     h.state_mut().options.dismiss_on_backdrop = true;
     h.run_steps(2);
-    // The opener is in the top gutter; the other host button is under the surface.
-    h.get_by_label("Open viewer").click();
+    // A press in the viewport gutter lands on the backdrop, not on the surface.
+    h.drag_at(egui::pos2(12.0, 12.0));
+    h.run_steps(1);
+    h.drop_at(egui::pos2(12.0, 12.0));
     h.run_steps(4);
     assert!(h.state().selected.is_none());
     assert_eq!(h.state().outside, 0);

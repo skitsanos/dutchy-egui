@@ -79,12 +79,19 @@ on macOS and Ctrl+K elsewhere. `.shortcut(None)` leaves opening entirely to the
 host; `.shortcut(Some(...))` changes the binding. Opening is suppressed while a
 different native modal is on top.
 
+The palette header uses the shared bordered 48-point `Input` rather than the
+web's borderless 14-point field with a leading search glyph; menu icon slots are
+20 points (web 16); shortcut hints on a highlighted row switch to the on-primary
+color for contrast where the live row keeps muted-foreground. Dropdown lists are
+capped at 320 points (`DROPDOWN_MAX_HEIGHT`); the web dropdown has no cap.
+
 The palette uses a centered native modal, four-point border, token backdrop,
 512-point maximum width, and scrollable grouped results. Query and active-result
 behavior match searchable selection. Enter returns an action. Escape, backdrop,
 or the shortcut closes. Tab/Shift+Tab stays inside the modal. Closing restores
 preceding host focus after the native modal layer clears; keep calling `show`
-while closed to complete this. If the host removes that target, it must choose a
+while closed to complete this. If another modal takes over first, the palette
+abandons the restoration and requests no further frames. If the host removes that target, it must choose a
 new focus destination. Host-set queries are retained between openings.
 
 ## Boundaries

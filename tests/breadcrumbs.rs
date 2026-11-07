@@ -66,7 +66,7 @@ fn ancestors_activate_but_current_page_is_named_noninteractive_and_not_a_tab_sto
         h.query_by_role_and_label(Role::Navigation, "Workspace path")
             .is_some()
     );
-    let current = h.get_by_label("A CURRENT PAGE WITH A LONG DESCRIPTIVE NAME");
+    let current = h.get_by_label("A current page with a long descriptive name");
     assert_eq!(
         current.accesskit_node().data().aria_current(),
         Some(AriaCurrent::Page)
@@ -74,7 +74,7 @@ fn ancestors_activate_but_current_page_is_named_noninteractive_and_not_a_tab_sto
     current.click();
     h.run();
     assert!(h.state().requests.is_empty());
-    h.get_by_label("LIBRARY").focus();
+    h.get_by_label("Library").focus();
     h.run();
     h.key_press(Key::Enter);
     h.run();
@@ -82,13 +82,13 @@ fn ancestors_activate_but_current_page_is_named_noninteractive_and_not_a_tab_sto
     h.key_press(Key::Space);
     h.run();
     assert_eq!(h.state().requests, [2, 2]);
-    h.get_by_label("COMPONENTS").focus();
+    h.get_by_label("Components").focus();
     h.run();
     h.key_press(Key::Tab);
     h.run_steps(2);
     assert!(h.get_by_label("Outside").is_focused());
-    assert!(h.get_by_label("UNAVAILABLE").accesskit_node().is_disabled());
-    h.get_by_label("UNAVAILABLE").click();
+    assert!(h.get_by_label("Unavailable").accesskit_node().is_disabled());
+    h.get_by_label("Unavailable").click();
     h.run();
     assert_eq!(h.state().requests, [2, 2]);
     h.check_accessibility();
@@ -98,7 +98,7 @@ fn collapsed_ancestors_use_keyboard_menu_dismissal_and_return_typed_destinations
     let mut h = harness(500.0);
     h.state_mut().collapsed = true;
     h.run_steps(2);
-    assert!(h.query_by_label("LIBRARY").is_none());
+    assert!(h.query_by_label("Library").is_none());
     h.get_by_label("Show collapsed ancestors").focus();
     h.run();
     h.key_press(Key::ArrowDown);
@@ -129,14 +129,14 @@ fn collapsed_ancestors_use_keyboard_menu_dismissal_and_return_typed_destinations
 #[test]
 fn keyed_focus_survives_insertions_renaming_and_narrow_reflow() {
     let mut h = harness(260.0);
-    h.get_by_label("LIBRARY").focus();
+    h.get_by_label("Library").focus();
     h.run_steps(2);
-    let id = h.get_by_label("LIBRARY").accesskit_node().id();
+    let id = h.get_by_label("Library").accesskit_node().id();
     h.state_mut().inserted = true;
     h.state_mut().renamed = true;
     h.run_steps(2);
-    assert_eq!(h.get_by_label("RENAMED LIBRARY").accesskit_node().id(), id);
-    assert!(h.get_by_label("RENAMED LIBRARY").is_focused());
+    assert_eq!(h.get_by_label("Renamed library").accesskit_node().id(), id);
+    assert!(h.get_by_label("Renamed library").is_focused());
     assert!(
         h.state()
             .rects
@@ -148,7 +148,7 @@ fn keyed_focus_survives_insertions_renaming_and_narrow_reflow() {
     assert!(h.state().rects.windows(2).any(|r| r[1].top() > r[0].top()));
     h.state_mut().disabled = true;
     h.run();
-    h.get_by_label("HOME").click();
+    h.get_by_label("Home").click();
     h.run();
     assert!(h.state().requests.is_empty());
 }
@@ -185,10 +185,30 @@ fn an_icon_keeps_its_named_target_compact_without_laying_out_hidden_label_text()
             Breadcrumbs::new("icons", &items).show(ui);
         });
     h.run_steps(2);
-    let icon = h.get_by_label("A LONG ACCESSIBLE NAME FOR THE HOME ICON");
+    let icon = h.get_by_label("A long accessible name for the home icon");
     assert_eq!(
         icon.rect().height(),
         dutchy_egui::ControlSize::Small.height()
     );
-    assert_eq!(icon.rect().top(), h.get_by_label("CURRENT").rect().top());
+    assert_eq!(icon.rect().top(), h.get_by_label("Current").rect().top());
+}
+
+#[test]
+fn collapsed_ancestor_buttons_rest_on_the_border_color() {
+    let mut h = harness(900.0);
+    h.state_mut().collapsed = true;
+    h.run_steps(2);
+    let target = h.get_by_label("Show collapsed ancestors").rect();
+    let stroke = h
+        .output()
+        .shapes
+        .iter()
+        .find_map(|clipped| match &clipped.shape {
+            egui::Shape::Rect(shape) if shape.rect == target && shape.stroke.width == 2.0 => {
+                Some(shape.stroke.color)
+            }
+            _ => None,
+        })
+        .expect("ellipsis outline painted");
+    assert_eq!(stroke, Theme::default().palette.border);
 }

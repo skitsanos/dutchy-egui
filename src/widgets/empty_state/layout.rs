@@ -32,7 +32,7 @@ pub(super) fn actions(ui: &mut Ui, state: &EmptyState<'_>) -> (bool, bool) {
     if state.action.is_none() && state.secondary.is_none() {
         return (false, false);
     }
-    ui.add_space(space::XXL);
+    crate::layout::gap_after(ui, space::XXL);
     let width = [state.action.as_deref(), state.secondary.as_deref()]
         .into_iter()
         .flatten()

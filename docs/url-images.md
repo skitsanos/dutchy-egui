@@ -4,7 +4,7 @@ Enable the optional integration:
 
 ```toml
 [dependencies]
-dutchy-egui = { version = "1.0.13", features = ["url-images"] }
+dutchy-egui = { version = "1.0.16", features = ["url-images"] }
 ```
 
 ```rust
@@ -60,7 +60,9 @@ Repeated use of one URL with the same texture options shares a request/texture,
 including thumbnails and the lightbox. Different texture options count as
 separate entries. Cache entries retain textures, failures or pending results.
 Inactive least-recently-used entries can be evicted, protecting the current and
-previous egui passes. If the cache is full of visible entries, an explicit failure
+previous egui passes. That protection reads the current viewport's pass counter
+for one context-wide cache, so a host that loads URL images in several viewports
+may see an entry evicted while another viewport still shows it. If the cache is full of visible entries, an explicit failure
 asks the host to increase capacity or show fewer images. There is no disk cache,
 background refresh or automatic retry. HTTP cache-control revalidation is not
 implemented by this loader.
@@ -75,7 +77,9 @@ unbounded workers. Completions request repaint even with reduced motion.
 ## Platforms
 
 On native platforms ehttp fetches and decodes on its worker thread; uploading the
-finished texture happens in egui's UI pass. `response_body_timeout` defaults to
+finished texture happens in egui's UI pass. A decoder panic is caught on that
+thread and reported as the failure "Image decoder failed", so retry stays
+available; on wasm a panic aborts the page. `response_body_timeout` defaults to
 30 seconds for native response-body reads. In ehttp 0.7.3 it does **not** bound
 connection establishment/headers and is ignored by browser fetches. A stalled
 transport may therefore retain a concurrency slot. Applications needing strict

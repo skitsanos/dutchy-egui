@@ -55,22 +55,22 @@ fn harness() -> Harness<'static, State> {
 #[test]
 fn title_clicks_do_not_activate_actions_and_native_keyboard_actions_remain_independent() {
     let mut h = harness();
-    h.get_by_role_and_label(Role::Heading, "NO PROJECTS YET")
+    h.get_by_role_and_label(Role::Heading, "No projects yet")
         .click();
     h.run();
     assert_eq!((h.state().primary, h.state().secondary), (0, 0));
-    h.get_by_label("CREATE PROJECT").focus();
+    h.get_by_label("Create project").focus();
     h.run();
     h.key_press(egui::Key::Enter);
     h.run();
     assert_eq!((h.state().primary, h.state().secondary), (1, 0));
-    h.get_by_label("BROWSE TEMPLATES").focus();
+    h.get_by_label("Browse templates").focus();
     h.run();
     h.key_press(egui::Key::Space);
     h.run();
     assert_eq!((h.state().primary, h.state().secondary), (1, 1));
     assert!(
-        h.query_by_role_and_label(Role::Heading, "NO PROJECTS YET")
+        h.query_by_role_and_label(Role::Heading, "No projects yet")
             .is_some()
     );
 }
@@ -80,15 +80,15 @@ fn changing_guidance_preserves_action_focus_and_announcements_are_explicit() {
     let mut h = harness();
     let region = h.get_by_role_and_label(Role::Status, "No projects yet");
     assert_eq!(region.accesskit_node().live(), Live::Polite);
-    h.get_by_label("CREATE PROJECT").focus();
+    h.get_by_label("Create project").focus();
     h.run();
-    let id = h.get_by_label("CREATE PROJECT").accesskit_node().id();
+    let id = h.get_by_label("Create project").accesskit_node().id();
     h.state_mut().expanded = true;
     h.state_mut().inserted = true;
     h.state_mut().width = Some(260.0);
     h.run_steps(2);
-    assert_eq!(h.get_by_label("CREATE PROJECT").accesskit_node().id(), id);
-    assert!(h.get_by_label("CREATE PROJECT").is_focused());
+    assert_eq!(h.get_by_label("Create project").accesskit_node().id(), id);
+    assert!(h.get_by_label("Create project").is_focused());
     assert_eq!(
         h.get_by_role_and_label(Role::Status, "No projects yet")
             .accesskit_node()
@@ -139,17 +139,17 @@ fn disabled_actions_and_disabled_parents_cannot_activate() {
             State::default(),
         );
     for label in [
-        "DISABLED PRIMARY",
-        "PARENT PRIMARY",
-        "PARENT SECONDARY",
-        "ALL PRIMARY",
-        "ALL SECONDARY",
+        "Disabled primary",
+        "Parent primary",
+        "Parent secondary",
+        "All primary",
+        "All secondary",
     ] {
         assert!(h.get_by_label(label).accesskit_node().is_disabled());
         h.get_by_label(label).click();
         h.run();
     }
-    h.get_by_label("ENABLED SECONDARY").click();
+    h.get_by_label("Enabled secondary").click();
     h.run();
     assert_eq!((h.state().primary, h.state().secondary), (0, 1));
 }
@@ -173,16 +173,29 @@ fn narrow_guidance_wraps_and_actions_stack_inside_the_column_without_style_leaks
             assert_eq!(before.as_ref(), ui.style().as_ref());
         });
     h.run();
-    let primary = h.get_by_label("ADD WIDGET").rect();
-    let secondary = h.get_by_label("BROWSE TEMPLATES").rect();
+    let primary = h.get_by_label("Add widget").rect();
+    let secondary = h.get_by_label("Browse templates").rect();
     assert!(secondary.top() > primary.top());
     assert!(primary.right() < 260.0 && secondary.right() < 260.0);
     let region = h.get_by_role_and_label(Role::Group, "Set up your dashboard");
     assert_eq!(region.accesskit_node().live(), Live::Off);
     assert_eq!(
-        h.get_by_role_and_label(Role::Heading, "SET UP YOUR DASHBOARD")
+        h.get_by_role_and_label(Role::Heading, "Set up your dashboard")
             .accesskit_node()
             .level(),
         Some(3)
     );
+}
+
+#[test]
+fn the_description_sits_twenty_four_points_above_the_actions() {
+    let mut h = harness();
+    h.state_mut().expanded = true;
+    h.run_steps(2);
+    let description = h
+        .get_by_label("Create a project to bring your work together.")
+        .rect();
+    let action = h.get_by_label("Create project").rect();
+    let gap = action.top() - description.bottom();
+    assert!((gap - 24.0).abs() < 0.5, "description to actions gap {gap}");
 }

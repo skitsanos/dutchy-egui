@@ -196,3 +196,58 @@ fn compact_summary_is_centered_with_its_neighboring_controls() {
         h.get_by_label("Next page").rect().center().y
     );
 }
+
+#[test]
+fn compact_summaries_bold_the_page_numbers_on_a_muted_base() {
+    let mut h = harness(600.0);
+    h.state_mut().compact = true;
+    h.run_steps(2);
+    let p = Theme::default().palette;
+    let galleys = common::galleys(&h.output().shapes);
+    let summary = galleys
+        .iter()
+        .find(|galley| galley.job.text == "Page 7 of 20")
+        .expect("summary painted");
+    let colors: Vec<_> = summary
+        .job
+        .sections
+        .iter()
+        .map(|section| {
+            (
+                section.byte_range.start.0..section.byte_range.end.0,
+                section.format.color,
+            )
+        })
+        .collect();
+    assert_eq!(
+        colors,
+        [
+            (0..5, p.muted_foreground),
+            (5..6, p.foreground),
+            (6..10, p.muted_foreground),
+            (10..12, p.foreground),
+        ]
+    );
+    #[cfg(feature = "bundled-fonts")]
+    assert_ne!(
+        summary.job.sections[1].format.font_id.family,
+        summary.job.sections[0].format.font_id.family,
+        "numbers use the bold face"
+    );
+}
+
+#[test]
+fn page_numbers_rest_on_the_foreground_like_the_live_component() {
+    let mut h = harness(600.0);
+    h.run_steps(2);
+    let color = h
+        .output()
+        .shapes
+        .iter()
+        .find_map(|clipped| match &clipped.shape {
+            egui::Shape::Text(text) if text.galley.job.text == "8" => text.override_text_color,
+            _ => None,
+        })
+        .expect("page 8 painted");
+    assert_eq!(color, Theme::default().palette.foreground);
+}

@@ -58,7 +58,8 @@ replace data, or perform an async retry. The component never retries every frame
 Images fill available width by default. `.width(...)` bounds the entire figure,
 including caption/source. Unconstrained width falls back to 640 points. Explicit
 dimensions clamp to 1–4096 points; nonfinite requests use defaults. Available
-width remains authoritative. `.height(...)` overrides aspect-derived box height.
+width remains authoritative. `.height(...)` overrides aspect-derived box height and keeps the chosen fit
+(the web `height` prop crops); pair it with `.fit(ImageFit::Cover)` for that result.
 
 `ImageAspect` offers Original, Square, Video (16:9), Standard (4:3) and Widescreen
 (16:10). Original uses intrinsic dimensions, with a 16:9 fallback until known.
@@ -68,8 +69,8 @@ Choose a fixed aspect/height when replacement must avoid layout shift. Calling
 Cover crops symmetrically using texture UVs. Neither stretches the source.
 
 Borders are two points, corners zero. Captions use 14-point body text and a
-12-point gap. Source credits use uppercase 12-point monospaced text with wide
-tracking. Credit sits at the trailing edge when both fit, otherwise below the
+12-point gap. Source credits use uppercase 12-point monospaced text with wider
+(0.05 em) tracking. Credit sits at the trailing edge when both fit, otherwise below the
 caption. Source-only credits are supported. Geometry comes from shared tokens.
 Caption/source text honors enclosing card text-color overrides; loading/error
 content retains the image box's own neutral surface colors.
@@ -81,10 +82,13 @@ Names include alternative text, e.g. “Expand Canal houses”. Clicking the ima
 surface does not expand it. Enter/Space activate controls normally. Pending and
 failed sources remain expandable so lazy loading cannot block keyboard access.
 `.enabled(false)` disables controls while retaining readable image content and
-respects disabled parent UIs. Focus reveals clipped expand/retry controls.
+respects disabled parent UIs. Gaining focus, or a layout move, reveals clipped expand/retry controls once;
+retained focus never pulls a scroll area back.
 
 The accessibility tree has a named Figure, an Image with alternative text and
-busy/failure metadata, a FigureCaption, and separate native action buttons.
+busy/failure metadata, a FigureCaption, and separate native action buttons. The
+figure and the image share the alternative text; some screen readers announce it
+twice, which is accepted so the figure stays navigable by name.
 Always supply meaningful alternative text. These primitives do not infer it.
 
 ## Keyed galleries and viewer binding
@@ -120,7 +124,11 @@ flag. Keys must be unique and immutable. The default gallery has up to three
 columns, 160-point desired minima, square cover thumbnails, two-point joined
 gaps and an outer border. It adapts down to a single column. Builders set maximum
 columns, typed minimum width, token gap, aspect, thumbnail captions, border and
-enabled state. Captions are hidden in thumbnails by default but retained for the
+enabled state. Joined galleries (the default micro gap) share one border-colored
+surface that shows through the gaps and carry the outer border; spaced galleries
+(any larger gap) paint nothing between tiles, and `bordered` then borders each
+tile as the web image cards do. Gallery expand controls use the web gallery's
+70 % inverse fill; standalone images keep 80 %. Captions are hidden in thumbnails by default but retained for the
 viewer. Reordering/reflow preserves item control identities. Empty galleries
 provide guidance; gallery opening returns a key without owning selection.
 
@@ -148,7 +156,8 @@ Native egui modality blocks the workspace and confines Tab/Shift+Tab. Focus
 starts on Close, or the named heading if Close is explicitly hidden. The shared
 `OverlayOptions` configures Escape/backdrop dismissal and initial/return focus.
 Escape applies only to the top modal after child popups. Clicking the image
-surface does not dismiss. Closing by button/Escape/backdrop clears selection and
+surface does not dismiss; backdrop dismissal covers the 24-point clearance
+around the stage, where the web closes on any click outside the image. Closing by button/Escape/backdrop clears selection and
 reports `OverlayDismissal`; host closure also finishes focus restoration. A
 surviving explicit target handles removed openers. Host focus changes elsewhere
 are preserved. Overlay focus/dismissal helpers are shared with Modal/Drawer.

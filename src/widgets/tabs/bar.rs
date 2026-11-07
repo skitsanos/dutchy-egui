@@ -79,6 +79,11 @@ pub(super) fn show<T: Clone + PartialEq>(
                                 if response.has_focus() {
                                     navigation::lock_arrows(ui, response.id, Axis::Horizontal);
                                 }
+                                if let Some(close) = &close_response
+                                    && close.has_focus()
+                                {
+                                    navigation::lock_arrows(ui, close.id, Axis::Horizontal);
+                                }
                                 if response.gained_focus() || response.clicked() {
                                     let theme = Theme::from_context(ui.ctx());
                                     let animation = if theme.reduced_motion {

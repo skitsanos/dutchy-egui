@@ -30,7 +30,9 @@ fn drawing_ui(ui: &mut egui::Ui, drawing: &mut ScribbleDrawing) {
 The default logical canvas is 600×200. Dimensions are immutable, from 1 to 4096
 per side; the displayed rectangle fits the available column at the same aspect.
 Stored coordinates and pen width do not depend on UI width or pixels per point.
-The surface uses shared light-paper and dark-ink tokens in every theme so a
+The live canvas is pure white; the port's paper is the warm light background
+(#FAF8F5) so exports and the canvas share one token. The surface uses shared
+light-paper and dark-ink tokens in every theme so a
 signature remains legible. Outer borders and controls follow the host theme.
 New strokes capture their brush; later theme/brush changes do not recolor old ink.
 Four pen tokens provide widths 1, 2, 4 and 8. Alpha colors use ordinary source-over.
@@ -51,7 +53,9 @@ Editable canvases retain arrow focus; Tab leaves the canvas normally:
 - Space starts/finishes a stroke; Enter adds a dot or finishes a stroke.
 - Escape cancels the draft and native egui releases focus. Refocus to resume.
 - Delete/Backspace requests Clear. Ctrl/Cmd+Z requests Undo; Shift+Ctrl/Cmd+Z or
-  Ctrl/Cmd+Y requests Redo. An active draft is cancelled before a history request.
+  Ctrl/Cmd+Y requests Redo. During an active keyboard draft these shortcuts
+  only cancel the draft; the next press reaches history. Delete/Backspace cancel
+  the draft and request Clear.
 
 Focus reveals a canvas once; handled keyboard drawing commands reveal it again
 when needed. Keeping focus does not override manual scrolling. Toolbar controls
@@ -76,6 +80,9 @@ when `.instructions(false)` hides the visible text.
 
 `ScribbleDrawing::push` validates finite in-bounds points before changing anything.
 There are at most 512 strokes, 8192 points per stroke and 65,536 completed points.
+A gesture that reaches a point limit is committed with the points captured so
+far and reports `ScribbleError::Capacity`; only a stroke that cannot be stored
+at all is dropped.
 Rejected edits retain data and redo history. Clear is one undoable operation;
 empty clear does nothing. History retains 32 operations using shared immutable
 point buffers. New edits discard redo. `snapshot()` shares completed point buffers

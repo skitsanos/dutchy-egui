@@ -202,7 +202,8 @@ pub fn file_size(bytes: Option<u64>) -> String {
     let mut value = bytes as f64;
     let mut unit = "B";
     for next in ["KB", "MB", "GB", "TB", "PB", "EB"] {
-        if value < 1000.0 {
+        // Choose the unit after rounding, so 999,950 bytes read "1.0 MB".
+        if value < 999.95 {
             break;
         }
         value /= 1000.0;

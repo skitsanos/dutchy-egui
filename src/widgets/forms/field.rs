@@ -58,7 +58,7 @@ impl<'a> Field<'a> {
             let theme = Theme::from_context(ui.ctx());
             self.set_border(ui, theme);
             let label = self.label(ui, theme);
-            ui.add_space(space::XS);
+            crate::layout::gap_after(ui, space::SM);
             let response = control(ui)
                 .labelled_by(label.id)
                 .accessible_name(self.label.to_string());
@@ -81,19 +81,24 @@ impl<'a> Field<'a> {
     }
 
     fn label(&self, ui: &mut Ui, theme: Theme) -> Response {
+        // Inverse surfaces install a scoped text color; the label follows it.
+        let inherited = ui.visuals().override_text_color;
         let mut job = Text::new(self.label.as_ref())
             .family(Family::Body)
             .size(TextSize::Xs)
             .weight(Weight::Bold)
             .tracking(Tracking::Wider)
             .uppercase(true)
+            .color(inherited.map_or(TextColor::Foreground, TextColor::Custom))
             .layout_job(&theme, ui.available_width());
         if self.required {
             let mut format = job.sections[0].format.clone();
-            format.color = theme.palette.primary;
+            format.color = inherited.unwrap_or(theme.palette.primary);
             job.append(" *", 0.0, format);
         }
-        ui.add(egui::Label::new(job).wrap().sense(egui::Sense::CLICK))
+        let response = ui.add(egui::Label::new(job).wrap().sense(egui::Sense::CLICK));
+        crate::text::name_as_written(&response, self.label.as_ref());
+        response
     }
 
     fn feedback(&self, ui: &mut Ui) {

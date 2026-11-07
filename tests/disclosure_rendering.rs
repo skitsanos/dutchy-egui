@@ -122,7 +122,7 @@ fn disclosure_states_render_across_themes_and_display_scales() {
             })
             .with_context_setup(move |ctx| common::install(ctx, theme))
             .build_ui_state(matrix, State::default());
-        h.get_by_role_and_label(Role::Tab, "OVERVIEW").focus();
+        h.get_by_role_and_label(Role::Tab, "Overview").focus();
         h.run_steps(3);
         h.check_accessibility();
         h.snapshot(name);
@@ -138,7 +138,7 @@ fn unselected_keyboard_tab_retains_its_focus_cue() {
         .with_render_cursor(false)
         .with_context_setup(|ctx| common::install(ctx, Theme::default().with_reduced_motion(true)))
         .build_ui_state(matrix, State::default());
-    h.get_by_role_and_label(Role::Tab, "OVERVIEW").focus();
+    h.get_by_role_and_label(Role::Tab, "Overview").focus();
     h.run_steps(2);
     h.key_press(egui::Key::ArrowRight);
     h.run_steps(2);
@@ -160,7 +160,7 @@ fn accordion_focus_has_four_complete_edges_above_adjacent_content() {
             )
         })
         .build_ui_state(matrix, State::default());
-    h.get_by_role_and_label(Role::Button, "BORDERS GIVE STRUCTURE")
+    h.get_by_role_and_label(Role::Button, "Borders give structure")
         .focus();
     h.run_steps(2);
     h.snapshot("accordion-keyboard-focus");
@@ -202,7 +202,7 @@ fn disclosure_pages_render_at_desktop_and_narrow_widths() {
 #[test]
 fn accordion_example_preserves_its_form_and_keeps_child_actions_independent() {
     let mut h = example(gallery::Page::Accordions, [1200.0, 2000.0]);
-    h.get_by_role_and_label(Role::Button, "CAN I COMPOSE INTERACTIVE CONTENT?")
+    h.get_by_role_and_label(Role::Button, "Can I compose interactive content?")
         .click();
     h.run_steps(2);
     h.get_by_label("Example workspace name").focus();
@@ -211,15 +211,15 @@ fn accordion_example_preserves_its_form_and_keeps_child_actions_independent() {
         .type_text(" with collaborators");
     h.run();
     let name = h.state().disclosures.name.clone();
-    h.get_by_label("APPLY EXAMPLE NAME").click();
+    h.get_by_label("Apply example name").click();
     h.run_steps(2);
     assert_eq!(h.state().disclosures.applies, 1);
     assert!(h.state().disclosures.single.is_open(&"controls"));
-    h.get_by_role_and_label(Role::Button, "WHAT IS DUTCHY?")
+    h.get_by_role_and_label(Role::Button, "What is Dutchy?")
         .click();
     h.run_steps(2);
     assert!(h.query_by_label("Example workspace name").is_none());
-    h.get_by_role_and_label(Role::Button, "CAN I COMPOSE INTERACTIVE CONTENT?")
+    h.get_by_role_and_label(Role::Button, "Can I compose interactive content?")
         .click();
     h.run_steps(2);
     assert_eq!(h.state().disclosures.name, name);
@@ -228,13 +228,13 @@ fn accordion_example_preserves_its_form_and_keeps_child_actions_independent() {
 #[test]
 fn tab_example_saves_settings_and_closing_documents_retains_host_data() {
     let mut h = example(gallery::Page::Tabs, [1200.0, 2300.0]);
-    h.get_by_role_and_label(Role::Tab, "WORKSPACE SETTINGS")
+    h.get_by_role_and_label(Role::Tab, "Workspace settings")
         .click();
     h.run_steps(2);
-    h.get_by_label("SAVE TAB SETTINGS").click();
+    h.get_by_label("Save tab settings").click();
     h.run_steps(2);
     assert_eq!(h.state().tabbed.saves, 1);
-    h.get_by_role_and_label(Role::Tab, "YEARLY").click();
+    h.get_by_role_and_label(Role::Tab, "Yearly").click();
     h.run_steps(2);
     assert_eq!(h.state().tabbed.billing, Some("yearly"));
     h.get_by_label("Document 1 note").focus();
@@ -249,7 +249,7 @@ fn tab_example_saves_settings_and_closing_documents_retains_host_data() {
         Some("Keep my note")
     );
     assert!(
-        h.get_by_role_and_label(Role::Tab, "DOCUMENT 2")
+        h.get_by_role_and_label(Role::Tab, "Document 2")
             .is_focused()
     );
     h.state_mut().tabbed.documents.retain(|id| *id == 2);
@@ -257,7 +257,7 @@ fn tab_example_saves_settings_and_closing_documents_retains_host_data() {
     h.key_press(egui::Key::Delete);
     h.run_steps(3);
     assert!(h.state().tabbed.documents.is_empty());
-    assert!(h.get_by_label("ADD DOCUMENT").is_focused());
+    assert!(h.get_by_label("Add document").is_focused());
     h.key_press(egui::Key::Enter);
     h.run_steps(2);
     assert_eq!(h.state().tabbed.document, Some(6));

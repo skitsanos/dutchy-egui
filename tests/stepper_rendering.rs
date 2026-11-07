@@ -139,7 +139,7 @@ fn showcase_renders_at_desktop_and_narrow_widths() {
 #[test]
 fn host_validation_gates_advancement_and_data_survives_back_revisit_and_completion() {
     let mut h = example([1200.0, 2300.0]);
-    h.get_by_label("CONTINUE SETUP").click();
+    h.get_by_label("Continue setup").click();
     h.run_steps(3);
     assert_eq!(h.state().stepping.position(), 1);
     assert!(
@@ -149,20 +149,20 @@ fn host_validation_gates_advancement_and_data_survives_back_revisit_and_completi
     assert!(h.get_by_label("Setup email").is_focused());
     h.get_by_label("Setup email").type_text("ada@example.test");
     h.run();
-    h.get_by_label("CONTINUE SETUP").click();
+    h.get_by_label("Continue setup").click();
     h.run_steps(3);
     assert_eq!(h.state().stepping.position(), 2);
     assert!(h.get_by_label("Setup workspace name").is_focused());
     h.get_by_label("Setup workspace name")
         .type_text("Design studio");
     h.run();
-    h.get_by_label("BACK").click();
+    h.get_by_label("Back").click();
     h.run_steps(3);
     assert_eq!(h.state().stepping.email, "ada@example.test");
     assert_eq!(h.state().stepping.workspace, "Design studio");
-    h.get_by_label("CONTINUE SETUP").click();
+    h.get_by_label("Continue setup").click();
     h.run_steps(3);
-    h.get_by_label("CONTINUE SETUP").click();
+    h.get_by_label("Continue setup").click();
     h.run_steps(3);
     assert_eq!(h.state().stepping.position(), 3);
     h.get_by_role_and_label(Role::List, "Workspace setup steps")
@@ -171,19 +171,19 @@ fn host_validation_gates_advancement_and_data_survives_back_revisit_and_completi
     h.run_steps(3);
     assert_eq!(h.state().stepping.position(), 1);
     assert!(h.get_by_label("Setup email").is_focused());
-    h.get_by_label("CONTINUE SETUP").click();
+    h.get_by_label("Continue setup").click();
     h.run_steps(3);
-    h.get_by_label("CONTINUE SETUP").click();
+    h.get_by_label("Continue setup").click();
     h.run_steps(3);
     complete_and_restart(&mut h);
 }
 fn complete_and_restart(h: &mut Harness<'static, gallery::Showcase>) {
-    h.get_by_label("CREATE WORKSPACE").click();
+    h.get_by_label("Create workspace").click();
     h.run_steps(3);
     assert_eq!(h.state().stepping.workflow, StepperState::Complete);
     assert_eq!(h.state().stepping.submissions, 1);
-    assert!(h.get_by_label("START SETUP AGAIN").is_focused());
-    h.get_by_label("START SETUP AGAIN").click();
+    assert!(h.get_by_label("Start setup again").is_focused());
+    h.get_by_label("Start setup again").click();
     h.run_steps(3);
     assert_eq!(h.state().stepping.position(), 1);
     assert_eq!(h.state().stepping.email, "ada@example.test");

@@ -57,6 +57,9 @@ Drawers slide in over the shared 200ms motion token. Reduced motion places them
 at their final edge immediately. Centered dialogs open without the web scale/fade
 animation. All overlays disappear immediately on closing; no exit animation delays
 input release or focus restoration. They schedule no entrance frames once settled.
+Entry focus is applied in the first pass that reports the surface as the
+topmost modal; an overlay opened beneath another modal waits without
+repainting until that modal closes.
 A drawer is a blocking overlay; use native egui panels for docked layouts.
 
 ## Dismissal and focus

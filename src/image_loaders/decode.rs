@@ -2,7 +2,22 @@ use super::UrlImageOptions;
 use image::{ImageFormat, ImageReader};
 use std::io::Cursor;
 
+/// Decode PNG/JPEG bytes within the option limits. A codec panic becomes a
+/// failure (native targets only: wasm aborts on panic) so retry stays offered.
 pub(super) fn decode(
+    bytes: &[u8],
+    options: UrlImageOptions,
+    max_side: u32,
+) -> Result<egui::ColorImage, String> {
+    guarded(|| decode_image(bytes, options, max_side))
+}
+
+fn guarded<T>(decode: impl FnOnce() -> Result<T, String>) -> Result<T, String> {
+    std::panic::catch_unwind(std::panic::AssertUnwindSafe(decode))
+        .unwrap_or_else(|_| Err("Image decoder failed".into()))
+}
+
+fn decode_image(
     bytes: &[u8],
     options: UrlImageOptions,
     max_side: u32,
@@ -34,4 +49,22 @@ pub(super) fn decode(
         [width as usize, height as usize],
         &rgba,
     ))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::guarded;
+    #[test]
+    fn a_panicking_decoder_reports_a_failure_instead_of_unwinding() {
+        let result: Result<u8, String> = guarded(|| panic!("codec bug"));
+        assert_eq!(result.unwrap_err(), "Image decoder failed");
+    }
+    #[test]
+    fn a_completed_decode_passes_through_the_guard() {
+        assert_eq!(guarded(|| Ok::<u8, String>(7)), Ok(7));
+        assert_eq!(
+            guarded(|| Err::<u8, String>("bad header".into())),
+            Err("bad header".to_string())
+        );
+    }
 }

@@ -69,13 +69,18 @@ fn pages(ui: &mut egui::Ui, page: &mut usize, total_pages: usize) {
 
 Pages are one-based. The widget receives current/count values and returns a
 `requested_page`; loading, filtering, counts, and data replacement belong to the
-host. `.enabled(false)` supports host loading states. Distinct IDs and accessible
+host. `.enabled(false)` supports host loading states. The collapsed-ancestor
+button rests on the border color and turns primary on hover/focus; the slash is
+a one-point diagonal and chevrons are 8-point strokes rather than the web's
+typographic glyphs. Distinct IDs and accessible
 names identify multiple pagers. `PaginationVariant::Compact` replaces number
 buttons with Previous, a centered page summary, and Next.
 
 The standard variant uses the live component's 40-point square controls and
 primary active fill (the older documentation's foreground-filled illustration
-is not used). Up to seven pages show in full. Larger ranges retain endpoints and
+is not used). Page numbers rest on the foreground as in the live component (the
+Markdown spec says muted) and direction controls rest muted; the compact summary
+bolds its numbers on a muted base. Up to seven pages show in full. Larger ranges retain endpoints and
 the current page's neighbors, with decorative ellipses. Single-page gaps show the
 actual number. Work remains bounded for `usize::MAX`; no full-range allocation
 or overflowing next/previous arithmetic is used. Long numbers expand their

@@ -81,6 +81,9 @@ fn metadata_extraction_does_no_io_and_unknown_sizes_are_not_zero() {
         (Some(999), "999 B"),
         (Some(1_000), "1.0 KB"),
         (Some(2_400_000), "2.4 MB"),
+        (Some(999_949), "999.9 KB"),
+        (Some(999_950), "1.0 MB"),
+        (Some(999_999_950), "1.0 GB"),
         (Some(u64::MAX), "18.4 EB"),
     ] {
         assert_eq!(file_size(bytes), expected);

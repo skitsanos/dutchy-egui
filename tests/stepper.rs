@@ -181,7 +181,7 @@ fn not_started_complete_unknown_and_progress_positions_are_finite_and_read_only(
             Some(progress)
         );
     }
-    assert!(h.query_by_label("CURRENT STEP UNAVAILABLE").is_some());
+    assert!(h.query_by_label("Current step unavailable").is_some());
     h.check_accessibility();
 }
 #[test]

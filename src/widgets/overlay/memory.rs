@@ -34,18 +34,28 @@ impl Memory {
         if !self.pending_entry {
             return;
         }
-        if ctx.memory(|m| m.top_modal_layer().is_none_or(|top| top == layer)) {
-            let inside = ctx
-                .memory(|m| m.focused())
-                .and_then(|id| ctx.read_response(id))
-                .is_some_and(|r| r.layer_id == layer);
-            if let Some(id) = options.initial_focus {
-                ctx.memory_mut(|m| m.request_focus(id));
-            } else if !inside {
-                ctx.memory_mut(|m| m.request_focus(fallback));
+        // egui reports the previous pass's modal layer, so entry completes in
+        // the first pass that names this surface as topmost. Another modal above
+        // it defers entry without repainting: the input that dismisses that
+        // modal produces the pass in which this surface becomes topmost.
+        match ctx.memory(|m| m.top_modal_layer()) {
+            Some(top) if top == layer => {}
+            None => {
+                ctx.request_repaint();
+                return;
             }
-            self.pending_entry = false;
+            Some(_) => return,
         }
+        let inside = ctx
+            .memory(|m| m.focused())
+            .and_then(|id| ctx.read_response(id))
+            .is_some_and(|r| r.layer_id == layer);
+        if let Some(id) = options.initial_focus {
+            ctx.memory_mut(|m| m.request_focus(id));
+        } else if !inside {
+            ctx.memory_mut(|m| m.request_focus(fallback));
+        }
+        self.pending_entry = false;
         ctx.request_repaint();
     }
     pub fn closed(&mut self, ctx: &Context, layer: LayerId) {

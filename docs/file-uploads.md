@@ -33,9 +33,13 @@ fn select(ui: &mut egui::Ui) {
 The whole surface is a native clickable/focusable Button, with the original
 label as its accessible name and instructions/limits as its description.
 Enter/Space and click set the same `browse_requested` result. Sharp dashed
-borders, centered wrapped text, a decorative upload glyph, accent hover/press/
-drag fill and an inset keyboard focus cue use shared tokens. Compact uses a
-solid border and a wrapped label. Parent/explicit disabled state blocks events.
+borders, centered wrapped text, a decorative upload glyph, a muted hover/press/
+drag fill (live `bg-muted/30`) and an inset keyboard focus cue use shared
+tokens. Padding (32 points), the 24-point glyph and the bold 14-point uppercase
+body instruction follow the live component. Compact uses a solid border and a
+wrapped label on a full-width 56-point surface where the web uses an inline
+control; that remains a documented difference. Parent/explicit disabled state
+blocks events.
 
 Drop routing requires a visible, enabled target under the current pointer and
 native egui layer/modal checks. It never routes a viewport-wide file event to
@@ -98,6 +102,8 @@ The collection has List/ListItem roles; actions include the full file name.
 `cancel_requested` and `retry_requested` keys. The X requests Cancel while
 uploading and Remove in other states; it uses shared close-control hover/pressed/
 focus feedback. The host decides when to remove data or cancel/retry work.
+Names use the medium weight, sizes are plain monospaced text, transfer tracks
+are 8 points and dismiss glyphs 16 points, following the live rows.
 Disabled controls preserve readable metadata; hiding remove does not hide retry.
 No action infers completion or mutates files automatically.
 
@@ -105,7 +111,12 @@ After actual host removal, focus moves to the next available remove/cancel
 control (or the previous endpoint). `.empty_focus(picker_id)` supplies a fallback
 when no remove/cancel control remains. Continue calling the list with an empty slice to
 finish this return. Explicit host focus changes elsewhere are preserved. A host
-that removes the whole list subtree owns its replacement focus decision.
+that removes the whole list subtree owns its replacement focus decision. The
+return keys on the focused control no longer being enabled, so a row that is
+disabled after Cancel is treated like a removed one; a host that keeps such a
+row and wants focus to stay on it moves focus itself.
+A focused action is revealed once when focus arrives or layout moves it;
+scrolling away from it is never undone.
 
 ## Showcase and scope
 

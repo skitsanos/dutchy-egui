@@ -36,7 +36,10 @@ The default surface has separate background-filled items, eight-point gaps,
 four-point left borders, primary hover edges, display headers, and 24-point
 padding. `AccordionVariant::Bordered` uses one two-point outer border and shared
 dividers, body headers, 24/16-point header padding, muted hover fills, and thin
-panel dividers. Header text is 14-point bold uppercase with tracking. Long
+panel dividers. Header text is 14-point bold uppercase with wider (0.05 em)
+tracking on the default variant and wide (0.025 em) on the bordered one, as
+live. The default accent edge lights while the header or the open body is under
+the pointer. Long
 headers wrap beside a reserved chevron; body width and typography remain under
 the callback's control. Host spacing is preserved inside panels.
 
@@ -100,8 +103,12 @@ This is **manual activation**: Left/Right wrap across enabled tabs without
 selecting; Home/End move to the first/last. Enter/Space activates. One tab is in
 the Tab order: the selected one on entry, or the current roving tab while the
 strip owns focus. A closable roving tab also exposes its close button as the next
-Tab stop, then the active panel follows. Disabled tabs are skipped. Focused tabs
-scroll into view, with shared timing or immediate reduced-motion scrolling.
+Tab stop, then the active panel follows. Disabled tabs are skipped. Left/Right
+are locked on a focused tab and on its close button; Up/Down keep egui's native
+spatial navigation. Focused tabs scroll into view, with shared timing or
+immediate reduced-motion scrolling. The close glyph is an 8-point, 2-point
+stroke and underline labels center in the 56-point strip (about 2 points lower
+than the web); the overflow strip keeps egui's floating scrollbar.
 Native horizontal wheel/trackpad/scrollbar behavior remains available.
 
 Selected tabs use their active underline or segmented surface without an extra
@@ -139,8 +146,9 @@ can leave up to a physical pixel at a scroll boundary.
 These are original, repository-maintained implementations using egui interaction,
 focus memory, accessible metadata, and ScrollArea. No dependencies or copied
 third-party widget code were added. Durable content/selection/expansion and save/
-close decisions remain with the host; egui memory holds only transient focus,
-scroll, and animation information.
+close decisions remain with the host; egui memory holds transient focus,
+scroll and animation information plus two small flags: the shared input-mode
+flag behind the focus-visible policy and each strip's previous-focus record.
 
 The web overflow dropdown/arrows are represented by native horizontal scrolling
 and keyboard reveal. An overflow menu, icon slots, docking, reorder dragging,

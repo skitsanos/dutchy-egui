@@ -19,6 +19,7 @@ pub(super) fn icon(
     rect: Rect,
     label: &str,
     icon: Icon,
+    opacity: f32,
     p: Palette,
 ) -> Response {
     let response = ui.interact(rect, id, Sense::click());
@@ -31,10 +32,7 @@ pub(super) fn icon(
     let (fill, foreground) = if hover {
         (p.primary, p.on_primary)
     } else {
-        (
-            p.foreground.gamma_multiply(geometry::EXPAND_OPACITY),
-            p.background,
-        )
+        (p.foreground.gamma_multiply(opacity), p.background)
     };
     ui.painter().rect_filled(rect, 0, fill);
     let extent = if matches!(icon, Icon::Expand) {

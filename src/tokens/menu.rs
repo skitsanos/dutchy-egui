@@ -43,6 +43,8 @@ pub const POPUP_GAP: f32 = space::XS;
 pub const RESULTS_HEIGHT: f32 = 240.0;
 /// Command result-list maximum height.
 pub const COMMANDS_HEIGHT: f32 = 320.0;
+/// Dropdown list cap; the web dropdown has none.
+pub const DROPDOWN_MAX_HEIGHT: f32 = 320.0;
 /// Command dialog width.
 pub const PALETTE_WIDTH: f32 = 512.0;
 /// Command header padding.

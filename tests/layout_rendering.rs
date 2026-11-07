@@ -88,7 +88,7 @@ fn layout_and_focused_tooltip_render_across_themes_and_scales() {
             })
             .with_context_setup(move |ctx| common::install(ctx, theme))
             .build_ui_state(matrix, "Studio workspace".into());
-        h.get_by_label("KEYBOARD HELP").focus();
+        h.get_by_label("Keyboard help").focus();
         h.run_steps(3);
         h.check_accessibility();
         assert!(h.query_by_role(Role::Tooltip).is_some());
@@ -147,15 +147,15 @@ fn workspace_example_preserves_focus_on_reflow_and_saves_host_state() {
     h.run_steps(2);
     assert_eq!(h.get_by_label("Workspace name").accesskit_node().id(), id);
     assert!(h.get_by_label("Workspace name").is_focused());
-    h.get_by_label("SAVE SETTINGS").focus();
+    h.get_by_label("Save settings").focus();
     h.run();
     h.key_press(egui::Key::Enter);
     h.run_steps(2);
     assert_eq!(h.state().layout.saves, 1);
     assert!(h.query_by_role_and_label(Role::Status, "Success").is_some());
-    h.get_by_label("TOOLTIPS").click();
+    h.get_by_label("Tooltips").click();
     h.run();
-    h.get_by_label("ABOVE").focus();
+    h.get_by_label("Above").focus();
     h.run_steps(2);
     assert!(h.query_by_role(Role::Tooltip).is_some());
     h.key_press(egui::Key::Enter);

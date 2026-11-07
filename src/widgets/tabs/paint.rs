@@ -67,7 +67,7 @@ pub(super) fn tab<T>(
             egui::accesskit::Role::Tab,
             ui.is_enabled(),
             selected,
-            item.label.to_uppercase(),
+            item.label.to_string(),
         )
     });
     let close = item.closable.then(|| {

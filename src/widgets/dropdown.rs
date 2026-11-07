@@ -163,7 +163,7 @@ impl<'a, T: Clone> Dropdown<'a, T> {
                 ui.set_width((width - border::STANDARD * 2.0).max(0.0));
                 let result =
                     egui::ScrollArea::vertical()
-                        .max_height(geometry::COMMANDS_HEIGHT.min(
+                        .max_height(geometry::DROPDOWN_MAX_HEIGHT.min(
                             (ui.ctx().content_rect().height() - border::STANDARD * 2.0).max(0.0),
                         ))
                         .show(ui, |ui| {

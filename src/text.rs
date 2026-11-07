@@ -172,6 +172,16 @@ impl<'a> Text<'a> {
     }
 }
 
+/// Expose transformed text as written: assistive technology derives a label
+/// node's name from its value, so both fields carry the host's string.
+pub(crate) fn name_as_written(response: &Response, text: &str) {
+    let text = text.to_string();
+    response.ctx.accesskit_node_builder(response.id, |node| {
+        node.set_label(text.clone());
+        node.set_value(text);
+    });
+}
+
 impl Widget for Text<'_> {
     fn ui(mut self, ui: &mut Ui) -> Response {
         let theme = Theme::from_context(ui.ctx());
@@ -180,6 +190,12 @@ impl Widget for Text<'_> {
         {
             self.color = TextColor::Custom(color);
         }
-        ui.add(Label::new(self.layout_job(&theme, ui.available_width())).wrap())
+        // Uppercase is a visual treatment; assistive technology gets the text as written.
+        let name = self.uppercase.then(|| self.text.to_string());
+        let response = ui.add(Label::new(self.layout_job(&theme, ui.available_width())).wrap());
+        if let Some(name) = &name {
+            name_as_written(&response, name);
+        }
+        response
     }
 }

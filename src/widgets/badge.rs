@@ -129,7 +129,8 @@ impl Widget for Badge<'_> {
             (galley.size().y + 2.0 * space::XS).max(space::XXL),
         );
         let (rect, response) = ui.allocate_exact_size(desired, Sense::hover());
-        response.widget_info(|| WidgetInfo::labeled(Role::Label, ui.is_enabled(), galley.text()));
+        response
+            .widget_info(|| WidgetInfo::labeled(Role::Label, ui.is_enabled(), self.label.as_ref()));
         if ui.is_rect_visible(rect) {
             ui.painter().rect(rect, 0, fill, stroke, StrokeKind::Inside);
             ui.painter().galley(

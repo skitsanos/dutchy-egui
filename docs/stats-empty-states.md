@@ -20,14 +20,16 @@ fn error_rate(ui: &mut egui::Ui) {
 }
 ```
 
-Standalone stats use a four-point border and 24-point padding. `accented(true)`
+Standalone stats use a four-point border and 24-point padding (the web grows
+to 32 above 640 px). `accented(true)`
 replaces that border with a four-point left brand edge. Four `StatVariant`
 surfaces match the web grid: Light, Muted, Dark (inverted), and Primary. Inverse
 foregrounds apply to values, labels, descriptions, and neutral trends. Explicit
 positive/negative trend colors remain semantic status colors.
 
 `StatSize::Default` uses 36/48-point display values according to available content
-width; Small uses 30. Labels wrap rather than truncate. Default IDs derive from
+width (the web steps 30/36/48 by viewport); Small uses 30. Dark/Primary labels
+keep full inverse opacity rather than the web's 60/70 % (DS-003). Labels wrap rather than truncate. Default IDs derive from
 the label; use `id_salt` for duplicate/changing labels within one parent scope.
 Metrics expose a named group with formatted value and description/trend context.
 They do not add Tab stops, click actions, live announcements, or animation.
@@ -36,7 +38,9 @@ Trends keep three independent inputs: formatted change text, Up/Down/Flat
 direction, and Positive/Negative/Neutral sentiment. Neutral is the default;
 direction or a numeric sign never determines sentiment. Visible direction words
 and change text supplement decorative arrows, and accessibility includes the
-explicit sentiment. `comparison` adds a wrapped contextual line.
+explicit sentiment. `comparison` adds a wrapped contextual line. The arrow is
+a single chevron 6 points before the text (the web draws a double chevron and
+colors every non-negative change success by default).
 
 ```rust
 use dutchy_egui::{Stat, StatsGrid, StatsLayout};
@@ -54,8 +58,9 @@ StatsGrid supports up to four preferred columns and reduces them using shared
 minimum column widths (200 regular, 160 compact). It uses two-point dividers and
 equal tile height within each row. Regular layout retains the preferred column
 slots on its final partial row. Compact adds an enclosing two-point border,
-16-point padding, centered 24-point values, and smaller labels. Unlike the web's
-compact branch, it retains explicitly supplied surfaces, trends, and descriptions.
+16-point padding, centered 24-point values, and smaller bold labels. Unlike the
+web's compact branch, it retains explicitly supplied surfaces, trends, and
+descriptions, and wraps at 160 points where the web keeps one row.
 The grid's `size` supplies a shared regular scale instead of per-stat `size`.
 Stable metric IDs survive responsive reflow and inserted siblings.
 
@@ -92,8 +97,10 @@ secondary-colored primary button; the host supplies table structure and headers.
 Dashboard adds a dashed border, larger icon/heading, and wider description.
 `icon` overrides/removes the default through `EmptyStateIcon`.
 
-Guidance wraps at a bounded text width. Actions are centered side by side when
-they fit, otherwise stacked. Both reuse native Dutchy buttons at the shared
+Guidance wraps at a bounded text width. The description sits 24 points above
+the actions, item spacing included; the table variant keeps the shared 24/8/32
+rhythm rather than the spec's 16/4/16, and the title shares the paragraph's
+text clamp. Actions are centered side by side when they fit, otherwise stacked. Both reuse native Dutchy buttons at the shared
 Small size. `action_enabled` and `secondary_action_enabled` disable independently;
 `enabled(false)` disables all controls and never enables a disabled parent.
 `response` covers the container; title/body clicks do not activate its controls.

@@ -195,7 +195,7 @@ impl<'a, T: Clone + PartialEq> Tabs<'a, T> {
             WidgetInfo::labeled(
                 egui::accesskit::Role::TabPanel,
                 ui.is_enabled(),
-                item.label.to_uppercase(),
+                item.label.to_string(),
             )
         });
         ui.ctx().accesskit_node_builder(panel.response.id, |node| {

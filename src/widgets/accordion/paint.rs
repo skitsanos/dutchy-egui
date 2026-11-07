@@ -26,7 +26,11 @@ pub(super) fn header(
         .family(family)
         .size(TextSize::Sm)
         .weight(Weight::Bold)
-        .tracking(Tracking::Wider)
+        .tracking(if variant == AccordionVariant::Default {
+            Tracking::Wider
+        } else {
+            Tracking::Wide
+        })
         .uppercase(true)
         .layout_job(&theme, text_width);
     let galley = ui.fonts_mut(|fonts| fonts.layout_job(job));
@@ -44,7 +48,7 @@ pub(super) fn header(
         WidgetInfo::labeled(
             egui::accesskit::Role::Button,
             ui.is_enabled(),
-            label.to_uppercase(),
+            label.to_string(),
         )
     });
     if !ui.is_rect_visible(rect) {

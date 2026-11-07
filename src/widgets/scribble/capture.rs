@@ -157,8 +157,9 @@ fn process(
         Event::PointerMoved(pos) if state.is_pointer() => {
             if canvas.rect.contains(pos) && ui.clip_rect().contains(pos) {
                 if let Err(error) = state.append(transform.transform_pos(pos), drawing) {
-                    state.draft = None;
-                    outcome.error = Some(error);
+                    // The gesture ends at the cap; the captured ink is kept.
+                    state.finish(drawing, outcome);
+                    outcome.error.get_or_insert(error);
                 }
             } else {
                 state.finish(drawing, outcome);
@@ -174,7 +175,6 @@ fn process(
                 && ui.clip_rect().contains(pos)
                 && let Err(error) = state.append(transform.transform_pos(pos), drawing)
             {
-                state.draft = None;
                 outcome.error = Some(error);
             }
             state.finish(drawing, outcome);

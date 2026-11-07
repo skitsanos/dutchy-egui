@@ -53,10 +53,10 @@ fn actions() -> Harness<'static, Actions> {
 #[test]
 fn pointer_and_keyboard_activate_once() {
     let mut harness = actions();
-    harness.get_by_label("SMALL").click();
+    harness.get_by_label("Small").click();
     harness.run();
     assert_eq!(harness.state().clicks, 1);
-    harness.get_by_label("MEDIUM").focus();
+    harness.get_by_label("Medium").focus();
     harness.run();
     harness.key_press(Key::Enter);
     harness.run();
@@ -69,13 +69,13 @@ fn pointer_and_keyboard_activate_once() {
 #[test]
 fn disabled_and_loading_controls_do_not_activate() {
     let mut harness = actions();
-    for label in ["DISABLED", "BUSY", "PARENT DISABLED"] {
+    for label in ["Disabled", "Busy", "Parent disabled"] {
         assert!(harness.get_by_label(label).accesskit_node().is_disabled());
         harness.get_by_label(label).click();
         harness.run();
     }
     assert_eq!(harness.state().clicks, 0);
-    assert!(harness.get_by_label("BUSY").accesskit_node().is_busy());
+    assert!(harness.get_by_label("Busy").accesskit_node().is_busy());
 }
 
 #[test]
@@ -90,7 +90,7 @@ fn control_height_is_independent_of_label_and_state() {
 #[test]
 fn badge_label_does_not_dismiss_but_close_supports_keyboard() {
     let mut harness = actions();
-    harness.get_by_label("REMOVABLE").click();
+    harness.get_by_label("Removable").click();
     harness.run();
     assert_eq!(harness.state().dismissals, 0);
     harness.get_by_label("Dismiss Removable").click();

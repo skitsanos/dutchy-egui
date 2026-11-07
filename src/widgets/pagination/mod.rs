@@ -100,6 +100,7 @@ impl<'a> Pagination<'a> {
                             || "No pages".into(),
                             |page| format!("Page {page} of {}", self.total),
                         ),
+                        current.map(|page| (page, self.total)),
                     );
                 } else if let Some(current) = current {
                     for entry in pages::entries(current, self.total) {

@@ -34,12 +34,12 @@ fn harness(size: [f32; 2]) -> Harness<'static, gallery::Showcase> {
 fn simulated_failure_retry_and_completion_are_host_actions() {
     let mut h = harness([1200.0, 2400.0]);
     h.run_steps(3);
-    h.get_by_label("ADD SAMPLE FILES").click();
+    h.get_by_label("Add sample files").click();
     h.run_steps(2);
     h.get_by_label("Interrupt the next demo transfer once")
         .click();
     h.run_steps(2);
-    h.get_by_label("START DEMO UPLOAD").click();
+    h.get_by_label("Start demo upload").click();
     h.run_steps(22);
     assert!(h.query_by_label("Retry upload project-brief.pdf").is_some());
     h.get_by_label("Retry upload project-brief.pdf").focus();
@@ -63,9 +63,9 @@ fn simulated_failure_retry_and_completion_are_host_actions() {
 fn cancelling_a_demo_transfer_removes_only_that_host_file() {
     let mut h = harness([1200.0, 2400.0]);
     h.run_steps(3);
-    h.get_by_label("ADD SAMPLE FILES").click();
+    h.get_by_label("Add sample files").click();
     h.run_steps(2);
-    h.get_by_label("START DEMO UPLOAD").click();
+    h.get_by_label("Start demo upload").click();
     h.run_steps(2);
     h.get_by_label("Cancel upload project-brief.pdf").focus();
     h.run_steps(1);
@@ -76,7 +76,7 @@ fn cancelling_a_demo_transfer_removes_only_that_host_file() {
             .is_none()
     );
     assert!(h.get_by_label("Cancel upload canal-photo.jpg").is_focused());
-    assert!(h.query_by_label("1 / 5 FILES SELECTED").is_some());
+    assert!(h.query_by_label("1 / 5 files selected").is_some());
 }
 #[derive(Debug)]
 struct File(PathBuf);
@@ -128,7 +128,7 @@ fn dropped_native_paths_share_type_size_and_count_validation_without_reading_byt
         h.query_by_role_and_label(Role::ListItem, "oversized.pdf")
             .is_none()
     );
-    assert!(h.query_by_label("1 / 5 FILES SELECTED").is_some());
+    assert!(h.query_by_label("1 / 5 files selected").is_some());
     assert!(
         h.query_by_label_contains("rejected.exe: File type is not accepted")
             .is_some()
@@ -141,7 +141,7 @@ fn showcase_is_readable_at_desktop_and_narrow_widths() {
     for (size, name) in [([1200.0, 2000.0], "desktop"), ([480.0, 3000.0], "narrow")] {
         let mut h = harness(size);
         h.run_steps(3);
-        h.get_by_label("ADD SAMPLE FILES").click();
+        h.get_by_label("Add sample files").click();
         h.run_steps(3);
         h.check_accessibility();
         h.render()

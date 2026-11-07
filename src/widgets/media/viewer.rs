@@ -192,7 +192,15 @@ fn header(
                             let (_, rect) =
                                 ui.allocate_space(egui::Vec2::splat(geometry::VIEWER_CONTROL));
                             buttons.push(ui.add_enabled(enabled, |ui: &mut Ui| {
-                                control::icon(ui, root.with(salt), rect, label, icon, p)
+                                control::icon(
+                                    ui,
+                                    root.with(salt),
+                                    rect,
+                                    label,
+                                    icon,
+                                    geometry::EXPAND_OPACITY,
+                                    p,
+                                )
                             }));
                         }
                     }
@@ -230,6 +238,7 @@ fn header(
             rect,
             &format!("Close {name}"),
             Icon::Close,
+            geometry::EXPAND_OPACITY,
             p,
         )
     });

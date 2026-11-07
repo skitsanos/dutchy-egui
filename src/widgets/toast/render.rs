@@ -59,7 +59,7 @@ pub(super) fn show<T>(stack: Toasts<'_, T>, ctx: &Context) -> ToastsResponse<T> 
                         if index > 0 {
                             ui.add_space(geometry::GAP);
                         }
-                        let opacity = entrance(ui, entry, now);
+                        let opacity = entrance(ui, entry, delta);
                         let response = paint::row(ui, root, entry.id, &entry.toast, opacity);
                         let running = !stack.paused
                             && !ui.is_sizing_pass()
@@ -110,15 +110,18 @@ pub(super) fn show<T>(stack: Toasts<'_, T>, ctx: &Context) -> ToastsResponse<T> 
         events,
     }
 }
-fn entrance<T>(ui: &Ui, entry: &mut Entry<T>, now: f64) -> f32 {
+fn entrance<T>(ui: &Ui, entry: &mut Entry<T>, delta: f64) -> f32 {
     if ui.is_sizing_pass() {
         return 1.0;
     }
-    let start = *entry.entrance.get_or_insert(now);
+    // The queue's clock guard keeps `delta` finite and non-negative, so a
+    // stalled or rewound clock pauses the fade instead of hiding the toast.
+    let elapsed = entry.entrance.map_or(0.0, |elapsed| elapsed + delta);
+    entry.entrance = Some(elapsed);
     if Theme::from_context(ui.ctx()).reduced_motion {
         return 1.0;
     }
-    let amount = ((now - start) / f64::from(motion::SLOW)).clamp(0.0, 1.0) as f32;
+    let amount = (elapsed / f64::from(motion::SLOW)).clamp(0.0, 1.0) as f32;
     if amount < 1.0 {
         ui.ctx().request_repaint_after(motion::FRAME_INTERVAL);
     }
@@ -130,11 +133,8 @@ fn schedule<T>(ctx: &Context, entry: &Entry<T>, running: bool) {
     }
 }
 fn reveal_focus(ui: &Ui, rows: &[ToastResponse]) {
-    if let Some(response) = rows
-        .iter()
-        .flat_map(|row| row.controls())
-        .find(|r| r.has_focus() && !ui.clip_rect().contains_rect(r.rect))
-    {
-        response.scroll_to_me_animation(None, egui::style::ScrollAnimation::none());
+    let anchor = ui.max_rect().min;
+    for response in rows.iter().flat_map(|row| row.controls()) {
+        crate::interaction::reveal_focused(ui, response, anchor);
     }
 }

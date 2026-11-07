@@ -60,7 +60,7 @@ pub(super) fn item<T>(
                 egui::accesskit::Role::Button
             },
             ui.is_enabled(),
-            item.label.to_uppercase(),
+            item.label.to_string(),
         )
     });
     if current {
@@ -137,15 +137,17 @@ pub(super) fn collapsed(ui: &mut Ui, id: Id) -> Response {
             "Show collapsed ancestors",
         )
     });
-    let color = if response.hovered() || response.has_focus() {
+    let active = response.hovered() || response.has_focus();
+    let color = if active {
         p.primary
     } else {
         p.muted_foreground
     };
+    let outline = if active { p.primary } else { p.border };
     ui.painter().rect_stroke(
         rect,
         0,
-        Stroke::new(border::STANDARD, color),
+        Stroke::new(border::STANDARD, outline),
         egui::StrokeKind::Inside,
     );
     let text = galley(ui, "…", f32::INFINITY);

@@ -142,31 +142,31 @@ fn example_progress_and_content_transitions_remain_application_controlled() {
                 ..Default::default()
             }
         });
-    h.get_by_label("ADD 10").click();
+    h.get_by_label("Add 10").click();
     h.run();
     assert_eq!(h.state().loading.value, 74.0);
     for _ in 0..3 {
-        h.get_by_label("ADD 10").click();
+        h.get_by_label("Add 10").click();
         h.run();
     }
     assert_eq!(h.state().loading.value, 100.0);
-    h.get_by_label("RESET PROGRESS").click();
+    h.get_by_label("Reset progress").click();
     h.run();
     assert_eq!(h.state().loading.value, 0.0);
-    h.get_by_label("SKELETONS").click();
+    h.get_by_label("Skeletons").click();
     h.run();
     assert!(h.query_by_label("Loading workspace").is_some());
-    let before = h.get_by_label("02 / SHAPE PRIMITIVES").rect();
-    h.get_by_label("SHOW LOADED CONTENT").click();
+    let before = h.get_by_label("02 / Shape primitives").rect();
+    h.get_by_label("Show loaded content").click();
     h.run();
     assert!(h.state().loading.ready);
     assert!(h.query_by_label("Loading workspace").is_none());
-    assert_eq!(h.get_by_label("02 / SHAPE PRIMITIVES").rect(), before);
-    h.get_by_label("OPEN WORKSPACE").click();
+    assert_eq!(h.get_by_label("02 / Shape primitives").rect(), before);
+    h.get_by_label("Open workspace").click();
     h.run();
     assert_eq!(h.state().loading.opens, 1);
-    h.get_by_label("SHOW PLACEHOLDERS").click();
+    h.get_by_label("Show placeholders").click();
     h.run();
     assert!(!h.state().loading.ready);
-    assert_eq!(h.get_by_label("02 / SHAPE PRIMITIVES").rect(), before);
+    assert_eq!(h.get_by_label("02 / Shape primitives").rect(), before);
 }

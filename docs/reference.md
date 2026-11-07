@@ -30,9 +30,13 @@ muted text, and #333333 border. Secondary dark surfaces map to muted; status
 colors and accents retain their source values. This completes a documented
 theme whose runtime overrides are absent from the current web stylesheet.
 
-White text on primary/status fills follows the source. Several combinations
-have limited contrast: see [DS-003](issues/DS-003.md). Palette fields are public
-so applications can choose appropriate accessible text/fill pairs.
+White text on primary/status fills follows the source by decision
+([DS-003](issues/DS-003.md)); several combinations have limited contrast.
+Status and accent text on neutral surfaces keeps the source colors as well
+([DS-027](issues/DS-027.md)). Palette fields are public so applications can
+choose appropriate accessible text/fill pairs, including `on_primary` and
+`on_status`, and `TextColor::Custom` sets an explicit color on any text the
+host renders.
 
 ## Geometry and behavior
 
@@ -40,9 +44,17 @@ so applications can choose appropriate accessible text/fill pairs.
 - Shared control heights are 32/48/56; paddings are 16/32/40 horizontally.
 - Borders use 1/2/4/8; focus is a 2-point outline with a 2-point gap.
   Shared focus cues follow keyboard/assistive input; pointer activation retains
-  native focus without an extra ring. Accordion rings are inset to keep all four
-  edges clear of adjacent fills. Selected tabs use their active mark alone.
-- No gradients, rounded corners, or blurred shadows are introduced.
+  native focus without an extra ring. The input mode persists in egui's
+  temporary memory, so programmatic focus shows a cue until the first pointer
+  press and again after the next key, text, IME, clipboard or assistive event.
+  Accordion rings are inset to keep all four edges clear of adjacent fills.
+  Selected tabs use their active mark alone (DS-011); WCAG 2.4.7 expects a
+  visible focus indicator on every focusable item, so a keyboard user entering
+  a strip on the selected tab sees no change (recorded in DS-036).
+- No gradients, rounded corners, or blurred shadows are introduced. Borders are
+  solid except the file drop zone, whose dashed 2-point edge follows the
+  file-upload component and its live implementation; the effects token page's
+  "no dashed borders" statement is a documented exception.
 - Buttons use egui's standard control for pointer/keyboard semantics inside a
   scoped variant style. Disabled/loading state also honors a disabled parent.
 - Badges dismiss only through the close affordance and report a named button.
@@ -52,4 +64,11 @@ so applications can choose appropriate accessible text/fill pairs.
 - Custom text supports em tracking and point line height; named presets match
   the documented scale. Bundled face weights are selected explicitly.
 - Native egui controls inherit the theme; they do not automatically acquire
-  every web component variant, tracking rule, or behavior.
+  every web component variant, tracking rule, or behavior. The style is
+  installed for both egui themes: `Mode` selects the palette, so a later
+  theme-preference change cannot drop native widgets to egui defaults.
+- Uppercase is a visual treatment. Buttons, tabs, accordion headers,
+  breadcrumbs, badges, headings, field labels, and uppercase `Text` expose
+  their accessible names and values as the host wrote them.
+- Focused controls are revealed once, when focus arrives or when layout moves
+  them relative to their container; manual scrolling is never undone.

@@ -131,7 +131,7 @@ fn example(size: [f32; 2]) -> Harness<'static, gallery::Showcase> {
 #[test]
 fn showcase_undo_and_retry_execute_in_the_host_once_and_keep_data() {
     let mut h = example([1200.0, 1300.0]);
-    h.get_by_label("ARCHIVE SAMPLE ITEM").click();
+    h.get_by_label("Archive sample item").click();
     h.run_steps(5);
     assert_eq!(h.state().notifications.archives, 1);
     h.get_by_label("Undo archive").focus();
@@ -140,7 +140,7 @@ fn showcase_undo_and_retry_execute_in_the_host_once_and_keep_data() {
     h.run_steps(4);
     assert_eq!(h.state().notifications.archives, 0);
     assert!(h.state().notifications.queue.is_empty());
-    h.get_by_label("NOTIFY ERROR").click();
+    h.get_by_label("Notify error").click();
     h.run_steps(4);
     h.get_by_label("Retry sync").click();
     h.run_steps(4);
@@ -156,7 +156,7 @@ fn showcase_and_long_notifications_render_with_narrow_scrolling() {
         let mut h = example(size);
         h.state_mut().notifications.persistent = true;
         h.run_steps(4);
-        h.get_by_label("NOTIFY WARNING").click();
+        h.get_by_label("Notify warning").click();
         h.run_steps(4);
         h.render()
             .unwrap()

@@ -96,6 +96,9 @@ impl<'a> Input<'a> {
                 egui::Layout::top_down(egui::Align::Min),
                 |ui| {
                     ui.style_mut().spacing.interact_size.y = self.size.height();
+                    // The editor keeps its own light fill, so inverse surfaces
+                    // must not recolor its text.
+                    ui.visuals_mut().override_text_color = None;
                     if !self.enabled {
                         ui.disable();
                     }

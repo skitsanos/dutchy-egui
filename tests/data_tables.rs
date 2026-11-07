@@ -289,12 +289,160 @@ fn loading_empty_and_missing_columns_do_not_invoke_data_cells() {
     h.state_mut().records.clear();
     h.run_steps(3);
     assert_eq!(h.state().calls, 0);
-    assert!(h.query_by_label("NO DATA AVAILABLE").is_some());
+    assert!(
+        h.query_by_role_and_label(Role::Heading, "No data available")
+            .is_some()
+    );
     let table = h.get_by_role_and_label(Role::Table, "Records");
     assert_eq!(table.accesskit_node().data().row_count(), Some(2));
     h.state_mut().no_columns = true;
     h.run_steps(2);
     assert!(h.query_by_role_and_label(Role::Table, "Records").is_none());
-    assert!(h.query_by_label("NO COLUMNS CONFIGURED").is_some());
+    assert!(
+        h.query_by_role_and_label(Role::Heading, "No columns configured")
+            .is_some()
+    );
     h.check_accessibility();
+}
+#[test]
+fn duplicate_row_keys_do_not_request_repaints_forever() {
+    let mut h = harness([840.0, 600.0]);
+    h.state_mut().records = vec![
+        Record {
+            id: 1,
+            name: "Short".into(),
+            value: 10,
+        },
+        Record {
+            id: 1,
+            name: "A duplicate key with a much longer name that wraps onto several lines inside the column"
+                .into(),
+            value: 20,
+        },
+        Record {
+            id: 2,
+            name: "Unique".into(),
+            value: 30,
+        },
+    ];
+    h.run_steps(8);
+    let delay = h.output().viewport_output[&egui::ViewportId::ROOT].repaint_delay;
+    assert!(
+        delay > std::time::Duration::from_secs(1),
+        "duplicate keys must not keep requesting repaints (delay={delay:?})"
+    );
+}
+#[test]
+fn row_measurements_do_not_accumulate_as_pages_change() {
+    struct Page(Vec<(u8, String)>);
+    let mut h = Harness::builder()
+        .with_size([600.0, 400.0])
+        .with_context_setup(|ctx| common::install(ctx, Theme::default().with_reduced_motion(true)))
+        .build_ui_state(
+            |ui, state: &mut Page| {
+                let columns =
+                    [TableColumn::new(Column::Name, "Name")
+                        .width(TableColumnWidth::Flexible(160.0))];
+                DataTable::new("pages", &columns, &state.0)
+                    .accessible_name("Pages")
+                    .show(
+                        ui,
+                        |row| row.0,
+                        |ui, row, _| {
+                            ui.label(&row.1);
+                        },
+                    );
+            },
+            Page(Vec::new()),
+        );
+    let mut sizes = Vec::new();
+    for page in 0..3u8 {
+        h.state_mut().0 = (1..=3)
+            .map(|n| (page * 10 + n, format!("Record {n} of page {page}")))
+            .collect();
+        h.run_steps(4);
+        sizes.push(h.ctx.data(|data| data.len()));
+    }
+    assert_eq!(
+        sizes[1], sizes[2],
+        "temporary measurements must be evicted for rows that left the view (sizes={sizes:?})"
+    );
+}
+
+#[test]
+fn headers_use_the_bold_body_face_with_wider_tracking() {
+    let mut h = harness([800.0, 600.0]);
+    h.run_steps(2);
+    let format = common::galleys(&h.output().shapes)
+        .into_iter()
+        .find(|galley| galley.job.text.eq_ignore_ascii_case("name"))
+        .map(|galley| galley.job.sections[0].format.clone())
+        .expect("header painted");
+    assert!((format.extra_letter_spacing - 0.05 * 12.0).abs() < 1e-3);
+    #[cfg(feature = "bundled-fonts")]
+    assert_eq!(
+        format.font_id.family,
+        dutchy_egui::fonts::font_family(dutchy_egui::Family::Body, dutchy_egui::Weight::Bold)
+    );
+}
+#[test]
+fn muted_headers_keep_foreground_text() {
+    let mut h = Harness::builder()
+        .with_size([600.0, 400.0])
+        .with_context_setup(|ctx| common::install(ctx, Theme::default().with_reduced_motion(true)))
+        .build_ui_state(
+            |ui, records: &mut Vec<Record>| {
+                let columns = [TableColumn::new(Column::Name, "Name")];
+                let _ = DataTable::new("muted", &columns, &records[..])
+                    .header(dutchy_egui::TableHeader::Muted)
+                    .show(
+                        ui,
+                        |row| row.id,
+                        |ui, row, _| {
+                            ui.label(&row.name);
+                        },
+                    );
+            },
+            State::default().records,
+        );
+    h.run_steps(2);
+    let color = h
+        .output()
+        .shapes
+        .iter()
+        .find_map(|clipped| match &clipped.shape {
+            egui::Shape::Text(text) if text.galley.job.text.eq_ignore_ascii_case("name") => {
+                text.override_text_color
+            }
+            _ => None,
+        })
+        .expect("header painted");
+    assert_eq!(color, Theme::default().palette.foreground);
+}
+#[test]
+fn unsorted_sort_glyphs_rest_at_thirty_percent() {
+    let mut h = harness([800.0, 600.0]);
+    h.run_steps(2);
+    let target = h.get_by_label("Sort by Name").rect();
+    let alphas: Vec<u8> = h
+        .output()
+        .shapes
+        .iter()
+        .filter_map(|clipped| match &clipped.shape {
+            egui::Shape::Path(path) if path.points.iter().all(|point| target.contains(*point)) => {
+                match &path.stroke.color {
+                    egui::epaint::ColorMode::Solid(color) => Some(color.a()),
+                    egui::epaint::ColorMode::UV(_) => None,
+                }
+            }
+            _ => None,
+        })
+        .collect();
+    assert_eq!(alphas.len(), 4, "two shafts and two heads");
+    assert!(
+        alphas
+            .iter()
+            .all(|alpha| *alpha == (0.3 * 255.0 + 0.5) as u8),
+        "{alphas:?}"
+    );
 }

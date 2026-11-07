@@ -91,10 +91,10 @@ fn keyboard_focus_and_hover_render() {
         .with_context_setup(|ctx| common::install(ctx, Theme::default().with_reduced_motion(true)))
         .build_ui(state_matrix);
     harness
-        .get_by_role_and_label(egui::accesskit::Role::Button, "PRIMARY")
+        .get_by_role_and_label(egui::accesskit::Role::Button, "Primary")
         .focus();
     harness
-        .get_by_role_and_label(egui::accesskit::Role::Button, "OUTLINE")
+        .get_by_role_and_label(egui::accesskit::Role::Button, "Outline")
         .hover();
     harness.run();
     harness.snapshot("focus-and-hover");
@@ -127,7 +127,7 @@ fn showcase_is_usable_at_desktop_and_narrow_widths() {
         assert!(harness.get_by_label("D. DUTCHY / EGUI").rect().width() < size[0]);
         assert!(
             harness
-                .get_by_role_and_label(egui::accesskit::Role::Button, "DESTRUCTIVE")
+                .get_by_role_and_label(egui::accesskit::Role::Button, "Destructive")
                 .rect()
                 .right()
                 <= size[0]
@@ -147,22 +147,22 @@ fn showcase_navigation_and_theme_switches_update_the_host_state() {
                 ..Default::default()
             }
         });
-    harness.get_by_label("PURPLE").click();
+    harness.get_by_label("Purple").click();
     harness.run();
     assert_eq!(harness.state().accent, Accent::Purple);
-    harness.get_by_label("DARK MODE").click();
+    harness.get_by_label("Dark mode").click();
     harness.run();
     assert_eq!(harness.state().mode, Mode::Dark);
     assert!(harness.ctx.global_style().visuals.dark_mode);
     // The component list now overflows the sidebar at this viewport height.
-    harness.get_by_label("BADGES").scroll_to_me();
+    harness.get_by_label("Badges").scroll_to_me();
     harness.run_steps(3);
-    harness.get_by_label("BADGES").click();
+    harness.get_by_label("Badges").click();
     harness.run();
     harness.get_by_label("Dismiss Removable tag").click();
     harness.run();
     assert!(!harness.state().badge_visible);
-    harness.get_by_label("RESTORE TAG").click();
+    harness.get_by_label("Restore tag").click();
     harness.run();
     assert!(harness.state().badge_visible);
 }

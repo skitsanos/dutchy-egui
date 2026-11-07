@@ -171,10 +171,15 @@ impl Card {
 
     /// Display-font card heading, with heading level 3 accessibility metadata.
     pub fn title(ui: &mut Ui, title: &str) -> Response {
-        let response = ui.add(Text::heading(title).size(TextSize::Xl));
+        // The live CardTitle keeps the display face without heading tracking.
+        let response = ui.add(
+            Text::heading(title)
+                .size(TextSize::Xl)
+                .tracking(crate::Tracking::Normal),
+        );
         response.ctx.accesskit_node_builder(response.id, |node| {
             node.set_role(egui::accesskit::Role::Heading);
-            node.set_label(title.to_uppercase());
+            node.set_label(title);
             node.set_level(3);
         });
         response
@@ -191,14 +196,20 @@ impl Card {
     /// Header content followed by the documented gap.
     pub fn header<R>(ui: &mut Ui, contents: impl FnOnce(&mut Ui) -> R) -> R {
         let result = contents(ui);
-        ui.add_space(space::LG);
+        crate::layout::gap_after(ui, space::LG);
         result
     }
-    /// Footer content separated by spacing and a thin divider.
+    /// Footer content separated by spacing and a one-point border divider
+    /// (live `mt-6 pt-4 border-t border-border`, on every surface).
     pub fn footer<R>(ui: &mut Ui, contents: impl FnOnce(&mut Ui) -> R) -> R {
-        ui.add_space(space::XXL);
-        ui.separator();
-        ui.add_space(space::LG);
+        crate::layout::gap_after(ui, space::XXL);
+        let (_, rect) = ui.allocate_space(egui::vec2(
+            ui.available_width(),
+            crate::tokens::border::THIN,
+        ));
+        ui.painter()
+            .rect_filled(rect, 0, Theme::from_context(ui.ctx()).palette.border);
+        crate::layout::gap_after(ui, space::LG);
         contents(ui)
     }
 }

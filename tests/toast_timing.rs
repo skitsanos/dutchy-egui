@@ -200,3 +200,45 @@ fn entrance_changes_paint_then_settles_and_reduced_motion_is_immediate() {
         assert!(frame(&ctx, &mut queue, 1.2, &options).delay > Duration::from_millis(100));
     }
 }
+
+/// Alpha of the most opaque rectangle painted inside the toast's rect.
+fn surface_alpha(read: &Read) -> u8 {
+    let rect = read.rect.expect("toast is shown");
+    read.shapes
+        .iter()
+        .filter_map(|clipped| match &clipped.shape {
+            egui::Shape::Rect(shape) if rect.contains_rect(shape.rect) => Some(shape.fill.a()),
+            _ => None,
+        })
+        .max()
+        .unwrap_or(0)
+}
+#[test]
+fn entrance_fade_survives_a_clock_that_stalls_or_runs_backwards() {
+    let ctx = Context::default();
+    common::install(&ctx, Theme::default());
+    let mut queue = ToastQueue::new();
+    queue.push(Toast::new("Saved"));
+    let options = Options::default();
+    frame(&ctx, &mut queue, 100.0, &options);
+    frame(&ctx, &mut queue, 100.01, &options);
+    let faded_in = frame(&ctx, &mut queue, 101.0, &options);
+    assert_eq!(
+        surface_alpha(&faded_in),
+        255,
+        "fade completes after a second"
+    );
+    let stalled = frame(&ctx, &mut queue, f64::NAN, &options);
+    assert_eq!(
+        surface_alpha(&stalled),
+        255,
+        "a non-finite clock keeps the toast visible"
+    );
+    let rewound = frame(&ctx, &mut queue, 50.0, &options);
+    assert_eq!(
+        surface_alpha(&rewound),
+        255,
+        "a clock that runs backwards keeps the toast visible"
+    );
+    assert_eq!(queue.len(), 1);
+}

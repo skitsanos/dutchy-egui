@@ -28,6 +28,8 @@ pub const COMPACT_Y: i8 = 8;
 pub const SORT_ICON: f32 = space::MD;
 /// Space between header text and sort arrow.
 pub const SORT_GAP: f32 = space::XS;
+/// Resting sort glyph opacity (live `opacity-30`).
+pub const SORT_IDLE_OPACITY: f32 = 0.3;
 /// Alternating muted surface blend.
 pub const STRIPE_OPACITY: f32 = 0.3;
 /// Row hover muted surface blend.

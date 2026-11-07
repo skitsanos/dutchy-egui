@@ -10,6 +10,8 @@ pub const COMPACT_COLUMN: f32 = 160.0;
 pub const LARGE_VALUE_WIDTH: f32 = 240.0;
 /// Decorative trend arrow side.
 pub const TREND_ICON: f32 = space::LG;
+/// Gap between the trend arrow and its text (live `gap-1.5`).
+pub const TREND_GAP: f32 = 6.0;
 /// Maximum empty-state body width.
 pub const EMPTY_TEXT_WIDTH: f32 = 384.0;
 /// Maximum dashboard description width.

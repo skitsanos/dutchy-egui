@@ -2,14 +2,16 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.15** adds Scribble: pointer/keyboard drawing, host-owned history,
-immutable export snapshots, SVG, CPU previews and optional PNG export.
+Version **1.0.16** fixes scroll, focus, composition and accessibility defects
+found by the ledger verification audit (DS-028). Version 1.0.15 added Scribble:
+pointer/keyboard drawing, host-owned history, immutable export snapshots, SVG,
+CPU previews and optional PNG export.
 The core advanced-component inventory is implemented; supported scope remains explicit.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.15"
+dutchy-egui = "1.0.16"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -53,6 +55,7 @@ Small/Medium/Large sizes, full width, disabled, and loading states. Badges have
 eight treatments and optional dismissal; the host removes a closable badge when
 its response is clicked. Close buttons on badges, tabs, and alerts share flat
 hover/pressed feedback, pointing cursors, and keyboard focus cues. Spinners respect reduced motion and visibility.
+Uppercase is a visual treatment: accessible names keep the host's casing.
 
 The default build depends only on **egui 0.37.0** at runtime. Optional
 `url-images` adds **ehttp 0.7.3** and **image 0.25.10** for HTTP(S) PNG/JPEG.
@@ -321,8 +324,10 @@ Current platform evidence and limitations are recorded in
 [cards and alerts verification](docs/verification-surfaces.md),
 [form verification](docs/verification-forms.md), and the earlier
 [visual-proof verification](docs/verification.md). This milestone does not claim whole-system
-parity or blanket contrast compliance; [DS-003](docs/issues/DS-003.md) records
-inherited source-palette contrast limitations.
+parity or blanket contrast compliance; [DS-003](docs/issues/DS-003.md) and
+[DS-027](docs/issues/DS-027.md) record the decision to keep the source colors
+for white text on status fills and for status and accent text on neutral
+surfaces, leaving stricter ratios to host palette overrides.
 
 ## Development
 

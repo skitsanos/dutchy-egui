@@ -90,11 +90,17 @@ impl<'a, T: Clone> CommandPalette<'a, T> {
                 memory.restore_pending = true;
             }
             if memory.restore_pending {
-                if ctx.memory(|m| m.top_modal_layer()).is_none() {
-                    restore(ctx, memory.return_focus);
-                    memory.restore_pending = false;
+                match ctx.memory(|m| m.top_modal_layer()) {
+                    None => {
+                        restore(ctx, memory.return_focus);
+                        memory.restore_pending = false;
+                        ctx.request_repaint();
+                    }
+                    // egui reports the palette's own layer for one more pass.
+                    Some(layer) if layer.id == root => ctx.request_repaint(),
+                    // Another modal took over; focus now belongs to it.
+                    Some(_) => memory.restore_pending = false,
                 }
-                ctx.request_repaint();
             }
             memory.was_open = false;
             ctx.data_mut(|data| data.insert_temp(key, memory));

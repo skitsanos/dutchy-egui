@@ -209,7 +209,7 @@ impl<'a> EmptyState<'a> {
         );
         title.ctx.accesskit_node_builder(title.id, |node| {
             node.set_role(Role::Heading);
-            node.set_label(self.title.to_uppercase());
+            node.set_label(self.title.to_string());
             node.set_level(3);
         });
         if let Some(description) = &self.description {

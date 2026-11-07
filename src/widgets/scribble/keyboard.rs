@@ -65,8 +65,9 @@ fn edit(
             .clamp(Vec2::ZERO, drawing.size())
             .to_pos2();
         if let Err(error) = state.append(point, drawing) {
-            state.draft = None;
-            outcome.error = Some(error);
+            // The draft ends at the cap; the captured ink is kept.
+            state.finish(drawing, outcome);
+            outcome.error.get_or_insert(error);
         }
         return true;
     }

@@ -69,6 +69,9 @@ table uses its natural total width. Minima never shrink to fit a narrow viewport
 the table scrolls horizontally instead.
 
 Keys must be unique within their row/column collection and remain immutable.
+A repeated row key receives an occurrence salt so the rows keep separate
+identities and measurements instead of looping; only unique keys retain
+identity across reordering.
 Do not use display positions as record keys or mutate `TableColumn.key` after
 construction. Labels may change while keys stay fixed. A cell closure receives
 the record and column key, runs once per cell per egui pass, and composes ordinary
@@ -84,6 +87,7 @@ when content changes; centering offsets do not contribute to natural row height.
 `TableAlign::{Left, Center, Right}` applies horizontally to headings and cells.
 `DataTableResponse` includes the viewport, semantic header/row/cell responses,
 optional selection controls, and host requests.
+Measurements of rows that leave the view are evicted at the end of the pass.
 
 ## Sort, selection and focus
 
@@ -114,8 +118,14 @@ selection or arbitrary row focus is introduced.
 
 `TableHeader::{Muted, Inverse, Plain}` explicitly supports the documented muted
 header, striped reference's inverse header and live component's plain header.
+Header labels use the bold body face at 12 points, uppercase, with wider
+(0.05 em) tracking; the muted header keeps foreground text while the plain
+header uses muted-foreground like the live `th`. Sort glyphs are the live
+12-point double arrow at 30 % opacity, primary at full strength when the column
+is sorted and rotated for descending order.
 Comfortable density uses 24x16 body padding and 24x12 header padding; Compact uses
-16x8 for both. `.striped(true)` alternates muted rows. Hover uses a flat muted
+16x8 for both. `.striped(true)` alternates rows with the live 30 % muted blend
+(the Markdown spec says 50 %). Hover uses a flat muted
 fill; selection adds a subtle accent fill and leading edge. Outer borders are
 two points, header dividers two, row separators one. `.bordered(false)` removes
 only the outer border. Geometry and palette values come from shared tokens.
@@ -124,7 +134,9 @@ The header stays above the vertically scrolling body; horizontal scrolling moves
 headings and cells together. `.max_height(...)` caps the body at 384 points by
 default, clamped to 96–4096. Nonfinite height requests use the default.
 
-Empty tables display `EmptyState` guidance, configurable through `.empty_text`.
+Empty tables display `EmptyState` guidance, configurable through `.empty_text`;
+its inbox glyph is the port's own, drawn by neither reference. Rows and
+selection checkboxes are named by display index.
 `.loading(true)` replaces records with a named busy skeleton group and disables
 header controls; stale cell closures do not run. This deliberately differs from
 the source's translucent overlay on stale data. Empty/loading guidance is sized

@@ -147,3 +147,59 @@ fn long_values_and_all_surfaces_fit_narrow_columns_without_style_leaks() {
         });
     h.run();
 }
+
+#[cfg(feature = "bundled-fonts")]
+#[test]
+fn compact_labels_use_the_bold_face() {
+    let mut h = Harness::builder()
+        .with_size([600.0, 500.0])
+        .with_theme(egui::Theme::Light)
+        .with_context_setup(|ctx| common::install(ctx, Theme::default()))
+        .build_ui(|ui| {
+            let stats = [Stat::new("Revenue", "$48,290")];
+            for layout in [StatsLayout::Grid, StatsLayout::Compact] {
+                ui.add(StatsGrid::new(format!("{layout:?}"), &stats).layout(layout));
+            }
+        });
+    h.run_steps(2);
+    let families: Vec<_> = common::galleys(&h.output().shapes)
+        .into_iter()
+        .filter(|galley| galley.job.text == "REVENUE")
+        .map(|galley| galley.job.sections[0].format.font_id.family.clone())
+        .collect();
+    assert_eq!(families.len(), 2);
+    assert_ne!(families[0], families[1], "the compact label is bold");
+}
+#[test]
+fn trend_text_sits_six_points_after_its_arrow() {
+    let mut h = Harness::builder()
+        .with_size([600.0, 300.0])
+        .with_theme(egui::Theme::Light)
+        .with_context_setup(|ctx| common::install(ctx, Theme::default()))
+        .build_ui(|ui| {
+            ui.add(Stat::new("Queue", "—").trend(Trend::new("0%", TrendDirection::Flat)));
+        });
+    h.run_steps(2);
+    let shapes = &h.output().shapes;
+    let line_right = shapes
+        .iter()
+        .find_map(|clipped| match &clipped.shape {
+            egui::Shape::LineSegment { points, .. }
+                if points[0].y == points[1].y
+                    && (points[1].x - points[0].x - 12.8).abs() < 0.05 =>
+            {
+                Some(points[1].x)
+            }
+            _ => None,
+        })
+        .expect("flat trend line painted");
+    let text_left = shapes
+        .iter()
+        .find_map(|clipped| match &clipped.shape {
+            egui::Shape::Text(text) if text.galley.job.text == "Unchanged 0%" => Some(text.pos.x),
+            _ => None,
+        })
+        .expect("trend text painted");
+    let gap = text_left - line_right - 16.0 * 0.1;
+    assert!((gap - 6.0).abs() < 0.05, "arrow to text gap {gap}");
+}

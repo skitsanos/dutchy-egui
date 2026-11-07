@@ -19,3 +19,20 @@ pub fn install(ctx: &egui::Context, theme: Theme) {
     }
     dutchy_egui::install(ctx, theme);
 }
+
+/// Every text galley painted in `shapes`, including nested shape groups.
+#[allow(dead_code)]
+pub fn galleys(shapes: &[egui::epaint::ClippedShape]) -> Vec<&egui::Galley> {
+    fn collect<'a>(shape: &'a egui::Shape, out: &mut Vec<&'a egui::Galley>) {
+        match shape {
+            egui::Shape::Text(text) => out.push(&text.galley),
+            egui::Shape::Vec(shapes) => shapes.iter().for_each(|shape| collect(shape, out)),
+            _ => {}
+        }
+    }
+    let mut out = Vec::new();
+    for clipped in shapes {
+        collect(&clipped.shape, &mut out);
+    }
+    out
+}

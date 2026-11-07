@@ -180,12 +180,15 @@ impl Button<'_> {
             ui.disable();
         }
 
-        let response = ui.add(
-            egui::Button::new(job)
-                .truncate()
-                .min_size(vec2(width, self.size.height()))
-                .corner_radius(0),
-        );
+        // The uppercase treatment is visual; assistive technology gets the label as written.
+        let response = ui
+            .add(
+                egui::Button::new(job)
+                    .truncate()
+                    .min_size(vec2(width, self.size.height()))
+                    .corner_radius(0),
+            )
+            .accessible_name(self.label.to_string());
         if self.loading {
             response
                 .ctx

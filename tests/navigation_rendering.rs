@@ -139,8 +139,8 @@ fn showcase_hierarchy_and_record_browser_apply_only_requested_navigation() {
     h.run_steps(3);
     assert_eq!(h.state().navigation.depth, 4);
     assert_eq!(h.state().navigation.destination, Some(4));
-    assert!(h.get_by_label("RESTORE DEEP PATH").is_focused());
-    h.get_by_label("RESTORE DEEP PATH").click();
+    assert!(h.get_by_label("Restore deep path").is_focused());
+    h.get_by_label("Restore deep path").click();
     h.run_steps(2);
     assert_eq!(h.state().navigation.depth, 6);
     h.state_mut().page = gallery::Page::Pagination;

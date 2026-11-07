@@ -66,9 +66,8 @@ impl<'a> Tooltip<'a> {
             return None;
         }
         let theme = Theme::from_context(&response.ctx);
-        let padding = f32::from(geometry::PADDING_X) * 2.0;
-        let width =
-            geometry::MAX_WIDTH.min((response.ctx.content_rect().width() - padding).max(0.0));
+        let width = geometry::MAX_WIDTH
+            .min((response.ctx.content_rect().width() - geometry::VIEWPORT_INSET).max(0.0));
         let frame = Frame::NONE
             .fill(theme.palette.foreground)
             .inner_margin(Margin::symmetric(geometry::PADDING_X, geometry::PADDING_Y));
@@ -86,6 +85,7 @@ impl<'a> Tooltip<'a> {
                 .layout_job(&theme, width);
             for section in &mut text.sections {
                 section.format.line_height = Some(TextSize::Xs.points() * geometry::LINE_HEIGHT);
+                section.format.extra_letter_spacing = TextSize::Xs.points() * geometry::TRACKING_EM;
             }
             ui.add(egui::Label::new(text).wrap());
         });

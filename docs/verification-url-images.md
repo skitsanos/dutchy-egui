@@ -1,8 +1,8 @@
 # URL image and loading feedback verification — 2026-11-06
 
 Package **1.0.13**, local branch `ticket/images-gallery-lightbox`. This extends
-[initial media verification](verification-media.md); 1.0.13 remains uncommitted
-and unpushed. No registry publication was performed.
+[initial media verification](verification-media.md). The record predates the
+1.0.13 push to main (`c4a728d`); registry publication remains a separate step.
 
 ## Dependencies and implementation
 

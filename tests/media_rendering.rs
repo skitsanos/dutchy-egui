@@ -17,6 +17,7 @@ struct State {
     textures: Vec<TextureHandle>,
     selected: Option<u8>,
     long_caption: bool,
+    rects: Vec<egui::Rect>,
 }
 fn items(state: &State) -> Vec<GalleryItem<'static, u8>> {
     state
@@ -232,7 +233,7 @@ fn narrow_images_and_long_viewer_captions_remain_constrained() {
         viewer.key_press(egui::Key::PageDown);
         viewer.run_steps(3);
     }
-    assert!(viewer.get_by_label("DUTCHY / ORIGINAL").rect().bottom() <= 576.5);
+    assert!(viewer.get_by_label("Dutchy / original").rect().bottom() <= 576.5);
     assert!(viewer.get_by_label("Close Image viewer").is_focused());
     viewer
         .render()
@@ -297,5 +298,58 @@ fn contain_letterboxes_and_cover_crops_actual_texture_pixels_without_distortion(
     assert_ne!(
         pixel(contain.center().x, contain.top() + 20.0),
         [0, 255, 0, 255]
+    );
+}
+
+/// Colors of the pixel midway between the first two tiles and of the page.
+fn gallery_gap_pixels(spaced: bool) -> ([u8; 3], [u8; 3]) {
+    let mut h = Harness::builder()
+        .with_size([520.0, 360.0])
+        .with_context_setup(|ctx| common::install(ctx, Theme::default().with_reduced_motion(true)))
+        .build_ui_state(
+            move |ui, state: &mut State| {
+                if state.textures.is_empty() {
+                    state.textures = art::textures(ui.ctx());
+                }
+                // A painted strip above the gallery samples the page surface.
+                ui.allocate_exact_size(
+                    egui::vec2(ui.available_width(), 16.0),
+                    egui::Sense::hover(),
+                );
+                let items = items(state);
+                let mut gallery = Gallery::new("pair", &items[..2]).columns(2);
+                if spaced {
+                    gallery = gallery.gap(Spacing::Xxl).bordered(false);
+                }
+                state.rects = gallery
+                    .show(ui)
+                    .images
+                    .into_iter()
+                    .map(|(_, image)| image.image.rect)
+                    .collect();
+            },
+            State::default(),
+        );
+    h.run_steps(3);
+    let pixels = h.render().unwrap();
+    let [a, b] = [h.state().rects[0], h.state().rects[1]];
+    let gap = pixels.get_pixel(((a.right() + b.left()) / 2.0) as u32, a.center().y as u32);
+    let page = pixels.get_pixel(a.center().x as u32, 12);
+    ([gap[0], gap[1], gap[2]], [page[0], page[1], page[2]])
+}
+#[test]
+fn spaced_gallery_leaves_the_page_background_between_tiles() {
+    let (gap, page) = gallery_gap_pixels(true);
+    assert_eq!(
+        gap, page,
+        "a spaced gallery paints no border band between tiles"
+    );
+}
+#[test]
+fn joined_gallery_fills_the_micro_gap_with_the_border_color() {
+    let (gap, page) = gallery_gap_pixels(false);
+    assert_ne!(
+        gap, page,
+        "the joined gallery keeps its border-colored hairline gap"
     );
 }

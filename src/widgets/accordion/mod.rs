@@ -240,7 +240,11 @@ impl<'a, T: Clone + PartialEq> Accordion<'a, T> {
         if self.variant == AccordionVariant::Default {
             let mut edge = result.response.rect;
             edge.max.x = edge.min.x + border::ACCENT;
-            let fill = if result.inner.0.hovered() {
+            // The live edge lights while any part of the item, open body
+            // included, is under the pointer.
+            let header = &result.inner.0;
+            let lit = header.enabled() && (header.hovered() || result.response.contains_pointer());
+            let fill = if lit {
                 theme.palette.primary
             } else {
                 theme.palette.border
@@ -292,7 +296,7 @@ impl<'a, T: Clone + PartialEq> Accordion<'a, T> {
             WidgetInfo::labeled(
                 egui::accesskit::Role::Region,
                 ui.is_enabled(),
-                item.label.to_uppercase(),
+                item.label.to_string(),
             )
         });
         result

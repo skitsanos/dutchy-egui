@@ -151,11 +151,40 @@ fn empty_collections_show_guidance_and_pending_or_failed_images_remain_keyboard_
     assert_eq!(h.state().requests, [1, 2]);
     h.state_mut().keys.clear();
     h.run_steps(3);
-    assert!(h.query_by_label("NO IMAGES").is_some());
+    assert!(
+        h.query_by_role_and_label(Role::Heading, "No images")
+            .is_some()
+    );
     assert!(h.query_by_role(Role::Image).is_none());
     assert!(
         h.query_by_role_and_label(Role::Group, "Portfolio")
             .is_some()
     );
     h.check_accessibility();
+}
+
+/// Fill alpha of the square control painted inside `area` with the given extent.
+fn control_alpha(
+    shapes: &[egui::epaint::ClippedShape],
+    area: egui::Rect,
+    extent: f32,
+) -> Option<u8> {
+    shapes.iter().find_map(|clipped| match &clipped.shape {
+        egui::Shape::Rect(shape)
+            if area.contains_rect(shape.rect)
+                && (shape.rect.width() - extent).abs() < 0.5
+                && (shape.rect.height() - extent).abs() < 0.5 =>
+        {
+            Some(shape.fill.a())
+        }
+        _ => None,
+    })
+}
+#[test]
+fn gallery_expand_controls_use_the_seventy_percent_inverse_fill() {
+    let mut h = harness([600.0, 700.0]);
+    h.run_steps(3);
+    let tile = h.state().rects[0].1;
+    let alpha = control_alpha(&h.output().shapes, tile, 32.0).expect("expand control painted");
+    assert_eq!(alpha, (0.7 * 255.0 + 0.5) as u8);
 }

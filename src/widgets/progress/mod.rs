@@ -196,7 +196,7 @@ impl<'a> Progress<'a> {
                 ui.add(egui::Label::new(job).wrap());
             }
         });
-        ui.add_space(space::SM);
+        crate::layout::gap_after(ui, space::SM);
     }
 
     fn show(self, ui: &mut Ui) -> Response {

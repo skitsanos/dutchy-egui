@@ -126,7 +126,7 @@ fn assert_alignment(h: &Harness<'_, Alignment>, scale: f32) {
     let state = h.state();
     let row = state.row.unwrap();
     let note = if state.tall { NOTE } else { "Short note" };
-    for label in ["Name 1", note, "ACTIVE", "$123.45", "VIEW"] {
+    for label in ["Name 1", note, "Active", "$123.45", "View"] {
         centered(h.get_by_label(label).rect(), row, scale);
     }
     for label in [
@@ -163,9 +163,9 @@ fn mixed_cell_content_and_wrapped_headers_are_centered_at_each_density_and_scale
 fn centering_reflows_and_shrinks_without_geometry_drift_or_losing_focus() {
     let mut h = harness(1.5);
     h.run_steps(4);
-    h.get_by_label("VIEW").focus();
+    h.get_by_label("View").focus();
     h.run_steps(2);
-    let id = h.get_by_label("VIEW").accesskit_node().id();
+    let id = h.get_by_label("View").accesskit_node().id();
     let initial = h.state().row.unwrap();
     h.state_mut().narrow = true;
     h.run_steps(5);
@@ -178,12 +178,12 @@ fn centering_reflows_and_shrinks_without_geometry_drift_or_losing_focus() {
     assert_alignment(&h, 1.5);
     assert!(h.state().row.unwrap().height() < initial.height());
     let settled = h.state().row.unwrap();
-    let control = h.get_by_label("VIEW").rect();
+    let control = h.get_by_label("View").rect();
     h.run_steps(12);
     assert_eq!(h.state().row.unwrap(), settled);
-    assert_eq!(h.get_by_label("VIEW").rect(), control);
-    assert_eq!(h.get_by_label("VIEW").accesskit_node().id(), id);
-    assert!(h.get_by_label("VIEW").is_focused());
+    assert_eq!(h.get_by_label("View").rect(), control);
+    assert_eq!(h.get_by_label("View").accesskit_node().id(), id);
+    assert!(h.get_by_label("View").is_focused());
 }
 
 #[test]
@@ -191,7 +191,7 @@ fn centered_pointer_targets_and_keyboard_controls_keep_independent_actions() {
     let mut h = harness(1.0);
     h.run_steps(4);
     assert_alignment(&h, 1.0);
-    h.get_by_label("VIEW").click();
+    h.get_by_label("View").click();
     h.run_steps(3);
     assert_eq!(h.state().clicks, 1);
     assert!(!h.state().selected);

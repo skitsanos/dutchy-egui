@@ -1,6 +1,6 @@
 use crate::{
     Text, TextSize, Theme, Weight,
-    tokens::{border, metrics, space},
+    tokens::{border, metrics},
 };
 use egui::{Color32, Sense, Stroke, Ui, vec2};
 use std::borrow::Cow;
@@ -109,9 +109,9 @@ impl<'a> Trend<'a> {
         } else {
             self.sentiment.color(theme)
         };
-        let text_width = (ui.available_width() - metrics::TREND_ICON - space::XS).max(0.0);
+        let text_width = (ui.available_width() - metrics::TREND_ICON - metrics::TREND_GAP).max(0.0);
         ui.horizontal_top(|ui| {
-            ui.spacing_mut().item_spacing.x = space::XS;
+            ui.spacing_mut().item_spacing.x = metrics::TREND_GAP;
             let (rect, decorative) = ui.allocate_exact_size(
                 vec2(metrics::TREND_ICON, metrics::TREND_ICON),
                 Sense::hover(),

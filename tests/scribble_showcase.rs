@@ -26,7 +26,7 @@ fn example(width: f32) -> Harness<'static, gallery::Showcase> {
 fn sample_keyboard_history_and_background_preview_use_only_host_data() {
     let mut h = example(1200.0);
     h.run_steps(4);
-    h.get_by_label("LOAD SAMPLE DRAWING").click();
+    h.get_by_label("Load sample drawing").click();
     h.run_steps(3);
     let count = h.state().sketch.drawing.strokes().len();
     assert!(count > 0);
@@ -103,7 +103,7 @@ fn showcase_renders_at_desktop_and_narrow_widths() {
     for width in [1200.0, 480.0] {
         let mut h = example(width);
         h.run_steps(3);
-        h.get_by_label("LOAD SAMPLE DRAWING").click();
+        h.get_by_label("Load sample drawing").click();
         h.run_steps(3);
         h.check_accessibility();
         h.render()

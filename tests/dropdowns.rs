@@ -52,14 +52,14 @@ fn harness() -> Harness<'static, State> {
 #[test]
 fn arrows_open_at_either_end_and_selection_or_escape_returns_focus() {
     let mut h = harness();
-    h.get_by_label("ACTIONS").focus();
+    h.get_by_label("Actions").focus();
     h.run_steps(2);
     h.key_press(Key::ArrowDown);
     h.run_steps(4);
     assert!(h.state().open);
     assert!(h.get_by_role_and_label(Role::MenuItem, "Edit").is_focused());
     assert_eq!(
-        h.get_by_label("ACTIONS")
+        h.get_by_label("Actions")
             .accesskit_node()
             .data()
             .is_expanded(),
@@ -73,7 +73,7 @@ fn arrows_open_at_either_end_and_selection_or_escape_returns_focus() {
     );
     h.key_press(Key::Escape);
     h.run_steps(2);
-    assert!(!h.state().open && h.get_by_label("ACTIONS").is_focused());
+    assert!(!h.state().open && h.get_by_label("Actions").is_focused());
     h.key_press(Key::ArrowUp);
     h.run_steps(4);
     assert!(
@@ -83,26 +83,26 @@ fn arrows_open_at_either_end_and_selection_or_escape_returns_focus() {
     h.key_press(Key::Enter);
     h.run_steps(2);
     assert_eq!(h.state().actions, [3]);
-    assert!(!h.state().open && h.get_by_label("ACTIONS").is_focused());
+    assert!(!h.state().open && h.get_by_label("Actions").is_focused());
     h.check_accessibility();
 }
 
 #[test]
 fn tab_exits_and_outside_input_click_does_not_lose_focus() {
     let mut h = harness();
-    h.get_by_label("ACTIONS").click();
+    h.get_by_label("Actions").click();
     h.run_steps(4);
     h.key_press(Key::Tab);
     h.run_steps(2);
     assert!(!h.state().open);
     assert!(h.get_by_label("Outside input").is_focused());
-    h.get_by_label("ACTIONS").click();
+    h.get_by_label("Actions").click();
     h.run_steps(4);
     h.key_press_modifiers(Modifiers::SHIFT, Key::Tab);
     h.run_steps(2);
     assert!(!h.state().open);
     assert!(h.get_by_label("Before actions").is_focused());
-    h.get_by_label("ACTIONS").click();
+    h.get_by_label("Actions").click();
     h.run_steps(4);
     h.get_by_label("Outside input").click();
     h.run_steps(2);
@@ -116,12 +116,12 @@ fn secondary_click_and_shift_f10_open_context_actions() {
     let mut h = harness();
     h.state_mut().context = true;
     h.run();
-    h.get_by_label("CONTEXT TARGET").click_secondary();
+    h.get_by_label("Context target").click_secondary();
     h.run_steps(4);
     assert!(h.state().open);
     h.key_press(Key::Escape);
     h.run_steps(2);
-    assert!(h.get_by_label("CONTEXT TARGET").is_focused());
+    assert!(h.get_by_label("Context target").is_focused());
     h.key_press_modifiers(Modifiers::SHIFT, Key::F10);
     h.run_steps(4);
     assert!(h.state().open);
@@ -135,7 +135,7 @@ fn secondary_click_and_shift_f10_open_context_actions() {
         h.key_press_modifiers(modifiers, Key::Tab);
         h.run_steps(3);
         assert!(!h.state().open);
-        assert!(h.get_by_label("CONTEXT TARGET").is_focused());
+        assert!(h.get_by_label("Context target").is_focused());
     }
     h.key_press(Key::Tab);
     h.run_steps(3);
@@ -145,7 +145,7 @@ fn secondary_click_and_shift_f10_open_context_actions() {
 #[test]
 fn disabled_parent_closes_and_prevents_activation() {
     let mut h = harness();
-    h.get_by_label("ACTIONS").click();
+    h.get_by_label("Actions").click();
     h.run_steps(4);
     h.get_by_role_and_label(Role::MenuItem, "Disabled").click();
     h.run();
@@ -153,8 +153,8 @@ fn disabled_parent_closes_and_prevents_activation() {
     h.state_mut().disabled = true;
     h.run_steps(2);
     assert!(!h.state().open);
-    assert!(h.get_by_label("ACTIONS").accesskit_node().is_disabled());
-    h.get_by_label("ACTIONS").click();
+    assert!(h.get_by_label("Actions").accesskit_node().is_disabled());
+    h.get_by_label("Actions").click();
     h.run();
     assert!(!h.state().open);
 }

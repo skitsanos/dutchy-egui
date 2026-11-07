@@ -20,8 +20,10 @@ pub const GALLERY_EXPAND_SIZE: f32 = super::ControlSize::Small.height();
 pub const GALLERY_EXPAND_INSET: f32 = space::SM;
 /// Gallery expansion glyph extent.
 pub const GALLERY_EXPAND_ICON: f32 = 14.0;
-/// Inverse expand background opacity.
+/// Inverse expand background opacity (web image `bg-foreground/80`).
 pub const EXPAND_OPACITY: f32 = 0.8;
+/// Gallery tile expand background opacity (web gallery `bg-foreground/70`).
+pub const GALLERY_EXPAND_OPACITY: f32 = 0.7;
 /// Lightbox clearance on each viewport edge.
 pub const VIEWPORT_GUTTER: f32 = space::XXL;
 /// Lightbox close/navigation targets.

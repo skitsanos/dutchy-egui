@@ -81,9 +81,11 @@ pub struct Image<'a> {
     expandable: bool,
     expand_size: f32,
     expand_inset: f32,
+    expand_opacity: f32,
     retryable: bool,
     enabled: bool,
     surface: Option<Palette>,
+    reveal_anchor: Option<egui::Pos2>,
 }
 impl<'a> Image<'a> {
     /// Bind a stable ID, native source, and meaningful alternative text.
@@ -106,9 +108,11 @@ impl<'a> Image<'a> {
             expandable: false,
             expand_size: crate::tokens::image::EXPAND_SIZE,
             expand_inset: crate::tokens::image::EXPAND_INSET,
+            expand_opacity: crate::tokens::image::EXPAND_OPACITY,
             retryable: false,
             enabled: true,
             surface: None,
+            reveal_anchor: None,
         }
     }
     /// Reserve a named aspect; fixed aspects default to a cover crop.

@@ -86,9 +86,10 @@ fn draw(ui: &Ui, response: &Response, kind: Kind, galley: std::sync::Arc<egui::G
     }
     let p = Theme::from_context(ui.ctx()).palette;
     let hover = response.hovered() || response.has_focus();
+    // Live page numbers inherit the foreground; direction controls rest muted.
     let color = if kind.current() {
         p.on_primary
-    } else if hover {
+    } else if hover || matches!(kind, Kind::Page { .. }) {
         p.foreground
     } else {
         p.muted_foreground
@@ -163,11 +164,36 @@ pub(super) fn ellipsis(ui: &mut Ui) {
     );
 }
 
-pub(super) fn summary(ui: &mut Ui, label: &str) {
+/// Muted summary; page numbers, when given, are bold foreground sections
+/// (live "Page <strong>3</strong> of <strong>12</strong>").
+pub(super) fn summary(ui: &mut Ui, label: &str, numbers: Option<(usize, usize)>) {
     let theme = Theme::from_context(ui.ctx());
-    let job = Text::new(label)
-        .size(TextSize::Sm)
-        .layout_job(&theme, ui.max_rect().width());
+    let width = ui.max_rect().width();
+    let job = match numbers {
+        Some((page, total)) => {
+            let mut job = Text::new("Page ")
+                .size(TextSize::Sm)
+                .color(crate::TextColor::Muted)
+                .layout_job(&theme, width);
+            let base = job.sections[0].format.clone();
+            let strong = Text::new(" ")
+                .size(TextSize::Sm)
+                .weight(crate::Weight::Bold)
+                .color(crate::TextColor::Foreground)
+                .layout_job(&theme, width)
+                .sections[0]
+                .format
+                .clone();
+            job.append(&page.to_string(), 0.0, strong.clone());
+            job.append(" of ", 0.0, base);
+            job.append(&total.to_string(), 0.0, strong);
+            job
+        }
+        None => Text::new(label)
+            .size(TextSize::Sm)
+            .color(crate::TextColor::Muted)
+            .layout_job(&theme, width),
+    };
     let text = ui.fonts_mut(|fonts| fonts.layout_job(job));
     let size = vec2(text.size().x, geometry::PAGE_SIZE.max(text.size().y));
     ui.allocate_ui_with_layout(size, egui::Layout::top_down(egui::Align::Min), |ui| {
@@ -175,7 +201,7 @@ pub(super) fn summary(ui: &mut Ui, label: &str) {
         response.widget_info(|| {
             WidgetInfo::labeled(egui::accesskit::Role::Label, ui.is_enabled(), label)
         });
-        ui.painter().galley_with_override_text_color(
+        ui.painter().galley(
             rect.center() - text.size() / 2.0,
             text,
             theme.palette.muted_foreground,

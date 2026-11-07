@@ -23,8 +23,9 @@ fn project(ui: &mut egui::Ui) {
 `show` returns `InnerResponse<R>` and creates a non-focusable container. Compose
 normal controls, images supplied by the host, or arbitrary content in its UI.
 The helpers are optional: title supplies an uppercase display heading with
-heading level 3 metadata; description supplies relaxed small text; header/footer
-add the documented spacing and footer divider.
+heading level 3 metadata and no heading tracking (live `CardTitle`); description
+supplies relaxed small text; header/footer render the documented 16-point and
+24/16-point gaps, item spacing included, around a one-point border divider.
 
 `show_interactive(ui, id, accessible_name, contents)` adds a native button action
 to the whole surface. Use a stable ID unique within the parent namespace and
@@ -41,6 +42,10 @@ Muted colors and native egui text inherit it. Explicit semantic/custom Text
 colors remain explicit. A nested card restores its own surface color. Manually
 created `LayoutJob`s resolve the Theme passed to `layout_job`, so their caller
 must supply the desired surface color. Buttons retain their own variant colors.
+Dark/Primary descriptions keep full inverse opacity (the Markdown spec's 70/80 %
+is not used; the live component always uses muted-foreground). Native egui
+buttons and checkboxes inside inverse cards keep their muted fills under the
+inverse text override, so hosts style those controls or use Dutchy controls.
 Dark means an inverted foreground surface, so it becomes light in dark mode.
 
 ## Alerts and banners
@@ -92,7 +97,14 @@ in the web implementation in favor of theme tokens.
 button on solid banners and an outline button on tinted alerts. Actions sit below
 the message, allowing wrapping in narrow columns. Banners fill their parent UI;
 the application decides whether that means a card, page, or window width. They
-are inline notifications, with no blocking overlay behavior.
+are inline notifications, with no blocking overlay behavior. Tinted alerts keep
+the surface foreground for the title and muted text for the message, as the
+live component does; only banners install the inverse text color for host
+content. Status glyphs are circle-backed (info, check-circle, alert-circle,
+x-circle) and the resting dismiss glyph is muted-foreground, foreground on
+hover. The web banner pattern is one uppercase line with an action filled in
+the on-fill color; the port keeps title, message and a secondary action as a
+recorded difference.
 
 Source-palette contrast limitations remain in [DS-003](issues/DS-003.md), including
 white text on some brand/status fills. Native testing currently covers macOS

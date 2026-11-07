@@ -124,6 +124,9 @@ pub(super) fn row<T>(
                                 "Dismiss {}",
                                 toast.title.as_deref().unwrap_or(toast.variant.name())
                             ),
+                            colors
+                                .text
+                                .gamma_multiply(crate::tokens::close::IDLE_OPACITY),
                             colors.text,
                         )
                     });

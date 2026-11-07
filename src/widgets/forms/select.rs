@@ -191,6 +191,9 @@ fn configure(ui: &mut Ui, theme: Theme, size: ControlSize) {
     let style = ui.style_mut();
     style.spacing.interact_size.y = size.height();
     style.spacing.button_padding = vec2(space::MD, space::XS);
+    // The trigger keeps its own light fill, so inverse surfaces must not
+    // recolor its text.
+    style.visuals.override_text_color = None;
     style.visuals.widgets.inactive = normal;
     style.visuals.widgets.hovered = normal;
     style.visuals.widgets.active = normal;

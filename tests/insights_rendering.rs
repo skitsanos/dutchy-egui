@@ -139,7 +139,7 @@ fn example_refreshes_metrics_and_host_actions_replace_empty_content() {
                 ..Default::default()
             }
         });
-    h.get_by_label("REFRESH SAMPLE METRICS").click();
+    h.get_by_label("Refresh sample metrics").click();
     h.run();
     assert_eq!(h.state().insights.refreshes, 1);
     assert_eq!(
@@ -149,15 +149,15 @@ fn example_refreshes_metrics_and_host_actions_replace_empty_content() {
             .as_deref(),
         Some("$52,460")
     );
-    h.get_by_label("EMPTY STATES").click();
+    h.get_by_label("Empty states").click();
     h.run();
-    h.get_by_label("BROWSE PROJECT TEMPLATES").click();
+    h.get_by_label("Browse project templates").click();
     h.run();
     assert_eq!(
         (h.state().insights.templates, h.state().insights.projects),
         (1, 0)
     );
-    h.get_by_label("CREATE PROJECT").focus();
+    h.get_by_label("Create project").focus();
     h.run();
     h.key_press(egui::Key::Enter);
     h.run_steps(2);
@@ -166,19 +166,19 @@ fn example_refreshes_metrics_and_host_actions_replace_empty_content() {
         h.query_by_role_and_label(Role::Status, "No projects yet")
             .is_none()
     );
-    assert!(h.get_by_label("RESET PROJECTS").is_focused());
-    h.get_by_label("CLEAR SEARCH").click();
+    assert!(h.get_by_label("Reset projects").is_focused());
+    h.get_by_label("Clear search").click();
     h.run_steps(2);
     assert!(!h.state().insights.filters_active);
-    assert!(h.get_by_label("APPLY SAMPLE FILTERS").is_focused());
-    h.get_by_label("ADD ENTRY").click();
+    assert!(h.get_by_label("Apply sample filters").is_focused());
+    h.get_by_label("Add entry").click();
     h.run_steps(2);
     assert_eq!(h.state().insights.entries, 1);
-    h.get_by_label("ADD WIDGET").click();
+    h.get_by_label("Add widget").click();
     h.run_steps(2);
     assert_eq!(h.state().insights.widgets, 1);
-    assert!(h.get_by_label("RESET DASHBOARD").is_focused());
-    h.get_by_label("RESET PROJECTS").click();
+    assert!(h.get_by_label("Reset dashboard").is_focused());
+    h.get_by_label("Reset projects").click();
     h.run();
     assert_eq!(h.state().insights.projects, 0);
     assert!(

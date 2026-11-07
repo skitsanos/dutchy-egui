@@ -123,7 +123,15 @@ Only the active worktree existed; active/unmerged work remained preserved.
 The 1.0.15 Scribble/export release adds host-owned bounded vector data/history, pointer/keyboard canvas, immutable snapshots,
 SVG/CPU raster/optional PNG and a native Save As demonstration. This completes
 the core advanced inventory. Partial variants and broader parity remain explicit
-in the coverage matrix.
+in the coverage matrix. The 1.0.15 release is on main as `e5d60a0`. The 1.0.16
+step resolves the defects registered by the ledger verification audit
+(DS-028): scroll snap-back, forms on inverse surfaces, duplicate table keys,
+modal-layer wait loops, accessible-name casing and the single-theme style
+install, then the remaining appearance and behavior entries (tooltips, alerts,
+spacing, media, stats, navigation, disclosures, table headers, uploads and
+Scribble). DS-003 and DS-027 are closed as design decisions that keep the
+source status and accent colors; the table row-naming item of DS-043 stays open
+in the ledger.
 See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md),
 [menu/dropdown decisions](menus-dropdowns.md),
 [navigation decisions](breadcrumbs-pagination.md), [stepper decisions](stepper.md),

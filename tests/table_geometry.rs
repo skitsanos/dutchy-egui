@@ -170,3 +170,30 @@ fn replacement_guidance_stays_in_the_viewport_after_horizontal_scrolling() {
     );
     h.check_accessibility();
 }
+
+#[test]
+fn retained_cell_focus_does_not_pull_the_body_back_while_scrolling() {
+    let mut h = harness(840.0, false, false);
+    h.run_steps(4);
+    h.get_by_label("Action 9").focus();
+    h.run_steps(6);
+    let table = h.state().table.unwrap();
+    assert!(h.get_by_label("Action 9").rect().bottom() <= table.bottom() + 0.5);
+    h.hover_at(table.center());
+    h.run_steps(2);
+    h.input_mut().events.push(egui::Event::MouseWheel {
+        unit: egui::MouseWheelUnit::Point,
+        phase: egui::TouchPhase::Move,
+        source: egui::MouseWheelSource::Unknown,
+        delta: egui::vec2(0.0, 1500.0),
+        modifiers: egui::Modifiers::NONE,
+    });
+    h.run_steps(60);
+    assert!(
+        h.state().cells[0][0].top() >= table.top() - 0.5,
+        "first row must stay revealed after scrolling up: {:?} vs {:?}",
+        h.state().cells[0][0],
+        table
+    );
+    assert!(h.get_by_label("Action 9").is_focused());
+}

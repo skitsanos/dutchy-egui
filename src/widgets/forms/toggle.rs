@@ -1,5 +1,5 @@
 use crate::{
-    ControlSize, Text, TextSize, Theme,
+    ControlSize, Text, TextColor, TextSize, Theme,
     interaction::paint_focus,
     tokens::{border, control, space},
 };
@@ -18,8 +18,14 @@ pub(super) fn show(
     let side = control::INDICATOR;
     let gap = control::LABEL_GAP;
     let text_width = (ui.available_width() - side - gap).max(0.0);
+    // Inverse surfaces install a scoped text color; the label follows it.
+    let color = ui
+        .visuals()
+        .override_text_color
+        .map_or(TextColor::Foreground, TextColor::Custom);
     let job = Text::new(label)
         .size(TextSize::Sm)
+        .color(color)
         .layout_job(&theme, text_width);
     let galley = ui.fonts_mut(|fonts| fonts.layout_job(job));
     let size = vec2(

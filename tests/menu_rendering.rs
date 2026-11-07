@@ -82,7 +82,7 @@ fn menus_and_search_results_render_across_themes_and_scales() {
             .focus();
         h.run_steps(3);
         h.snapshot(format!("{prefix}-inline"));
-        h.get_by_label("MORE ACTIONS").click();
+        h.get_by_label("More actions").click();
         h.run_steps(4);
         h.key_press(Key::ArrowDown);
         h.run_steps(2);
@@ -139,7 +139,7 @@ fn menu_pages_render_at_desktop_and_narrow_widths() {
 #[test]
 fn showcase_dropdown_search_and_global_commands_update_host_state() {
     let mut h = example(gallery::Page::Dropdowns, [1200.0, 2000.0]);
-    h.get_by_label("PROJECT ACTIONS").click();
+    h.get_by_label("Project actions").click();
     h.run_steps(4);
     h.get_by_role_and_label(Role::MenuItem, "Duplicate project")
         .click();
@@ -153,7 +153,7 @@ fn showcase_dropdown_search_and_global_commands_update_host_state() {
     h.key_press(Key::Enter);
     h.run_steps(3);
     assert_eq!(h.state().menus.framework, Some("egui"));
-    h.get_by_label("OPEN COMMAND PALETTE").click();
+    h.get_by_label("Open command palette").click();
     h.run_steps(4);
     h.get_by_label("Search commands").type_text("create");
     h.run_steps(3);

@@ -151,14 +151,24 @@ impl<'a, K: egui::AsIdSalt + Clone> Gallery<'a, K> {
                 return Vec::new();
             }
             let p = Theme::from_context(ui.ctx()).palette;
-            egui::Frame::NONE
-                .fill(p.border)
-                .inner_margin(egui::Margin::same(if self.bordered {
+            // Joined tiles share one border-colored surface that shows through
+            // the micro gap; spaced tiles sit on the page and border themselves.
+            let joined = self.gap == Spacing::Micro;
+            let frame = if joined {
+                let width = if self.bordered {
                     border::STANDARD as i8
                 } else {
                     0
-                }))
+                };
+                egui::Frame::NONE
+                    .fill(p.border)
+                    .inner_margin(egui::Margin::same(width))
+            } else {
+                egui::Frame::NONE
+            };
+            frame
                 .show(ui, |ui| {
+                    let anchor = ui.max_rect().min;
                     ResponsiveGrid::new("images")
                         .columns(self.columns)
                         .min_column_width(self.minimum)
@@ -175,11 +185,14 @@ impl<'a, K: egui::AsIdSalt + Clone> Gallery<'a, K> {
                                             .image()
                                             .aspect(self.aspect)
                                             .expandable(true)
-                                            .bordered(false);
+                                            .bordered(!joined && self.bordered);
                                         image.expand_size =
                                             crate::tokens::image::GALLERY_EXPAND_SIZE;
                                         image.expand_inset =
                                             crate::tokens::image::GALLERY_EXPAND_INSET;
+                                        image.expand_opacity =
+                                            crate::tokens::image::GALLERY_EXPAND_OPACITY;
+                                        image.reveal_anchor = Some(anchor);
                                         if !self.captions {
                                             image.caption = None;
                                             image.caption_source = None;

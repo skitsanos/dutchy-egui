@@ -203,6 +203,11 @@ impl<'a> Stat<'a> {
         ui.add(
             Text::new(self.label.as_ref())
                 .size(if compact { TextSize::Xs } else { TextSize::Sm })
+                .weight(if compact {
+                    Weight::Bold
+                } else {
+                    Weight::default()
+                })
                 .tracking(Tracking::Wider)
                 .uppercase(true)
                 .color(TextColor::Muted),

@@ -21,16 +21,19 @@ fn actions(ui: &mut egui::Ui) {
 ```
 
 Top is the default; Bottom/Left/Right are preferred placements. egui flips and
-constrains the popup at viewport edges. Text wraps within a maximum 320-point
-text width, constrained further by the viewport. The inverted foreground fill,
-background text, 12-point medium face, 1.4 leading, 10/6 padding, 8-point gap,
-and 5-point arrow match the reference. There are no interactive tooltip children.
+constrains the popup at viewport edges. Text wraps within a maximum 256-point
+text width, reduced to the viewport width minus 32 points. The inverted
+foreground fill, background text, 12-point medium face with 0.02 em letter
+spacing, 1.4 leading, 12/6 padding, 8-point gap, and 5-point arrow follow the
+live stylesheet (`src/styles/dutchy.css`); the Markdown spec's 10-point padding
+and uncapped single line are not used. There are no interactive tooltip children.
 
 Keyboard focus presents help immediately. Hover uses egui's configured delay,
 grace period, scrolling/dragging and popup suppression. Disabled controls support
 pointer help without adding a keyboard stop. Fully clipped controls do not show
 popups. Escape dismisses hover help until both focus and hover leave; the key is
-not consumed. Native focus policy applies: egui clears button focus on Escape.
+not consumed. Escape pressed during egui's hover delay is not remembered, so a
+hint can still appear once that delay elapses. Native focus policy applies: egui clears button focus on Escape.
 Tooltip rendering itself neither requests nor steals focus.
 
 The control's accessible description includes the hint even while the popup is

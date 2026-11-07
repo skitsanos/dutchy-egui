@@ -54,6 +54,8 @@ fn normalize(width: f32) -> f32 {
 pub(super) struct Row<K> {
     pub key: K,
     pub id: IdSalt,
+    /// Widget scope; a repeated key receives an occurrence salt.
+    pub scope: egui::Id,
     pub enabled: bool,
     pub selected: bool,
 }

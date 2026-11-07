@@ -15,6 +15,7 @@ use egui::{
 
 pub(super) fn show(config: Image<'_>, ui: &mut Ui) -> ImageResponse {
     let root = ui.make_persistent_id(("dutchy-image", config.id));
+    let anchor = config.reveal_anchor.unwrap_or(ui.max_rect().min);
     let p = config
         .surface
         .unwrap_or_else(|| Theme::from_context(ui.ctx()).palette);
@@ -136,13 +137,12 @@ pub(super) fn show(config: Image<'_>, ui: &mut Ui) -> ImageResponse {
                     button,
                     &format!("Expand {}", config.alt),
                     Icon::Expand,
+                    config.expand_opacity,
                     p,
                 )
             });
             for response in expand.iter().chain(retry.iter()) {
-                if response.has_focus() && !ui.clip_rect().contains_rect(response.rect) {
-                    response.scroll_to_me_animation(None, egui::style::ScrollAnimation::none());
-                }
+                crate::interaction::reveal_focused(ui, response, anchor);
             }
             let caption_color = if config.surface.is_some() {
                 p.muted_foreground

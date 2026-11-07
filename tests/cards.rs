@@ -68,11 +68,11 @@ fn harness() -> Harness<'static, State> {
 #[test]
 fn child_clicks_do_not_activate_the_card_and_keyboard_activation_is_native() {
     let mut h = harness();
-    h.get_by_label("CHILD ACTION").click();
+    h.get_by_label("Child action").click();
     h.run();
     assert_eq!(h.state().child, 1);
     assert_eq!(h.state().opened, 0);
-    h.get_by_label("PROJECT PHOENIX").click();
+    h.get_by_label("Project Phoenix").click();
     h.run();
     assert_eq!(h.state().opened, 1);
     h.get_by_label("Open project").focus();
@@ -125,4 +125,42 @@ fn surfaces_do_not_leak_style_and_nested_cards_restore_text_colors() {
             assert_eq!(before.as_ref(), ui.style().as_ref());
         });
     h.run();
+}
+
+#[test]
+fn header_and_footer_gaps_render_as_documented() {
+    let mut h = Harness::builder()
+        .with_theme(egui::Theme::Light)
+        .with_context_setup(|ctx| common::install(ctx, Theme::default()))
+        .build_ui(|ui| {
+            Card::new().show(ui, |ui| {
+                Card::header(ui, |ui| Card::title(ui, "Quarterly review"));
+                ui.label("Body copy");
+                Card::footer(ui, |ui| ui.add(Button::new("Approve")));
+            });
+        });
+    h.run_steps(2);
+    let title = h
+        .get_by_role_and_label(egui::accesskit::Role::Heading, "Quarterly review")
+        .rect();
+    let body = h.get_by_label("Body copy").rect();
+    let action = h.get_by_label("Approve").rect();
+    let header = body.top() - title.bottom();
+    let footer = action.top() - body.bottom();
+    assert!((header - 16.0).abs() < 0.5, "header gap {header}");
+    assert!(
+        (footer - 41.0).abs() < 0.5,
+        "footer gap, divider and gap {footer}"
+    );
+}
+#[test]
+fn card_titles_have_no_display_tracking() {
+    let mut h = harness();
+    h.run_steps(2);
+    let spacing = common::galleys(&h.output().shapes)
+        .into_iter()
+        .find(|galley| galley.job.text.to_lowercase().contains("project phoenix"))
+        .map(|galley| galley.job.sections[0].format.extra_letter_spacing)
+        .expect("title painted");
+    assert_eq!(spacing, 0.0);
 }

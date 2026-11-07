@@ -1,11 +1,16 @@
 use super::{FileItem, FileStatus, file_size, icon};
 use crate::{
-    Button, ButtonVariant, ControlSize, Progress, ProgressSize, ProgressVariant, Text, TextColor,
-    TextSize, Theme, Weight,
+    Button, ButtonVariant, ControlSize, Family, Progress, ProgressSize, ProgressVariant, Text,
+    TextColor, TextSize, Theme, Weight,
     tokens::{border, space, upload as tokens},
 };
 use egui::{Id, Response, Sense, Stroke, Ui, UiBuilder, WidgetInfo, vec2};
-pub(super) fn show<K>(ui: &mut Ui, id: Id, item: &FileItem<'_, K>) -> (Option<Response>, bool) {
+pub(super) fn show<K>(
+    ui: &mut Ui,
+    id: Id,
+    item: &FileItem<'_, K>,
+    anchor: egui::Pos2,
+) -> (Option<Response>, bool) {
     let p = Theme::from_context(ui.ctx()).palette;
     let mut action = None;
     let mut retry = false;
@@ -53,12 +58,13 @@ pub(super) fn show<K>(ui: &mut Ui, id: Id, item: &FileItem<'_, K>) -> (Option<Re
                             ui.set_width(content_width);
                             let mut job = Text::new(item.name.as_ref())
                                 .size(TextSize::Sm)
-                                .weight(Weight::SemiBold)
+                                .weight(Weight::Medium)
                                 .layout_job(&Theme::from_context(ui.ctx()), content_width);
                             job.wrap.break_anywhere = true;
                             ui.add(egui::Label::new(job).wrap());
                             ui.add(
-                                Text::label(file_size(item.bytes))
+                                Text::new(file_size(item.bytes))
+                                    .family(Family::Mono)
                                     .size(TextSize::Xs)
                                     .color(TextColor::Muted),
                             );
@@ -81,11 +87,11 @@ pub(super) fn show<K>(ui: &mut Ui, id: Id, item: &FileItem<'_, K>) -> (Option<Re
                             }
                         });
                         if item.removable && !stacked {
-                            action = Some(action_control(ui, id, item, width));
+                            action = Some(action_control(ui, id, item, width, anchor));
                         }
                     });
                     if item.removable && stacked {
-                        action = Some(action_control(ui, id, item, width));
+                        action = Some(action_control(ui, id, item, width, anchor));
                     }
                 });
         })
@@ -106,7 +112,7 @@ fn status<K>(ui: &mut Ui, item: &FileItem<'_, K>) {
                 value
                     .map_or_else(Progress::indeterminate, Progress::new)
                     .id_salt("transfer")
-                    .size(ProgressSize::Small)
+                    .size(ProgressSize::Medium)
                     .show_value(true)
                     .accessible_name(format!("Uploading {}", item.name)),
             );
@@ -115,7 +121,7 @@ fn status<K>(ui: &mut Ui, item: &FileItem<'_, K>) {
             ui.add(
                 Progress::new(100.0)
                     .id_salt("transfer")
-                    .size(ProgressSize::Small)
+                    .size(ProgressSize::Medium)
                     .variant(ProgressVariant::Success)
                     .label("Complete")
                     .accessible_name(format!("Upload complete {}", item.name)),
@@ -138,7 +144,13 @@ fn status<K>(ui: &mut Ui, item: &FileItem<'_, K>) {
     }
 }
 
-fn action_control<K>(ui: &mut Ui, id: Id, item: &FileItem<'_, K>, width: f32) -> Response {
+fn action_control<K>(
+    ui: &mut Ui,
+    id: Id,
+    item: &FileItem<'_, K>,
+    width: f32,
+    anchor: egui::Pos2,
+) -> Response {
     let p = Theme::from_context(ui.ctx()).palette;
     let (_, rect) = ui.allocate_space(vec2(tokens::ACTION_SIZE.min(width), tokens::ACTION_SIZE));
     let response = ui.interact(rect, id.with("action"), Sense::click());
@@ -168,9 +180,7 @@ fn action_control<K>(ui: &mut Ui, id: Id, item: &FileItem<'_, K>, width: f32) ->
             focus: p.primary,
         },
     );
-    if response.has_focus() {
-        response.scroll_to_me_animation(None, egui::style::ScrollAnimation::none());
-    }
+    crate::interaction::reveal_focused(ui, &response, anchor);
 
     response
 }
