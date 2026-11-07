@@ -164,6 +164,8 @@ This first table is **not virtualized**: all supplied rows and cells are visited
 each pass. Bound or paginate the slice for large datasets. Column resizing,
 reordering, pinning, grouped/multirow headers, arbitrary spans, multicolumn sort,
 row dragging, copy/export and a grid editing model are outside this step.
-Image/file/Scribble components remain later advanced work. See
+Image, file-selection and Scribble components now have their own
+[media](images-galleries-lightboxes.md), [file-selection](file-uploads.md) and
+[drawing/export](scribble-export.md) guides. See
 [DS-019](issues/DS-019.md), the [centering correction](issues/DS-020.md), and the
 [verification record](verification-tables.md).

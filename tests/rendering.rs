@@ -285,3 +285,60 @@ fn button_rect(harness: &Harness<'_, gallery::Showcase>, label: &str) -> egui::R
         .get_by_role_and_label(egui::accesskit::Role::Button, label)
         .rect()
 }
+
+#[test]
+fn sidebar_reveals_arriving_focus_without_overriding_manual_scrolling() {
+    use egui::{Event, Modifiers, MouseWheelSource, MouseWheelUnit, TouchPhase, vec2};
+    for height in [600.0, 940.0] {
+        let mut harness = Harness::builder()
+            .with_size([1200.0, height])
+            .with_theme(egui::Theme::Light)
+            .build_eframe(|cc| {
+                common::install(&cc.egui_ctx, Theme::default().with_reduced_motion(true));
+                gallery::Showcase {
+                    reduced_motion: true,
+                    ..Default::default()
+                }
+            });
+        harness.run();
+        let footer = harness.get_by_label("01 / Foundation").rect();
+        harness
+            .get_by_role_and_label(egui::accesskit::Role::Button, "Tooltips")
+            .focus();
+        harness.run_steps(4);
+        let focused = button_rect(&harness, "Tooltips");
+        assert!(
+            focused.bottom() <= footer.top(),
+            "arriving focus must reveal the page above the footer: {focused:?} / {footer:?}"
+        );
+        assert!(focused.top() >= harness.get_by_label("The system").rect().bottom());
+        let outline = focused.expand(
+            dutchy_egui::tokens::border::FOCUS_OFFSET + dutchy_egui::tokens::border::FOCUS_WIDTH,
+        );
+        assert!(
+            harness.output().shapes.iter().any(|shape| {
+                matches!(&shape.shape, egui::Shape::Rect(rect) if rect.rect == outline)
+                    && shape.clip_rect.contains_rect(outline)
+            }),
+            "the entire painted focus outline must fit inside the scrolling viewport"
+        );
+        harness.hover_at(focused.center());
+        harness.run_steps(2);
+        harness.input_mut().events.push(Event::MouseWheel {
+            unit: MouseWheelUnit::Point,
+            phase: TouchPhase::Move,
+            source: MouseWheelSource::Unknown,
+            delta: vec2(0.0, 3000.0),
+            modifiers: Modifiers::NONE,
+        });
+        harness.run_steps(80);
+        assert!(button_rect(&harness, "Tooltips").bottom() > footer.top());
+        assert!(
+            harness
+                .get_by_role_and_label(egui::accesskit::Role::Button, "Tooltips")
+                .is_focused(),
+            "wheel scrolling keeps focus without pulling the page list back"
+        );
+        assert_eq!(harness.get_by_label("01 / Foundation").rect(), footer);
+    }
+}

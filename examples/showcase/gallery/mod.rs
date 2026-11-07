@@ -243,7 +243,12 @@ impl Showcase {
                         ui.add_space(space::LG);
                         egui::ScrollArea::vertical()
                             .id_salt("navigation-scroll")
-                            .show(ui, |ui| self.navigation(ui, true));
+                            .show(ui, |ui| {
+                                let focus_inset = border::FOCUS_OFFSET + border::FOCUS_WIDTH;
+                                ui.add_space(focus_inset);
+                                self.navigation(ui, true);
+                                ui.add_space(focus_inset);
+                            });
                     });
                 });
             });
@@ -259,15 +264,19 @@ impl Showcase {
             } else {
                 ButtonVariant::Ghost
             };
-            if ui
-                .add(
-                    Button::new(page.name())
-                        .variant(variant)
-                        .size(ControlSize::Small)
-                        .full_width(full_width),
-                )
-                .clicked()
-            {
+            let response = ui.add(
+                Button::new(page.name())
+                    .variant(variant)
+                    .size(ControlSize::Small)
+                    .full_width(full_width),
+            );
+            let outline = response
+                .rect
+                .expand(border::FOCUS_OFFSET + border::FOCUS_WIDTH);
+            if full_width && response.gained_focus() && !ui.clip_rect().contains_rect(outline) {
+                ui.scroll_to_rect_animation(outline, None, egui::style::ScrollAnimation::none());
+            }
+            if response.clicked() {
                 self.page = page;
             }
         }

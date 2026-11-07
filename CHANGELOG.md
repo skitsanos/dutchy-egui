@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.18 — 2026-11-07
+
+- The showcase sidebar reveals page buttons when keyboard or assistive focus
+  arrives, while preserving manual scrolling with retained focus (DS-045).
+- The tables guide links the implemented media, file-selection and Scribble
+  guides instead of calling them future work (DS-041).
+
 ## 1.0.17 — 2026-11-07
 
 - Delft Blue (hsl 221 83% 53%) and Emerald Green (hsl 160 84% 31%) accents,

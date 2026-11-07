@@ -2,17 +2,16 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.17** adds the Delft Blue and Emerald Green accents, lists the
-presets through `Accent::ALL`, and leads the showcase navigation with Overview,
-Typography and Tokens before the component pages sorted by name. Version 1.0.16
-fixed scroll, focus, composition and accessibility defects found by the ledger
-verification audit (DS-028).
+Version **1.0.18** reveals showcase sidebar pages when keyboard or assistive
+focus arrives (DS-045). Version 1.0.17 added the Delft Blue and Emerald Green
+accents, `Accent::ALL`, and the showcase navigation order of Overview,
+Typography and Tokens before the component pages sorted by name.
 The core advanced-component inventory is implemented; supported scope remains explicit.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.17"
+dutchy-egui = "1.0.18"
 ```
 
 The package is prepared locally; registry publication is a separate release step.

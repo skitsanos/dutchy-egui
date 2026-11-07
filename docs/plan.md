@@ -134,7 +134,14 @@ Scribble). DS-003 and DS-027 are closed as design decisions that keep the
 source status and accent colors; the table row-naming item of DS-043 stays open
 in the ledger. The 1.0.17 step adds the Delft Blue and Emerald Green accents
 with `Accent::ALL`, and orders the showcase navigation as Overview, Typography,
-Tokens and then the component pages by name.
+Tokens and then the component pages by name. Releases 1.0.16 and 1.0.17 are on
+main as `17fc52d` and `9d841db`. After the 1.0.17 push, cleanup removed 43 GiB
+of build artifacts and visual proofs and the two merged ticket branches, and
+pruned worktree metadata; only the active worktree existed, no showcase or
+preview process was running, and the unmerged Renovate remote branch was
+preserved. The 1.0.18 step reveals sidebar pages on arriving keyboard focus
+(DS-045) and corrects the tables guide (DS-041) after the post-release review
+recorded in [verification-review-1.0.17.md](verification-review-1.0.17.md).
 See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md),
 [menu/dropdown decisions](menus-dropdowns.md),
 [navigation decisions](breadcrumbs-pagination.md), [stepper decisions](stepper.md),
