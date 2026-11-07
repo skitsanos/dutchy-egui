@@ -2,16 +2,17 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.18** reveals showcase sidebar pages when keyboard or assistive
-focus arrives (DS-045). Version 1.0.17 added the Delft Blue and Emerald Green
-accents, `Accent::ALL`, and the showcase navigation order of Overview,
-Typography and Tokens before the component pages sorted by name.
+Version **1.0.20** adds the form primitives the web registry never listed:
+`Switch`, `Kbd`, `Segmented`, `Slider`, `NumberInput`, `DatePicker` and
+`TimePicker`, with in-repository `calendar::Date` and `calendar::Time` values.
+Version 1.0.19 added opt-in Scribble pointer smoothing (DS-046); 1.0.18
+revealed showcase sidebar pages on arriving keyboard focus (DS-045).
 The core advanced-component inventory is implemented; supported scope remains explicit.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.18"
+dutchy-egui = "1.0.20"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -76,6 +77,13 @@ do not edit. Textarea limits/counts use Unicode scalar values.
 and custom predicates. `FieldValidation` tracks explicit change/blur/submit
 triggers and rejects stale async tickets; the application executes async work.
 See the [form API guide](docs/forms.md) for examples and boundaries.
+
+`Switch`, `Segmented`, `Slider`, `NumberInput`, `DatePicker` and `TimePicker`
+extend the same host-owned model with on/off, exclusive segments, ranges,
+stepped numbers and ISO date/time entry; `Kbd` draws key chips. The date and
+time editors keep unparsable text while focused and revert on blur, and the
+calendar grid is keyboard-navigable. The library reads no clock: hosts pass
+`today`. See the [form primitives guide](docs/form-primitives.md).
 
 ## Cards and alerts
 
@@ -325,7 +333,8 @@ Current platform evidence and limitations are recorded in
 [stats and empty states verification](docs/verification-insights.md),
 [loading verification](docs/verification-loading.md),
 [cards and alerts verification](docs/verification-surfaces.md),
-[form verification](docs/verification-forms.md), and the earlier
+[form verification](docs/verification-forms.md),
+[form primitives verification](docs/verification-form-primitives.md), and the earlier
 [visual-proof verification](docs/verification.md). This milestone does not claim whole-system
 parity or blanket contrast compliance; [DS-003](docs/issues/DS-003.md) and
 [DS-027](docs/issues/DS-027.md) record the decision to keep the source colors

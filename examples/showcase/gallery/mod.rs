@@ -11,6 +11,7 @@ mod navigation;
 mod notifications;
 mod overlays;
 mod pages;
+mod primitives;
 pub(crate) mod sketch;
 mod stepping;
 mod surfaces;
@@ -42,6 +43,7 @@ pub struct Showcase {
     pub native_text: String,
     pub native_checked: bool,
     pub forms: FormState,
+    pub primitives: primitives::PrimitivesState,
     pub surfaces: SurfacesState,
     pub loading: LoadingState,
     pub insights: InsightsState,
@@ -72,6 +74,7 @@ impl Default for Showcase {
             native_text: "Native egui, Dutchy style".into(),
             native_checked: true,
             forms: FormState::default(),
+            primitives: primitives::PrimitivesState::default(),
             surfaces: SurfacesState::default(),
             loading: LoadingState::default(),
             insights: InsightsState::default(),
@@ -127,6 +130,7 @@ impl Showcase {
                             Page::Overview => components::overview(ui, self),
                             Page::Typography => typography::show(ui),
                             Page::Forms => forms::show(ui, &mut self.forms),
+                            Page::Controls => primitives::show(ui, &mut self.primitives),
                             Page::Cards => surfaces::cards(ui, &mut self.surfaces),
                             Page::Alerts => surfaces::alerts(ui, &mut self.surfaces),
                             Page::Progress => loading::progress(ui, &mut self.loading),

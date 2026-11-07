@@ -105,6 +105,23 @@ pub mod control {
     pub const TEXTAREA_ROWS: usize = 4;
     /// Maximum select popup height.
     pub const SELECT_POPUP_HEIGHT: f32 = 240.0;
+    /// Switch track width; the track is one indicator tall.
+    pub const SWITCH_WIDTH: f32 = 36.0;
+    /// Switch thumb side, inset by four points inside the track.
+    pub const SWITCH_THUMB: f32 = 12.0;
+    /// Horizontal padding inside one segment of a segmented control.
+    pub const SEGMENT_PADDING_X: f32 = super::space::LG;
+    /// Horizontal padding inside a keyboard key chip.
+    pub const KBD_PADDING_X: f32 = super::space::TIGHT;
+    /// Slider interaction height. egui derives the handle radius as height / 2.5,
+    /// so 25 points yield the 20-point square handle.
+    pub const SLIDER_HEIGHT: f32 = INDICATOR * 1.25;
+    /// Reserved width of a slider's host-formatted value label.
+    pub const SLIDER_VALUE_WIDTH: f32 = super::space::MAJOR;
+    /// Length of the minus/plus glyph strokes in number-input step buttons.
+    pub const STEP_GLYPH: f32 = super::space::MD;
+    /// Calendar day cell side; the grid is seven cells wide and six tall.
+    pub const CALENDAR_CELL: f32 = 36.0;
 }
 
 /// Shared sizes for buttons and future input/select controls.

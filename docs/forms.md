@@ -37,6 +37,7 @@ rule and explicitly validate every required field at submission.
 
 - Input: single-line, placeholder, password mask, shared sizes, disabled/read-only,
   width, and character limit. Password clipboard/accessibility behavior uses egui.
+  The text row is vertically centered in the frame (DS-047).
 - Textarea: native multiline editing, rows, 120-point minimum height, count/limit,
   and read-only/disabled states. Interactive resize handles remain planned.
 - Checkbox: square indicator, wrapped clickable label, keyboard activation.
@@ -45,6 +46,10 @@ rule and explicitly validate every required field at submission.
 - Select: typed options, placeholder, disabled options, shared heights. Enter
   opens; Tab/arrows navigate; Enter chooses; Escape dismisses. Choosing a value
   returns focus to the trigger, including choosing the existing value.
+
+Switch, Segmented, Slider, NumberInput, DatePicker, TimePicker and the Kbd chip
+follow the same ownership and ID rules; their decisions, keyboard behavior and
+examples are in the [form primitives guide](form-primitives.md).
 
 Use change or explicit submit validation for selection controls. RadioGroup
 returns a structural group Response with change events; it does not aggregate

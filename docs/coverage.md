@@ -1,9 +1,11 @@
 # Component coverage
 
-Version 1.0.15 adds Scribble and SVG/optional PNG export after file selection,
-images, galleries, lightboxes, data tables and the core
-interaction and application-essential groups. Registry groups are not a count
-of individual controls. "Planned" means no public implementation is shipped.
+Version 1.0.20 adds the form primitives the web registry never listed, after
+1.0.15 completed Scribble and SVG/optional PNG export, file selection, images,
+galleries, lightboxes, data tables and the core interaction and
+application-essential groups. Registry groups are not a count of individual
+controls. "Planned" means no public implementation is shipped; "Port addition"
+marks a control with no web counterpart.
 
 | Web registry group | Status | Supported scope / next work |
 | --- | --- | --- |
@@ -34,6 +36,13 @@ of individual controls. "Planned" means no public implementation is shipped.
 | Text | Visual proof | Three roles; four actual weights; 12 sizes; tracking, leading, color, Unicode uppercase, italics, wrapping |
 | Scribble | Advanced components | Pointer/dot and keyboard drawing, host-owned bounded strokes/history, undoable clear, fixed paper, captured brushes, read-only/disabled, immutable snapshots, SVG/CPU raster/optional PNG, opt-in pointer smoothing and native demo Save As. No pressure/tilt, multitouch, eraser, tapered ends, history persistence or shape editor. |
 | Textarea | Application essentials (partial) | Multiline, row sizing, Unicode count/limit, read-only/disabled and field feedback. Interactive resize remains planned. |
+| Switch | Port addition | 36 × 20 track with a sliding square thumb, Switch role, Space/Enter activation, disabled state, reduced motion |
+| Kbd | Port addition | Mono uppercase key chip on the muted surface; a label, composed per key |
+| Segmented | Port addition | Typed exclusive segments at a shared height, foreground selection, RadioGroup/RadioButton semantics, one tab stop, Left/Right/Home/End roving that selects, disabled segments, full width |
+| Slider | Port addition | egui slider interaction and Slider semantics under a 4-point rail, primary trailing fill, 20-point square handle, step snapping, host-formatted value label, disabled state. Single value; no range or vertical slider yet. |
+| NumberInput | Port addition | Editor with square decrease/increase buttons, Up/Down stepping, bounds, decimals, read-only, SpinButton value/min/max/step; unparsable text reverts on blur |
+| DatePicker | Port addition | ISO `YYYY-MM-DD` editor, caret-segment stepping, bounds, host-supplied today, calendar popup with month navigation, arrows/Home/End/PageUp/PageDown, Enter/Escape and focus return. No week numbers, ranges or locale formats yet. |
+| TimePicker | Port addition | `HH:MM` or `HH:MM:SS` editor with wrapping caret-segment steps and strict parsing; no time zones or 12-hour display. |
 
 Foundation support: ten accent/mode combinations, custom semantic palette,
 standard egui styling, shared 32/48/56-point control heights, four-point spacing

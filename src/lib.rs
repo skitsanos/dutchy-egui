@@ -5,6 +5,7 @@
 
 pub use egui;
 
+pub mod calendar;
 pub mod fonts;
 #[cfg(feature = "url-images")]
 pub mod image_loaders;
@@ -28,14 +29,17 @@ pub use tokens::{
     Accent, CardPadding, ColumnWidth, ContainerWidth, ControlSize, DrawerWidth, Family, Leading,
     MenuWidth, ModalWidth, Mode, ProgressSize, Spacing, TextSize, Tracking, Weight,
 };
-pub use widgets::forms::{Checkbox, Field, Input, RadioGroup, Select, SelectOption, Textarea};
+pub use widgets::forms::{
+    Checkbox, DatePicker, Field, Input, NumberInput, RadioGroup, Segmented, Select, SelectOption,
+    Slider, Switch, Textarea, TimePicker,
+};
 pub use widgets::{
     Accordion, AccordionItem, AccordionResponse, AccordionState, AccordionVariant, Alert,
     AlertResponse, AlertVariant, Badge, BadgeVariant, BreadcrumbIconPainter, BreadcrumbItem,
     BreadcrumbSeparator, Breadcrumbs, BreadcrumbsResponse, Button, ButtonVariant, Card,
     CardVariant, CommandPalette, CommandPaletteResponse, Drawer, DrawerSide, Dropdown,
     DropdownAlign, DropdownResponse, EmptyState, EmptyStateIcon, EmptyStateResponse,
-    EmptyStateVariant, Menu, MenuIconPainter, MenuItem, MenuItemVariant, MenuResponse, Modal,
+    EmptyStateVariant, Kbd, Menu, MenuIconPainter, MenuItem, MenuItemVariant, MenuResponse, Modal,
     OverlayDismissal, OverlayOptions, OverlayResponse, Pagination, PaginationResponse,
     PaginationVariant, Progress, ProgressVariant, SearchState, SearchableSelect,
     SearchableSelectResponse, Skeleton, SkeletonGroup, SkeletonVariant, Spinner, SpinnerSize, Stat,

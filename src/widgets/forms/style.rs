@@ -55,3 +55,19 @@ pub(super) fn set_border(ui: &mut Ui, color: Color32) {
         visual.bg_stroke.color = color;
     }
 }
+
+/// Paint a composite control's frame: light or muted fill with the inherited border.
+pub(super) fn paint_frame(ui: &Ui, rect: egui::Rect, theme: Theme) {
+    let fill = if ui.is_enabled() {
+        theme.palette.background
+    } else {
+        theme.palette.muted
+    };
+    ui.painter().rect(
+        rect,
+        0,
+        fill,
+        Stroke::new(border::STANDARD, inherited_border(ui)),
+        StrokeKind::Inside,
+    );
+}

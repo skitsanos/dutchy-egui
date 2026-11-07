@@ -142,6 +142,16 @@ preview process was running, and the unmerged Renovate remote branch was
 preserved. The 1.0.18 step reveals sidebar pages on arriving keyboard focus
 (DS-045) and corrects the tables guide (DS-041) after the post-release review
 recorded in [verification-review-1.0.17.md](verification-review-1.0.17.md).
+Release 1.0.18 is on main as `3347e64`. After its push, cleanup removed 25 GiB
+of build artifacts, including the review's temporary app bundle, logs and
+fixtures under `target/review-1.0.17/`, and pruned worktree metadata; only the
+active worktree and the main branch existed, no build, showcase or preview
+process was running, and the Renovate remote branch was preserved.
+The 1.0.19 step adds opt-in Scribble pointer smoothing (DS-046), merged from a
+separate session's branch. The 1.0.20 step adds the form primitives the web
+registry never listed (Switch,
+Kbd, Segmented, Slider, NumberInput, DatePicker, TimePicker) with in-repository
+calendar values; see [form primitives](form-primitives.md).
 See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md),
 [menu/dropdown decisions](menus-dropdowns.md),
 [navigation decisions](breadcrumbs-pagination.md), [stepper decisions](stepper.md),

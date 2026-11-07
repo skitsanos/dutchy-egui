@@ -53,16 +53,19 @@ the default is `Off`, which stores samples as captured. `Light`, `Regular` and
 `Strong` set a pulled-string stabilizer of 2, 4 or 8 drawing units
 (`tokens::scribble::SMOOTH_*`): the pen trails the pointer and moves only when
 the string is taut, so tremor shorter than the string never reaches the stroke.
-The stabilizer is distance-based, so results do not depend on event rate, frame
-timing or display scale. Ink trails the pointer by up to the string length and
+The stabilizer is distance-based: identical drawing-coordinate samples produce
+the same result across frame timing and display scales. Different sampling can
+change the result. Ink trails the pointer by up to the string length and
 tight loops smaller than it close up; stronger levels trade detail for calm.
 
-On commit, the stabilized points plus the last pointer sample (so ink ends under
-the pointer) are fitted with a midpoint quadratic B-spline, flattened within
-0.25 drawing units (`SMOOTH_TOLERANCE`), and simplified within the same
-tolerance. The fit keeps both endpoints, never overshoots and stays inside the
-samples' bounding box. The live stroke draws the same fitted curve, so ink does
-not jump on release. If the smoothed stroke would exceed the remaining point
+On commit, the last pointer sample is appended when at least 0.5 drawing units
+from the stored ink; shorter tails collapse. These points are fitted with a
+midpoint quadratic B-spline, flattened toward 0.25 drawing units
+(`SMOOTH_TOLERANCE`), capped at 16 segments per piece, and simplified within the
+same tolerance. Large jumps can exceed the flattening tolerance. The fit keeps
+its input endpoints, never overshoots and stays inside the
+samples' bounding box. The live stroke draws the same fitted curve; commit
+simplification can move it within its tolerance. If the smoothed stroke would exceed the remaining point
 capacity, the stabilized samples are committed instead.
 
 Smoothing is captured when a gesture starts, like the brush, and is baked into

@@ -159,3 +159,8 @@ identically on an untouched 1.0.18 checkout in the same container, so they
 come from the software renderer, not this change. They still need confirming
 on the reference renderer. The wasm check was not run because the
 `wasm32-unknown-unknown` target is not installed here.
+
+Confirmed on 2026-11-07 on macOS with the reference WGPU renderer after the
+branch was fast-forwarded into `main`: the full all-features suite passes with
+no snapshot differences, so the two `tests/media_rendering.rs` failures above
+were the software renderer's; both wasm library checks pass as well.

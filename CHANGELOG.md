@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.0.20 — 2026-11-07
+
+- Form primitives: `Switch` (sliding square thumb, Switch role), `Kbd` key
+  chips, `Segmented` exclusive choice (radio semantics, roving Left/Right),
+  `Slider` over egui's slider with Dutchy rail and square handle, `NumberInput`
+  with square step buttons, Up/Down stepping and SpinButton semantics,
+  `DatePicker` with ISO text, caret-segment stepping and a keyboard-navigable
+  month grid, and `TimePicker` with wrapping segment steps.
+- `calendar::Date` and `calendar::Time` values with civil arithmetic and strict
+  ISO parsing; no calendar dependency. Hosts supply `today`.
+- Showcase "Form controls" page; primitives baselines in light, dark and green
+  at 1x, 1.5x and 2x plus the open calendar.
+- Single-line `Input` and `TimePicker` rows are vertically centered in their
+  frame; textareas stay top-aligned (DS-047). The date picker's calendar
+  hangs below the whole field, aligned with its start (DS-048).
+- Follow-up verification fixes disabled typed-field stepping and calendar
+  dismissal, preserves slider focus when siblings change, bounds calendar
+  keyboard navigation and defers entry focus until after sizing, guards extreme
+  numeric/date/time arithmetic, and restores visible month arrows
+  (DS-049–DS-053).
+- Enable Renovate dependency proposals through the reviewed onboarding
+  configuration, with automatic merging explicitly disabled (PR #1, DS-054).
+
 ## 1.0.19 — 2026-11-07
 
 - Opt-in Scribble pointer smoothing: `Scribble::smoothing` with tokenized

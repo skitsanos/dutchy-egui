@@ -115,9 +115,15 @@ impl<'a> Input<'a> {
                     } else {
                         TextEdit::singleline(buffer)
                     };
+                    let align = if self.multiline {
+                        egui::Align2::LEFT_TOP
+                    } else {
+                        egui::Align2::LEFT_CENTER
+                    };
                     let mut response = editor
                         .id(id)
                         .frame(frame)
+                        .align(align)
                         .desired_width(width)
                         .desired_rows(self.rows)
                         .min_size(vec2(width, height))

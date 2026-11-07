@@ -41,12 +41,13 @@ impl ScribbleSmoothing {
         !matches!(self, Self::Off)
     }
     /// Smooth one gesture's drawing-coordinate samples exactly as the widget
-    /// commits a pointer stroke: stabilize, end at the last sample, fit a curve
+    /// commits a pointer stroke: stabilize, catch up to the last sample, fit a curve
     /// and simplify. `Off` returns the samples unchanged.
     ///
-    /// The first and last samples are kept, and every output point stays inside
-    /// the samples' bounding box, so in-bounds input remains in bounds. The
-    /// widget's per-stroke point caps are not applied here.
+    /// The first sample is kept. The last sample is appended when at least the
+    /// shared sample distance from the last stored point; shorter tails collapse.
+    /// Every output point stays inside the samples' bounding box, so in-bounds
+    /// input remains in bounds. The widget's point caps are not applied here.
     pub fn smooth(self, samples: &[Pos2]) -> Vec<Pos2> {
         let Some((&first, rest)) = samples.split_first() else {
             return Vec::new();
@@ -65,8 +66,8 @@ impl ScribbleSmoothing {
 }
 
 /// Pulled-string stabilizer: the pen trails the pointer on a fixed-length string
-/// and moves only when the pointer pulls it taut. Distance-based, so results do
-/// not depend on event rate or frame timing.
+/// and moves only when the pointer pulls it taut. The same ordered samples yield
+/// the same result regardless of frame timing; different sampling can change it.
 #[derive(Clone, Copy, Debug)]
 pub(crate) struct Stabilizer {
     radius: f32,
@@ -93,7 +94,7 @@ impl Stabilizer {
         }
         (last.distance(self.pen) >= tokens::SAMPLE_DISTANCE).then_some(self.pen)
     }
-    /// Stored points followed by the latest raw sample, so ink ends under the pointer.
+    /// Append the raw tip when it is at least one sample distance from stored ink.
     pub(crate) fn trail(&self, points: &[Pos2]) -> Vec<Pos2> {
         let mut trail = points.to_vec();
         if trail
@@ -107,8 +108,8 @@ impl Stabilizer {
 }
 
 /// Fit a midpoint quadratic B-spline through the sample polygon and flatten it
-/// within the shared tolerance. Endpoints are preserved; the curve never
-/// overshoots its control polygon.
+/// toward the shared tolerance, capped at 16 segments per piece. Large jumps can
+/// exceed that tolerance. Endpoints are preserved without overshoot.
 pub(crate) fn fit(points: &[Pos2]) -> Vec<Pos2> {
     if points.len() < 3 {
         return points.to_vec();
