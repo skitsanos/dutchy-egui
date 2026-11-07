@@ -27,7 +27,7 @@ ehttp = { version = "0.7.3", optional = true, default-features = false, features
 image = { version = "0.25.10", optional = true, default-features = false }
 
 [dev-dependencies]
-rfd = "0.17.2"
+rfd = "0.18.0"
 eframe = { version = "0.37.0", default-features = false, features = ["accesskit", "glow", "wayland", "x11"] }
 egui_kittest = { version = "0.37.0", features = ["eframe", "snapshot", "wgpu"] }
 
