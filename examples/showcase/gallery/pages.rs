@@ -27,6 +27,7 @@ pub enum Page {
     Galleries,
     Lightboxes,
     FileUploads,
+    Scribble,
     Buttons,
     Badges,
     Motion,
@@ -34,7 +35,7 @@ pub enum Page {
 }
 
 impl Page {
-    pub(super) const ALL: [Self; 30] = [
+    pub(super) const ALL: [Self; 31] = [
         Self::Overview,
         Self::Typography,
         Self::Forms,
@@ -61,6 +62,7 @@ impl Page {
         Self::Galleries,
         Self::Lightboxes,
         Self::FileUploads,
+        Self::Scribble,
         Self::Buttons,
         Self::Badges,
         Self::Motion,
@@ -99,6 +101,7 @@ impl Page {
             Self::Motion => "Motion",
             Self::Tokens => "Tokens",
             Self::FileUploads => "File uploads",
+            Self::Scribble => "Scribble",
         }
     }
 }

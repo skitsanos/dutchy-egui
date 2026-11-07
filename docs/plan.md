@@ -45,7 +45,8 @@ stateful controls accept stable IDs. Theme updates do not reinstall fonts.
 
 Use the latest stable egui release family and verify current versions whenever
 adding dependencies. egui is the sole default runtime crate. Optional HTTP(S)
-PNG/JPEG loading uses ehttp and image, with repository-owned integration;
+PNG/JPEG loading uses ehttp and image; independent optional PNG drawing export
+reuses image without HTTP/JPEG, with repository-owned integration;
 eframe and egui_kittest are development dependencies. Implement small helpers
 locally; adapt compatible MIT code only with provenance and notices. Keep code
 files near or below 400 lines and favor small functions over complex branching.
@@ -109,19 +110,24 @@ milestone. The 1.0.13 step was pushed to main as `c4a728d` on 2026-11-06:
 native image-source presentation, optional HTTP(S) PNG/JPEG loading, keyed
 responsive galleries, host loader/retry
 policy and constrained lightboxes with native modality, keyboard operation and
-focus return. The 1.0.14 file-selection/drop step is local on
-`ticket/file-uploads-drag-drop`: controlled browse/drop requests, metadata rules,
+focus return. The 1.0.14 file-selection/drop step was pushed to main as
+`cc10183` on 2026-11-06: controlled browse/drop requests, metadata rules,
 keyed file lists, host transfer states/actions and a native-picker demonstration.
 The core adds no runtime dependency; rfd 0.17.2 is development-only.
 Post-push cleanup is required by AGENTS.md: after 1.0.13, 81 GiB of generated
 artifacts and 13 obsolete merged local branches were removed; the sole active
 worktree and unmerged Renovate branch were preserved.
-Partial variants and remaining advanced groups stay explicit in
-the coverage matrix.
+After 1.0.14, cleanup closed the superseded task preview, removed 15.3 GiB of
+build artifacts and the merged file-upload branch, and pruned worktree metadata.
+Only the active worktree existed; active/unmerged work remained preserved.
+The 1.0.15 Scribble/export release adds host-owned bounded vector data/history, pointer/keyboard canvas, immutable snapshots,
+SVG/CPU raster/optional PNG and a native Save As demonstration. This completes
+the core advanced inventory. Partial variants and broader parity remain explicit
+in the coverage matrix.
 See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md),
 [menu/dropdown decisions](menus-dropdowns.md),
 [navigation decisions](breadcrumbs-pagination.md), [stepper decisions](stepper.md),
 [overlay decisions](modals-drawers.md), [toast decisions](toasts.md),
 [table decisions](data-tables.md), [media decisions](images-galleries-lightboxes.md),
-and [file-selection decisions](file-uploads.md)
+[file-selection decisions](file-uploads.md), and [Scribble decisions](scribble-export.md)
 for behavior and scope boundaries.

@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.0.15 — 2026-11-07
+
+- Scribble canvas with ordered primary-pointer capture, dots, keyboard drawing,
+  fixed paper/ink tokens, per-stroke brushes, read-only/disabled and lifecycle guards.
+- Host-owned bounded vector data and undoable clear/undo/redo; immutable snapshots
+  support background export without retaining UI controls or draft gestures.
+- Static SVG and bounded CPU raster export with transparency/paper backgrounds;
+  independent optional `png-export` reuses image 0.25.10 for RGBA PNG bytes.
+- Manual scrolling no longer snaps to a focused canvas/toolbar; keyboard reveal
+  remains available, keyboard drafts survive layout changes, and read-only empty
+  views use an accurate hint.
+- Native arrow-focus retention with Tab/Escape exit, and picker focus restoration
+  after export controls re-enable, preserving intervening focus changes.
+- Drawing/history, async preview and native SVG/PNG Save As showcase; model,
+  interaction, export, host-workflow and theme/scale/narrow rendering checks.
+  Completes the core advanced inventory with broader parity limitations explicit.
+
 ## 1.0.14 — 2026-11-06
 
 - Dashed and compact file selection surfaces, native keyboard browse requests,

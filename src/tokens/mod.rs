@@ -10,6 +10,7 @@ pub mod menu;
 pub mod metrics;
 pub mod navigation;
 pub mod overlay;
+pub mod scribble;
 pub mod stepper;
 pub mod surface;
 pub mod table;

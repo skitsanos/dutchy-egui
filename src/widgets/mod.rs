@@ -19,6 +19,7 @@ mod navigation;
 mod overlay;
 mod pagination;
 mod progress;
+mod scribble;
 pub(crate) mod search;
 mod searchable_select;
 mod skeleton;
@@ -78,3 +79,5 @@ pub use media::{
     Gallery, GalleryItem, GalleryResponse, Image, ImageAspect, ImageFit, ImageResponse,
     ImageStatus, Lightbox, LightboxResponse,
 };
+
+pub use scribble::{Scribble, ScribbleAction, ScribbleResponse};

@@ -11,6 +11,7 @@ mod navigation;
 mod notifications;
 mod overlays;
 mod pages;
+pub(crate) mod sketch;
 mod stepping;
 mod surfaces;
 mod tabbed;
@@ -56,6 +57,7 @@ pub struct Showcase {
     pub tabular: tabular::TableState,
     pub media: media::MediaState,
     pub uploads: uploads::UploadState,
+    pub sketch: sketch::SketchState,
 }
 
 impl Default for Showcase {
@@ -85,6 +87,7 @@ impl Default for Showcase {
             tabular: tabular::TableState::default(),
             media: media::MediaState::default(),
             uploads: uploads::UploadState::default(),
+            sketch: sketch::SketchState::default(),
         }
     }
 }
@@ -103,6 +106,7 @@ impl Showcase {
     pub fn show(&mut self, ui: &mut Ui) {
         self.forms.tick(ui.ctx());
         self.uploads.tick(ui.ctx());
+        self.sketch.tick(ui.ctx());
         self.header(ui);
         let wide = ui.available_width() >= 820.0;
         if wide {
@@ -146,6 +150,7 @@ impl Showcase {
                             Page::Galleries => self.media.galleries(ui),
                             Page::Lightboxes => self.media.lightboxes(ui),
                             Page::FileUploads => self.uploads.show(ui),
+                            Page::Scribble => self.sketch.show(ui),
                             Page::Buttons => components::buttons(ui, self),
                             Page::Badges => components::badges(ui, self),
                             Page::Motion => components::motion(ui, self),

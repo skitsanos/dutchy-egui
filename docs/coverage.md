@@ -1,7 +1,7 @@
 # Component coverage
 
-Version 1.0.14 adds file selection/drop surfaces, metadata validation and file
-lists after images, galleries, lightboxes, data tables and the core
+Version 1.0.15 adds Scribble and SVG/optional PNG export after file selection,
+images, galleries, lightboxes, data tables and the core
 interaction and application-essential groups. Registry groups are not a count
 of individual controls. "Planned" means no public implementation is shipped.
 
@@ -32,7 +32,7 @@ of individual controls. "Planned" means no public implementation is shipped.
 | Flex | Application essentials | Token gaps, row/column/reverse, row wrapping, native cross alignment; centered containers and keyed responsive grids. CSS baseline/distribution modes are outside this scope. |
 | Menu | Interaction components | Keyed actions, consecutive named groups, separators, shortcut hints, optional decorative icons, disabled/destructive states, native pointer/assistive/keyboard input. Nested submenus, checked actions, and menu bars remain planned. |
 | Text | Visual proof | Three roles; four actual weights; 12 sizes; tracking, leading, color, Unicode uppercase, italics, wrapping |
-| Scribble | Planned | Pointer drawing, clear, host-owned strokes, optional export |
+| Scribble | Advanced components | Pointer/dot and keyboard drawing, host-owned bounded strokes/history, undoable clear, fixed paper, captured brushes, read-only/disabled, immutable snapshots, SVG/CPU raster/optional PNG and native demo Save As. No pressure/tilt, multitouch, eraser, smoothing, history persistence or shape editor. |
 | Textarea | Application essentials (partial) | Multiline, row sizing, Unicode count/limit, read-only/disabled and field feedback. Interactive resize remains planned. |
 
 Foundation support: six accent/mode combinations, custom semantic palette,
@@ -45,6 +45,6 @@ scope is implemented, including a public-API form and workspace settings/dashboa
 composition. Partial controls and broader web parity remain explicit above;
 the core interaction-components scope is implemented, including a public-API
 notification queue with host Undo/Retry actions. Advanced work includes data
-tables, images/galleries/lightboxes, and file selection/drop zones; Scribble/export
-remains outstanding. Partial variants and broader web parity remain explicit in
-the matrix; milestone completion does not imply whole-system parity.
+tables, images/galleries/lightboxes, file selection/drop zones and Scribble/export.
+The core advanced-component inventory is implemented. Partial variants and broader
+web parity remain explicit in the matrix; milestone completion does not imply whole-system parity.

@@ -10,6 +10,7 @@ pub mod fonts;
 pub mod image_loaders;
 pub mod interaction;
 pub mod layout;
+pub mod scribble;
 pub mod text;
 pub mod theme;
 pub mod tokens;
@@ -17,6 +18,10 @@ pub mod validation;
 pub mod widgets;
 
 pub use layout::{Container, CrossAlign, Flex, FlexDirection, ResponsiveGrid};
+pub use scribble::{
+    ScribbleBrush, ScribbleDrawing, ScribbleError, ScribbleExportOptions, ScribbleSnapshot,
+    ScribbleStroke, ScribbleWidth,
+};
 pub use text::{Text, TextColor};
 pub use theme::Theme;
 pub use tokens::{
@@ -68,3 +73,5 @@ pub use widgets::{
     Gallery, GalleryItem, GalleryResponse, Image, ImageAspect, ImageFit, ImageResponse,
     ImageStatus, Lightbox, LightboxResponse,
 };
+
+pub use widgets::{Scribble, ScribbleAction, ScribbleResponse};

@@ -2,14 +2,14 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.14** adds file selection, drag-and-drop, metadata validation and
-keyed file lists to the advanced-components milestone. Applications retain file
-handles and own all reading, transfer, retry and cancellation work.
+Version **1.0.15** adds Scribble: pointer/keyboard drawing, host-owned history,
+immutable export snapshots, SVG, CPU previews and optional PNG export.
+The core advanced-component inventory is implemented; supported scope remains explicit.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.13"
+dutchy-egui = "1.0.15"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -56,7 +56,8 @@ hover/pressed feedback, pointing cursors, and keyboard focus cues. Spinners resp
 
 The default build depends only on **egui 0.37.0** at runtime. Optional
 `url-images` adds **ehttp 0.7.3** and **image 0.25.10** for HTTP(S) PNG/JPEG.
-eframe and egui_kittest are development dependencies. The library keeps
+`png-export` enables the existing optional image codec for PNG output without
+HTTP/JPEG. eframe and egui_kittest are development dependencies. The library keeps
 application state in the host and needs no web design system checkout.
 
 ## Forms
@@ -217,10 +218,25 @@ for the native picker. It inspects metadata off the UI thread and simulates
 transfers locally; no files are uploaded. No new runtime dependency is added.
 See the [file upload guide](docs/file-uploads.md).
 
+## Scribble and export
+
+`Scribble` records pointer or keyboard strokes in a host-owned `ScribbleDrawing`.
+Logical coordinates and per-stroke brushes survive resizing and theme changes.
+Clear/undo/redo and export controls return host requests; completed strokes update
+the bound model. Read-only views retain inspection and exports.
+
+Immutable snapshots produce self-contained SVG or an egui CPU raster with
+transparent/paper backgrounds. `png-export` additionally encodes PNG bytes.
+Export sizes/work/history are bounded; the host owns workers, save dialogs and
+storage. The demo provides a local preview and native Save As. See the
+[Scribble guide](docs/scribble-export.md).
+
 ## Showcase
 
 ```sh
 cargo run --example showcase
+# Include PNG drawing exports:
+cargo run --example showcase --features png-export
 # Include live Picsum photos:
 cargo run --example showcase --features url-images
 ```
@@ -246,6 +262,8 @@ select **Use Picsum photos** on any media page to load credited online samples;
 the initial source, so opening the demo makes no external image requests.
 The File Uploads page adds native browsing, drop targets, shared validation,
 background metadata inspection, and explicit local transfer simulation.
+The Scribble page adds pointer/keyboard drawing, retained history, a shared
+read-only canvas, async previews and SVG/optional PNG Save As.
 Its renderer is Glow;
 automated rendering tests use WGPU. Keyboard focus uses
 Tab, Enter, and Space. The library itself is renderer-independent.
@@ -286,6 +304,8 @@ Linux). Review rendering baseline changes visually before accepting updates:
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
+[Scribble verification](docs/verification-scribble.md),
+[file-upload verification](docs/verification-file-uploads.md),
 [media verification](docs/verification-media.md),
 [data table verification](docs/verification-tables.md),
 [toast verification](docs/verification-toasts.md),
