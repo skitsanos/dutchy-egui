@@ -1,5 +1,5 @@
 //! Form-primitive baselines across accents, modes and scales, plus the showcase page.
-#![cfg(feature = "bundled-fonts")]
+#![cfg(all(feature = "bundled-fonts", feature = "markdown"))]
 
 mod common;
 #[path = "../examples/showcase/gallery/mod.rs"]

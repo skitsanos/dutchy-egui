@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.0.23 — 2026-11-08
+
+- Add `Markdown`: CommonMark with GitHub tables, task lists, strikethrough,
+  heading anchors and callouts rendered from Dutchy tokens. Display headings
+  per level, one galley per paragraph with focusable Link widgets, square list
+  markers and mono numbering, read-only task boxes, accent-rule quotes and
+  status callouts, content-sized tables that shrink above their widest words,
+  `Image` figures and rules. Links are reported to the host; `LinkPolicy::Open`
+  also opens external destinations and scrolls `#fragment` links to their
+  heading. The parsed tree is cached per source change (DS-058).
+- Add `CodeBlock`: muted surface, mono text, language label, native copy with
+  "Copied" feedback, line numbers, host `CodeHighlighter` spans, wrapping or
+  horizontal scrolling and a height cap. Available without the parser.
+- New default `markdown` feature with pulldown-cmark 0.13.6 (parser only;
+  adds unicase 2.10.0 to the lockfile). The showcase example requires it and
+  gains a Markdown page with host-logged links, heading demotion, smart
+  punctuation, line numbers and a live source editor.
+- Six Markdown rendering baselines and the `tokens::markdown` / `tokens::code`
+  geometry modules.
+
 ## 1.0.22 — 2026-11-08
 
 - Add a native Dutchy `ColorPicker`: named palettes, hex entry, RGB and optional

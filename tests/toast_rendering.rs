@@ -1,5 +1,5 @@
 //! Severity surfaces, viewport constraints, hover/focus and public-API host flows.
-#![cfg(feature = "bundled-fonts")]
+#![cfg(all(feature = "bundled-fonts", feature = "markdown"))]
 mod common;
 #[path = "../examples/showcase/gallery/mod.rs"]
 mod gallery;

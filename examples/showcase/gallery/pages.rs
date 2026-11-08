@@ -28,6 +28,7 @@ pub enum Page {
     Images,
     Galleries,
     Lightboxes,
+    Markdown,
     FileUploads,
     Scribble,
     Buttons,
@@ -41,7 +42,7 @@ impl Page {
     pub(crate) const FOUNDATION: [Self; 3] = [Self::Overview, Self::Typography, Self::Tokens];
 
     /// Component pages follow, sorted by display name.
-    pub(crate) const COMPONENTS: [Self; 30] = [
+    pub(crate) const COMPONENTS: [Self; 31] = [
         Self::Accordions,
         Self::Alerts,
         Self::Badges,
@@ -60,6 +61,7 @@ impl Page {
         Self::Images,
         Self::Layout,
         Self::Lightboxes,
+        Self::Markdown,
         Self::Menus,
         Self::Modals,
         Self::Motion,
@@ -108,6 +110,7 @@ impl Page {
             Self::Images => "Images",
             Self::Galleries => "Galleries",
             Self::Lightboxes => "Lightboxes",
+            Self::Markdown => "Markdown",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",

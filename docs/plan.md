@@ -47,7 +47,9 @@ closure-based show methods. Values and durable state remain application-owned;
 stateful controls accept stable IDs. Theme updates do not reinstall fonts.
 
 Use the latest stable egui release family and verify current versions whenever
-adding dependencies. egui is the sole default runtime crate. Optional HTTP(S)
+adding dependencies. egui and, behind the default `markdown` feature, the
+pulldown-cmark parser (without its default features) are the runtime crates;
+the Markdown renderer itself is repository-owned. Optional HTTP(S)
 PNG/JPEG loading uses ehttp and image; independent optional PNG drawing export
 reuses image without HTTP/JPEG, with repository-owned integration;
 eframe and egui_kittest are development dependencies. Implement small helpers
@@ -153,7 +155,9 @@ The 1.0.19 step adds opt-in Scribble pointer smoothing (DS-046), merged from a
 separate session's branch. The 1.0.20 step adds the form primitives the web
 registry never listed (Switch,
 Kbd, Segmented, Slider, NumberInput, DatePicker, TimePicker) with in-repository
-calendar values; see [form primitives](form-primitives.md).
+calendar values; see [form primitives](form-primitives.md). The 1.0.22 step adds
+ColorPicker and the component roadmap. The 1.0.23 step adds Markdown rendering
+and CodeBlock over pulldown-cmark (DS-058); see [the Markdown guide](markdown.md).
 See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md),
 [menu/dropdown decisions](menus-dropdowns.md),
 [navigation decisions](breadcrumbs-pagination.md), [stepper decisions](stepper.md),

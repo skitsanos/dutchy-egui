@@ -38,7 +38,11 @@ OFL notices with redistributed fonts.
 
 ## Crate dependencies
 
-egui is the default direct runtime crate. Optional `url-images` adds ehttp
+egui is the default direct runtime crate. The default `markdown` feature adds
+MIT-licensed pulldown-cmark 0.13.6 without its default features (parser only;
+its dependencies bitflags, memchr and unicase are MIT OR Apache-2.0 or
+Unlicense OR MIT). The Markdown renderer and CodeBlock are repository-owned.
+Optional `url-images` adds ehttp
 0.7.3 (HTTP transport) and image 0.25.10 (PNG/JPEG codecs). Independent
 `png-export` reuses image 0.25.10 with PNG only, without HTTP/JPEG. Scribble
 model, capture and raster/SVG helpers are repository-owned implementations.

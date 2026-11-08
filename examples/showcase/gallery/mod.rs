@@ -6,6 +6,7 @@ mod help;
 mod insights;
 mod layout;
 mod loading;
+mod markdown;
 mod media;
 mod menus;
 mod navigation;
@@ -59,6 +60,7 @@ pub struct Showcase {
     pub overlays: overlays::OverlayState,
     pub notifications: notifications::NotificationState,
     pub tabular: tabular::TableState,
+    pub markdown: markdown::MarkdownState,
     pub media: media::MediaState,
     pub uploads: uploads::UploadState,
     pub sketch: sketch::SketchState,
@@ -91,6 +93,7 @@ impl Default for Showcase {
             overlays: overlays::OverlayState::default(),
             notifications: notifications::NotificationState::default(),
             tabular: tabular::TableState::default(),
+            markdown: markdown::MarkdownState::default(),
             media: media::MediaState::default(),
             uploads: uploads::UploadState::default(),
             sketch: sketch::SketchState::default(),
@@ -157,6 +160,7 @@ impl Showcase {
                             Page::Images => self.media.images(ui),
                             Page::Galleries => self.media.galleries(ui),
                             Page::Lightboxes => self.media.lightboxes(ui),
+                            Page::Markdown => markdown::show(ui, &mut self.markdown),
                             Page::FileUploads => self.uploads.show(ui),
                             Page::Scribble => self.sketch.show(ui),
                             Page::Buttons => components::buttons(ui, self),

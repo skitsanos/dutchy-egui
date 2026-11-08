@@ -1,5 +1,9 @@
 //! Public showcase state: host validation, asynchronous metadata and simulated transfers.
-#![cfg(all(feature = "bundled-fonts", not(target_arch = "wasm32")))]
+#![cfg(all(
+    feature = "bundled-fonts",
+    feature = "markdown",
+    not(target_arch = "wasm32")
+))]
 mod common;
 #[path = "../examples/showcase/gallery/mod.rs"]
 mod gallery;

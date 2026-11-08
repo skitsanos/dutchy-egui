@@ -1,5 +1,5 @@
 //! Form-control states and the application example at multiple scales/layouts.
-#![cfg(feature = "bundled-fonts")]
+#![cfg(all(feature = "bundled-fonts", feature = "markdown"))]
 
 mod common;
 #[path = "../examples/showcase/gallery/mod.rs"]

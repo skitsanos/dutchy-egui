@@ -9,9 +9,11 @@ with an arbitrary widget count.
 
 ## Current addition
 
-**ColorPicker**: host-owned color, flat named palettes, hex entry, RGB/alpha,
-copy, transparency preview, controlled disabled/read-only states and a showcase.
-It is a port addition; see [the editing contract](color-picker.md).
+**Markdown and CodeBlock**: CommonMark with GitHub extensions rendered from the
+tokens, host-reported links with native opening and fragment scrolling, and a
+standalone code block with copy, line numbers and host highlighting. Both are
+port additions; see [the Markdown guide](markdown.md). The previous addition,
+**ColorPicker**, is documented in [the editing contract](color-picker.md).
 
 ## Recommended next milestones
 
@@ -39,7 +41,8 @@ It is a port addition; see [the editing contract](color-picker.md).
 
 | Addition | Useful outcome / implementation basis |
 | --- | --- |
-| CodeBlock with copy and line numbers | Share examples, diagnostics and generated snippets; host-provided highlighting first |
+| Syntax highlighting for CodeBlock | Bundled or optional highlighter over the shipped `CodeHighlighter` span hook; diff and line-focus views |
+| Markdown extensions | Footnotes, inline images in text and clickable linked figures, once hosts ask for them |
 | JsonInspector / PropertyGrid | Inspect structured application state; compose tree and form primitives |
 | LogViewer | Filter, pause and follow logs with virtualization and bounded host buffers |
 | Sparklines / small bar and line charts | Compact dashboard context using Painter and shared tokens |

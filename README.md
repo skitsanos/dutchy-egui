@@ -254,6 +254,20 @@ Export sizes/work/history are bounded; the host owns workers, save dialogs and
 storage. The demo provides a local preview and native Save As. See the
 [Scribble guide](docs/scribble-export.md).
 
+## Markdown and code blocks
+
+`Markdown` renders host-owned CommonMark (plus GitHub tables, task lists,
+strikethrough, heading anchors and callouts) from the shared tokens: display
+headings per level, body paragraphs with emphasis and inline code, accent-rule
+quotes, square list markers, read-only task boxes, content-sized tables,
+`Image` figures and rules. Links are focusable widgets; every activation is
+reported, and by default external links open natively while `#fragment` links
+scroll to their heading. The parsed tree is cached until the source changes.
+`CodeBlock` is a standalone widget with a language label, native copy, line
+numbers, optional host highlighting and horizontal scrolling. The default
+`markdown` feature adds pulldown-cmark without its default features. See the
+[Markdown guide](docs/markdown.md).
+
 ## Showcase
 
 ```sh
@@ -305,7 +319,9 @@ coverage. Italics use egui's italic treatment.
 
 With `default-features = false`, no font bytes are bundled by the library. The
 host supplies proportional and monospace fonts; role-specific weights then
-fall back to those host families. The showcase requires bundled fonts.
+fall back to those host families. The default `markdown` feature adds the
+pulldown-cmark parser for `Markdown`; without it, `CodeBlock` and every other
+component remain available. The showcase requires bundled fonts and `markdown`.
 
 ## Verification
 
@@ -327,6 +343,7 @@ Linux). Review rendering baseline changes visually before accepting updates:
 environment variable. Generated showcase previews are under `target/visual-proof/`.
 
 Current platform evidence and limitations are recorded in
+[Markdown verification](docs/verification-markdown.md),
 [Scribble verification](docs/verification-scribble.md),
 [file-upload verification](docs/verification-file-uploads.md),
 [media verification](docs/verification-media.md),

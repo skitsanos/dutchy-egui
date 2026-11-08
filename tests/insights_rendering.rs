@@ -1,5 +1,5 @@
 //! Stats surfaces/trends and empty-state wrapping at multiple display scales.
-#![cfg(feature = "bundled-fonts")]
+#![cfg(all(feature = "bundled-fonts", feature = "markdown"))]
 
 mod common;
 #[path = "../examples/showcase/gallery/mod.rs"]

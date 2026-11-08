@@ -7,8 +7,9 @@ application-essential groups. Registry groups are not a count of individual
 controls. "Planned" means no public implementation is shipped; "Port addition"
 marks a control with no web counterpart.
 
-Version 1.0.22 adds ColorPicker. The native library intentionally
-extends beyond the web inventory; see the [component roadmap](component-roadmap.md).
+Version 1.0.22 adds ColorPicker and 1.0.23 adds Markdown and CodeBlock. The
+native library intentionally extends beyond the web inventory; see the
+[component roadmap](component-roadmap.md).
 
 | Web registry group | Status | Supported scope / next work |
 | --- | --- | --- |
@@ -46,6 +47,8 @@ extends beyond the web inventory; see the [component roadmap](component-roadmap.
 | NumberInput | Port addition | Editor with square decrease/increase buttons, Up/Down stepping, bounds, decimals, read-only, SpinButton value/min/max/step; unparsable text reverts on blur |
 | DatePicker | Port addition | ISO `YYYY-MM-DD` editor, caret-segment stepping, bounds, host-supplied today, calendar popup with month navigation, arrows/Home/End/PageUp/PageDown, Enter/Escape and focus return. No week numbers, ranges or locale formats yet. |
 | TimePicker | Port addition | `HH:MM` or `HH:MM:SS` editor with wrapping caret-segment steps and strict parsing; no time zones or 12-hour display. |
+| Markdown | Port addition | CommonMark plus tables, task lists, strikethrough, heading anchors and callouts; token typography per level, focusable links with open/report policies and fragment scrolling, square/mono list markers, read-only tasks, quotes, content-sized tables, figures, rules and a cached parse. Footnotes, math, raw HTML, inline images and column spans are not rendered. |
+| CodeBlock | Port addition | Muted mono surface with language label, native copy and feedback, line numbers, host highlight spans, wrap or horizontal scroll and a height cap. No built-in syntax highlighting or diff view. |
 | ColorPicker | Port addition | Named theme/host palettes, RGB/optional alpha sliders and numbers, hex editing/copy, transparency previews, constrained popup, disabled/read-only and keyboard/accessibility. No HSV/HSL, eyedropper, history service or HDR yet. |
 
 Foundation support: ten accent/mode combinations, custom semantic palette,

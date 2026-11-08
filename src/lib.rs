@@ -79,3 +79,7 @@ pub use widgets::{
 };
 
 pub use widgets::{Scribble, ScribbleAction, ScribbleResponse};
+
+pub use widgets::{CodeBlock, CodeHighlighter, CodeSpan};
+#[cfg(feature = "markdown")]
+pub use widgets::{LinkPolicy, Markdown, MarkdownLink, MarkdownResponse};

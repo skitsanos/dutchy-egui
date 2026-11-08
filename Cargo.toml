@@ -1,6 +1,6 @@
 [package]
 name = "dutchy-egui"
-version = "1.0.22"
+version = "1.0.23"
 edition = "2024"
 rust-version = "1.95"
 description = "Dutchy Design System for egui: sharp geometry, warm colors, and bold typography"
@@ -16,8 +16,9 @@ include = [
 ]
 
 [features]
-default = ["bundled-fonts"]
+default = ["bundled-fonts", "markdown"]
 bundled-fonts = []
+markdown = ["dep:pulldown-cmark"]
 url-images = ["dep:ehttp", "dep:image", "image/jpeg", "image/png"]
 png-export = ["dep:image", "image/png"]
 
@@ -25,6 +26,7 @@ png-export = ["dep:image", "image/png"]
 egui = "0.37.0"
 ehttp = { version = "0.7.3", optional = true, default-features = false, features = ["streaming"] }
 image = { version = "0.25.10", optional = true, default-features = false }
+pulldown-cmark = { version = "0.13.6", optional = true, default-features = false }
 
 [dev-dependencies]
 rfd = "0.18.0"
@@ -34,7 +36,7 @@ egui_kittest = { version = "0.37.0", features = ["eframe", "snapshot", "wgpu"] }
 [[example]]
 name = "showcase"
 path = "examples/showcase/main.rs"
-required-features = ["bundled-fonts"]
+required-features = ["bundled-fonts", "markdown"]
 
 [lints.rust]
 unsafe_code = "forbid"

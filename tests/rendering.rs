@@ -1,6 +1,6 @@
 //! Focused rendering baselines and showcase smoke checks.
 
-#![cfg(feature = "bundled-fonts")]
+#![cfg(all(feature = "bundled-fonts", feature = "markdown"))]
 
 mod common;
 #[path = "../examples/showcase/gallery/mod.rs"]
@@ -226,8 +226,8 @@ fn showcase_page_groups_cover_every_page_once_in_sorted_order() {
         names.windows(2).all(|pair| pair[0] < pair[1]),
         "component pages are sorted by display name: {names:?}"
     );
-    // Thirty-three pages exist; a new page must join one of the two groups.
-    assert_eq!(Page::all().count(), 33);
+    // Thirty-four pages exist; a new page must join one of the two groups.
+    assert_eq!(Page::all().count(), 34);
     for page in Page::all() {
         assert_eq!(Page::all().filter(|other| *other == page).count(), 1);
     }

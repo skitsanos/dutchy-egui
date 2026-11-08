@@ -1,5 +1,5 @@
 //! Public-API host loading/retry and gallery-to-lightbox workflows.
-#![cfg(feature = "bundled-fonts")]
+#![cfg(all(feature = "bundled-fonts", feature = "markdown"))]
 mod common;
 #[path = "../examples/showcase/gallery/mod.rs"]
 mod gallery;

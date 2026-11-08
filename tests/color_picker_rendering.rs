@@ -1,5 +1,5 @@
 //! Native flat-color controls across themes, scales and constrained layouts.
-#![cfg(feature = "bundled-fonts")]
+#![cfg(all(feature = "bundled-fonts", feature = "markdown"))]
 mod common;
 #[path = "../examples/showcase/gallery/mod.rs"]
 mod gallery;

@@ -1,5 +1,5 @@
 //! Surface colors, wrapping, focus, and application-level interactions.
-#![cfg(feature = "bundled-fonts")]
+#![cfg(all(feature = "bundled-fonts", feature = "markdown"))]
 
 mod common;
 #[path = "../examples/showcase/gallery/mod.rs"]

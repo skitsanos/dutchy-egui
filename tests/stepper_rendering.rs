@@ -1,5 +1,5 @@
 //! Stepper variants, responsive geometry and a host-validated workflow.
-#![cfg(feature = "bundled-fonts")]
+#![cfg(all(feature = "bundled-fonts", feature = "markdown"))]
 mod common;
 #[path = "../examples/showcase/gallery/mod.rs"]
 mod gallery;
