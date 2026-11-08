@@ -1,5 +1,8 @@
 # Verification — IconButton, ToggleButton and Toolbar
 
+This is the pre-release record of the component work; it shipped in
+[release 1.0.24](verification-release-1.0.24.md).
+
 Date: 2026-11-08. Local Unreleased work after repository release 1.0.23
 (`cd2688fb8f5d8b42ad9d23ea73970491a4f6f79e`). No new dependencies.
 At this original DS-062 qualification the README was 42 lines. It was later

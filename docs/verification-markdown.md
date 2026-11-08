@@ -3,8 +3,9 @@
 Date: 2026-11-08. Local development on the `gedankrayze/vibrant-cerf-rat7ho`
 branch, which used a parallel 1.0.23 label; no registry publication. This is
 the branch's original qualification, not the main release history. Integration
-onto current main is Unreleased; see
-[the combined record](verification-fixes-markdown.md). Dependency change: the
+onto main shipped in release 1.0.24; see
+[the combined record](verification-fixes-markdown.md) and
+[the release record](verification-release-1.0.24.md). Dependency change: the
 default `markdown` feature adds pulldown-cmark 0.13.6 (MIT, default features
 off). Its parser dependencies resolve to the current releases bitflags 2.13.2
 and memchr 2.8.3, already in the lockfile, plus unicase 2.10.0 (MIT OR

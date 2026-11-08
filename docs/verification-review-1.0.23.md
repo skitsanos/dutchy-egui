@@ -1,5 +1,8 @@
 # Post-release review — 1.0.20 to 1.0.23 and the Unreleased actions work
 
+This is the pre-release review record; the fixes it describes shipped in
+[release 1.0.24](verification-release-1.0.24.md).
+
 Date: 2026-11-08. Reviewed releases `0fb3af6` (1.0.20) through `cd2688f`
 (1.0.23) and the local Unreleased IconButton/ToggleButton/Toolbar tree against
 `facb01c` (1.0.19), reading DS-049 through DS-062, the component guides, the

@@ -55,3 +55,21 @@ media/storyboard outputs, local IDE/tool settings and private check receipts.
 Exact check results, archive hash, pushed SHA and cleanup/preservation inventory
 are retained under `.git/codex-maintenance/` and reported with the release.
 This repository release does not publish the crate to a registry.
+
+## Independent post-push verification
+
+Date: 2026-11-08, a second session on macOS 27.2 with Rust 1.99.1 after the
+push. `origin/main` and the GitHub API both report `4f0cb55`; the remote reflog
+shows one push from `cd2688f`, so the version advanced from 1.0.23 to 1.0.24 in
+a single delivery. Re-running the gates on the pushed tree: formatting clean;
+490 all-feature, 342 minimal and 476 default-feature tests pass with none
+ignored; all three Clippy configurations clean; the fonts-only check builds;
+`cargo package --allow-dirty` lists 613 entries without IDE, media or
+snapshot-difference files and produces an archive with SHA-256
+`ac80ea39f4ce44997f1f56788653cc8fce8aee34e58ab2b5c868ba994498423f`, equal to
+the release receipt. pulldown-cmark 0.13.6 and unicase 2.10.0 are the current
+releases; the 131 documents have no broken relative links; the README badges
+and both screenshots resolve on GitHub. The native showcase reports 1.0.24 and
+renders the Markdown and Toggle buttons pages in light and dark mode. Documents
+that still described this work as Unreleased were corrected afterwards in
+[DS-072](issues/DS-072.md).

@@ -113,4 +113,4 @@ child inputs and a rich-text editor remain application concerns. No mixed-state
 toggle, drag reorder or customizable overflow menu is included.
 
 See [verification evidence](verification-actions-toolbars.md) and
-[DS-062](issues/DS-062.md). This work is Unreleased after the 1.0.23 repository push.
+[DS-062](issues/DS-062.md). This work shipped in release 1.0.24.

@@ -73,7 +73,7 @@ Images load through host loaders; without one, the alternative text appears.
 "#;
 
 pub fn show(ui: &mut Ui, state: &mut MarkdownState) {
-    ui.add(Text::label("Content / Markdown").color(TextColor::Primary));
+    ui.add(Text::label("Native additions / Markdown").color(TextColor::Primary));
     ui.add(Text::heading("Documents, rendered in Dutchy.").size(TextSize::Xl4));
     ui.add(
         Text::new(

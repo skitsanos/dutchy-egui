@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.25 — 2026-11-08
+
+- Documentation: state that the actions, Markdown and CodeBlock work shipped in
+  1.0.24, normalise ledger statuses DS-045 to DS-061 to the release that carried
+  each fix, align the Markdown showcase kicker with the other native additions,
+  ignore IDE settings, and record the independent post-push verification of
+  1.0.24 (DS-072).
+
 ## 1.0.24 — 2026-11-08
 
 - Reserve MediaCard title allocation independently of host alignment and keep
