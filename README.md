@@ -78,6 +78,13 @@ and with reduced motion:
 cargo run --example showcase --all-features
 ```
 
+DutchyTodo, the first [example application](docs/example-applications.md), is a
+keyboard-operable task manager built from shipped components:
+
+```sh
+cargo run --example dutchy_todo --all-features
+```
+
 ## What is inside
 
 - **Actions:** Button, IconButton, ToggleButton, Toolbar, Kbd.
