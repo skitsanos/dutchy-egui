@@ -1,3 +1,4 @@
+mod collection;
 mod colors;
 mod components;
 mod disclosures;
@@ -6,7 +7,7 @@ mod help;
 mod insights;
 mod layout;
 mod loading;
-mod media;
+pub(crate) mod media;
 mod menus;
 mod navigation;
 mod notifications;
@@ -46,6 +47,7 @@ pub struct Showcase {
     pub forms: FormState,
     pub primitives: primitives::PrimitivesState,
     pub colors: colors::ColorsState,
+    pub collection: collection::CollectionState,
     pub surfaces: SurfacesState,
     pub loading: LoadingState,
     pub insights: InsightsState,
@@ -78,6 +80,7 @@ impl Default for Showcase {
             forms: FormState::default(),
             primitives: primitives::PrimitivesState::default(),
             colors: colors::ColorsState::default(),
+            collection: collection::CollectionState::default(),
             surfaces: SurfacesState::default(),
             loading: LoadingState::default(),
             insights: InsightsState::default(),
@@ -135,6 +138,8 @@ impl Showcase {
                             Page::Forms => forms::show(ui, &mut self.forms),
                             Page::Controls => primitives::show(ui, &mut self.primitives),
                             Page::Colors => colors::show(ui, &mut self.colors),
+                            Page::MediaCards => self.collection.cards(ui),
+                            Page::SearchInput => self.collection.search(ui),
                             Page::Cards => surfaces::cards(ui, &mut self.surfaces),
                             Page::Alerts => surfaces::alerts(ui, &mut self.surfaces),
                             Page::Progress => loading::progress(ui, &mut self.loading),

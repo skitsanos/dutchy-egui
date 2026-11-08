@@ -4,7 +4,8 @@ mod common;
 #[allow(dead_code)]
 mod media;
 use dutchy_egui::{
-    FileItem, FileList, FileStatus, Image, Theme, Toast, ToastQueue, ToastVariant, Toasts,
+    FileItem, FileList, FileStatus, Image, MediaCard, Theme, Toast, ToastQueue, ToastVariant,
+    Toasts,
 };
 use egui::{Event, Modifiers, MouseWheelUnit, Pos2, Rect, vec2};
 use egui_kittest::{Harness, kittest::Queryable};
@@ -49,6 +50,15 @@ fn page() -> Harness<'static, Page> {
                         )
                         .width(300.0)
                         .expandable(true)
+                        .show(ui);
+                        MediaCard::new(
+                            "card",
+                            "fixture://card",
+                            "Original card illustration",
+                            "Test card",
+                        )
+                        .saved(false)
+                        .width(300.0)
                         .show(ui);
                         ui.add_space(600.0);
                         state.tail = ui.label("Tail marker").rect;
@@ -101,6 +111,22 @@ fn focused_image_control_does_not_pull_the_page_back() {
     );
     assert!(h.get_by_label("Expand Test artwork").is_focused());
 }
+#[test]
+fn focused_media_card_control_does_not_pull_the_page_back() {
+    let mut h = page();
+    h.run_steps(3);
+    h.get_by_label("Save Test card").focus();
+    h.run_steps(3);
+    let center = h.state().viewport.center();
+    wheel(&mut h, center, -1500.0);
+    assert!(
+        h.state().viewport.contains_rect(h.state().tail),
+        "offset={}",
+        h.state().offset
+    );
+    assert!(h.get_by_label("Save Test card").is_focused());
+}
+
 struct Stack {
     queue: ToastQueue<u8>,
     rects: Vec<Rect>,

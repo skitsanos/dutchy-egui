@@ -1,6 +1,6 @@
 [package]
 name = "dutchy-egui"
-version = "1.0.22"
+version = "1.0.23"
 edition = "2024"
 rust-version = "1.95"
 description = "Dutchy Design System for egui: sharp geometry, warm colors, and bold typography"
@@ -10,9 +10,11 @@ readme = "README.md"
 keywords = ["egui", "gui", "design-system", "widgets", "theme"]
 categories = ["gui"]
 include = [
-    "src/**", "assets/**", "examples/**", "tests/**", "docs/**",
-    "scripts/prepare_fonts.py", ".clippy.toml", "AGENTS.md", "README.md",
-    "LICENSE", "THIRD_PARTY.md", "CHANGELOG.md", "Cargo.lock",
+    "/src/**", "/assets/**", "/examples/**", "/tests/**", "/docs/**",
+    "/scripts/prepare_fonts.py", "/.clippy.toml", "/AGENTS.md", "/README.md",
+    "/LICENSE", "/THIRD_PARTY.md", "/CHANGELOG.md", "/Cargo.lock",
+    "!/tests/snapshots/**/*.diff.png", "!/tests/snapshots/**/*.new.png",
+    "!/tests/snapshots/**/*.old.png",
 ]
 
 [features]

@@ -31,7 +31,7 @@ pub use tokens::{
 };
 pub use widgets::forms::{
     Checkbox, ColorPicker, ColorPreset, DatePicker, Field, Input, NumberInput, RadioGroup,
-    Segmented, Select, SelectOption, Slider, Switch, Textarea, TimePicker,
+    SearchInput, Segmented, Select, SelectOption, Slider, Switch, Textarea, TimePicker,
 };
 pub use widgets::{
     Accordion, AccordionItem, AccordionResponse, AccordionState, AccordionVariant, Alert,
@@ -75,7 +75,7 @@ pub use widgets::{
 };
 pub use widgets::{
     Gallery, GalleryItem, GalleryResponse, Image, ImageAspect, ImageFit, ImageResponse,
-    ImageStatus, Lightbox, LightboxResponse,
+    ImageStatus, Lightbox, LightboxResponse, MediaCard, MediaCardResponse,
 };
 
 pub use widgets::{Scribble, ScribbleAction, ScribbleResponse};

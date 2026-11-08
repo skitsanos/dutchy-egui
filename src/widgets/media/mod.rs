@@ -1,4 +1,5 @@
 mod caption;
+mod card;
 mod control;
 mod gallery;
 mod geometry;
@@ -8,6 +9,7 @@ mod render;
 mod viewer;
 
 use crate::tokens::Palette;
+pub use card::{MediaCard, MediaCardResponse};
 use egui::{IdSalt, ImageSource, Response, Ui};
 pub use gallery::{Gallery, GalleryItem, GalleryResponse};
 pub use lightbox::{Lightbox, LightboxResponse};
@@ -86,6 +88,7 @@ pub struct Image<'a> {
     enabled: bool,
     surface: Option<Palette>,
     reveal_anchor: Option<egui::Pos2>,
+    action: Option<Cow<'a, str>>,
 }
 impl<'a> Image<'a> {
     /// Bind a stable ID, native source, and meaningful alternative text.
@@ -113,6 +116,7 @@ impl<'a> Image<'a> {
             enabled: true,
             surface: None,
             reveal_anchor: None,
+            action: None,
         }
     }
     /// Reserve a named aspect; fixed aspects default to a cover crop.

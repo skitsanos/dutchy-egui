@@ -18,6 +18,8 @@ pub struct Input<'a> {
     width: Option<f32>,
     pub(super) multiline: bool,
     pub(super) rows: usize,
+    framed: bool,
+    height_override: Option<f32>,
 }
 
 impl<'a> Input<'a> {
@@ -36,6 +38,8 @@ impl<'a> Input<'a> {
             width: None,
             multiline: false,
             rows: 1,
+            framed: true,
+            height_override: None,
         }
     }
     /// Hint shown when empty; not a replacement for an accessible label.
@@ -79,30 +83,42 @@ impl<'a> Input<'a> {
         self
     }
 
+    /// The composite search control supplies its outer frame and editor slot.
+    pub(super) fn without_frame(mut self, height: f32) -> Self {
+        self.framed = false;
+        self.height_override = Some(height);
+        self
+    }
+
     pub(super) fn render(self, ui: &mut Ui) -> (Response, usize) {
         let id = ui.make_persistent_id(self.id);
         let width = self
             .width
             .unwrap_or(ui.available_width())
             .min(ui.available_width());
-        let height = if self.multiline {
+        let height = self.height_override.unwrap_or(if self.multiline {
             control::TEXTAREA_MIN_HEIGHT
         } else {
             self.size.height()
-        };
+        });
         let response = ui
             .allocate_ui_with_layout(
                 vec2(width, height),
                 egui::Layout::top_down(egui::Align::Min),
                 |ui| {
-                    ui.style_mut().spacing.interact_size.y = self.size.height();
+                    ui.style_mut().spacing.interact_size.y =
+                        self.height_override.unwrap_or(self.size.height());
                     // The editor keeps its own light fill, so inverse surfaces
                     // must not recolor its text.
                     ui.visuals_mut().override_text_color = None;
                     if !self.enabled {
                         ui.disable();
                     }
-                    let frame = style::frame(ui, self.size);
+                    let frame = if self.framed {
+                        style::frame(ui, self.size)
+                    } else {
+                        egui::Frame::NONE
+                    };
                     let mut immutable;
                     let buffer: &mut dyn TextBuffer = if self.read_only {
                         immutable = self.value.as_str();
@@ -146,7 +162,9 @@ impl<'a> Input<'a> {
                             node.set_read_only();
                         }
                     });
-                    style::finish(ui, &response);
+                    if self.framed {
+                        style::finish(ui, &response);
+                    }
                     response
                 },
             )

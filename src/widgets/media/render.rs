@@ -67,13 +67,28 @@ pub(super) fn show(config: Image<'_>, ui: &mut Ui) -> ImageResponse {
                 .unwrap_or(width / geometry::aspect(config.aspect, intrinsic))
                 .min(tokens::MAX_DIMENSION);
             let (_, rect) = ui.allocate_space(vec2(width, height));
-            let image = ui.interact(rect, root.with("image"), Sense::hover());
+            let image = ui.interact(
+                rect,
+                root.with("image"),
+                if config.action.is_some() {
+                    Sense::click()
+                } else {
+                    Sense::hover()
+                },
+            );
+            if image.clicked() {
+                image.request_focus();
+            }
             let status = status(&load);
             image.widget_info(|| {
                 WidgetInfo::labeled(
-                    egui::accesskit::Role::Image,
+                    if config.action.is_some() {
+                        egui::accesskit::Role::Button
+                    } else {
+                        egui::accesskit::Role::Image
+                    },
                     ui.is_enabled(),
-                    config.alt.as_ref(),
+                    config.action.as_deref().unwrap_or(config.alt.as_ref()),
                 )
             });
             image

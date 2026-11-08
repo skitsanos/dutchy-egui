@@ -79,7 +79,10 @@ control/card observations are recorded in
 
 Repeated all checks against the 1.0.22 package and lockfile: 421/314 tests,
 formatting, all three Clippy configurations, rustdoc with warnings denied,
-native build and both WASM checks passed. The distributable package includes
-the color-picker sources, tests, guides and bundled font notices; demo-video
-work and storyboard outputs are excluded. Registry publication is a separate
-step from the authorized main-branch commit and push.
+native build and both WASM checks passed. Package generation passed, but content
+inspection found a nested media AGENTS.md matched by an unanchored include.
+The command chain continued after that failed content gate; no media was
+committed or pushed, and the generated crate was not published. The archive was
+removed during cleanup. The root-anchored allowlist fix remains local with the
+next component work; see [DS-058](issues/DS-058.md). Registry publication is a
+separate step from the authorized main-branch commit and push.

@@ -1,5 +1,5 @@
 pub mod art;
-mod pending;
+pub(crate) mod pending;
 #[cfg(feature = "url-images")]
 mod remote;
 use super::section;

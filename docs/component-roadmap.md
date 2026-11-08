@@ -13,23 +13,26 @@ with an arbitrary widget count.
 copy, transparency preview, controlled disabled/read-only states and a showcase.
 It is a port addition; see [the editing contract](color-picker.md).
 
+Version 1.0.23 adds **MediaCard** and **SearchInput**, with a
+searchable artwork-browser showcase. See the
+[composition guide](media-card-search-input.md). The standalone icon/toolbar,
+multi-select and workbench APIs below remain future milestones.
+
 ## Recommended next milestones
 
 1. **Actions and toolbars:** public IconButton, ToggleButton and Toolbar APIs.
    The library currently has text buttons and private close/icon painting.
    Add named icon-only actions, pressed state, consistent hit targets, tooltip
    composition and roving toolbar focus. Include a small polished icon gallery
-   and host-provided icon painters. Follow with a MediaCard composition with
-   independent preview/save actions, informed by the
-   [Foliopress showcase](references/foliopress-showcase.md).
+   and host-provided icon painters, extending the independent action patterns
+   demonstrated by MediaCard and the [Foliopress showcase](references/foliopress-showcase.md).
    Extend menus with checked actions/submenus
    and an application menu bar as a follow-up.
 2. **Powerful filtering:** MultiSelect with removable chips, TagInput and
    RangeSlider. Current Select/SearchableSelect choose one value and Slider
    edits one endpoint. Ship a useful filter-builder example with keyboard
    removal, empty states, explicit commit behavior and typed host values.
-   Add SearchInput with a magnifier, clear action and optional key hint; combine
-   it with media cards and explicit result counts in a gallery-browser example.
+   Compose these with the existing SearchInput and MediaCard browser example.
 3. **Workbench building blocks:** TreeView, VirtualList and resizable SplitPane.
    Provide keyed selection/expansion, large collections, keyboard navigation
    and host-owned pane sizes. A small file/record explorer demonstrates the

@@ -9,6 +9,7 @@ marks a control with no web counterpart.
 
 Version 1.0.22 adds ColorPicker. The native library intentionally
 extends beyond the web inventory; see the [component roadmap](component-roadmap.md).
+Version 1.0.23 adds MediaCard and SearchInput.
 
 | Web registry group | Status | Supported scope / next work |
 | --- | --- | --- |
@@ -47,6 +48,8 @@ extends beyond the web inventory; see the [component roadmap](component-roadmap.
 | DatePicker | Port addition | ISO `YYYY-MM-DD` editor, caret-segment stepping, bounds, host-supplied today, calendar popup with month navigation, arrows/Home/End/PageUp/PageDown, Enter/Escape and focus return. No week numbers, ranges or locale formats yet. |
 | TimePicker | Port addition | `HH:MM` or `HH:MM:SS` editor with wrapping caret-segment steps and strict parsing; no time zones or 12-hour display. |
 | ColorPicker | Port addition | Named theme/host palettes, RGB/optional alpha sliders and numbers, hex editing/copy, transparency previews, constrained popup, disabled/read-only and keyboard/accessibility. No HSV/HSL, eyedropper, history service or HDR yet. |
+| MediaCard | Port addition | Image/URI/byte sources, category/title/description, independent preview/metadata/save/retry, host-owned saved state, responsive width and native loading/error pipeline. No custom metadata slots or masonry. |
+| SearchInput | Port addition | Native text/IME/clipboard, magnifier, conditional clear with focus return, optional Kbd hint, all sizes, disabled/read-only, char limits and narrow adaptation. Filtering, submission and shortcuts remain host-owned. |
 
 Foundation support: ten accent/mode combinations, custom semantic palette,
 standard egui styling, shared 32/48/56-point control heights, four-point spacing

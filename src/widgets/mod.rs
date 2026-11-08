@@ -79,7 +79,7 @@ pub use table::{
 
 pub use media::{
     Gallery, GalleryItem, GalleryResponse, Image, ImageAspect, ImageFit, ImageResponse,
-    ImageStatus, Lightbox, LightboxResponse,
+    ImageStatus, Lightbox, LightboxResponse, MediaCard, MediaCardResponse,
 };
 
 pub use scribble::{Scribble, ScribbleAction, ScribbleResponse};

@@ -7,6 +7,8 @@ pub enum Page {
     Cards,
     Controls,
     Colors,
+    MediaCards,
+    SearchInput,
     Alerts,
     Progress,
     Skeletons,
@@ -41,7 +43,7 @@ impl Page {
     pub(crate) const FOUNDATION: [Self; 3] = [Self::Overview, Self::Typography, Self::Tokens];
 
     /// Component pages follow, sorted by display name.
-    pub(crate) const COMPONENTS: [Self; 30] = [
+    pub(crate) const COMPONENTS: [Self; 32] = [
         Self::Accordions,
         Self::Alerts,
         Self::Badges,
@@ -60,12 +62,14 @@ impl Page {
         Self::Images,
         Self::Layout,
         Self::Lightboxes,
+        Self::MediaCards,
         Self::Menus,
         Self::Modals,
         Self::Motion,
         Self::Pagination,
         Self::Progress,
         Self::Scribble,
+        Self::SearchInput,
         Self::Skeletons,
         Self::Stats,
         Self::Stepper,
@@ -87,6 +91,8 @@ impl Page {
             Self::Cards => "Cards",
             Self::Controls => "Form controls",
             Self::Colors => "Color picker",
+            Self::MediaCards => "Media cards",
+            Self::SearchInput => "Search input",
             Self::Alerts => "Alerts",
             Self::Progress => "Progress",
             Self::Skeletons => "Skeletons",

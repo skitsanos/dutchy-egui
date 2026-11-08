@@ -21,12 +21,17 @@ impl<'a> Kbd<'a> {
     pub fn new(text: impl Into<Cow<'a, str>>) -> Self {
         Self { text: text.into() }
     }
-}
 
-impl Widget for Kbd<'_> {
-    fn ui(self, ui: &mut Ui) -> Response {
+    pub(crate) fn desired_size(&self, ui: &Ui) -> egui::Vec2 {
+        let galley = self.galley(ui);
+        vec2(
+            galley.size().x + 2.0 * control::KBD_PADDING_X,
+            control::INDICATOR,
+        )
+    }
+
+    fn galley(&self, ui: &Ui) -> std::sync::Arc<egui::Galley> {
         let theme = Theme::from_context(ui.ctx());
-        let p = theme.palette;
         let job = Text::new(self.text.as_ref())
             .family(Family::Mono)
             .size(TextSize::Xs)
@@ -35,7 +40,15 @@ impl Widget for Kbd<'_> {
             .uppercase(true)
             .color(crate::TextColor::Foreground)
             .layout_job(&theme, f32::INFINITY);
-        let galley = ui.fonts_mut(|fonts| fonts.layout_job(job));
+        ui.fonts_mut(|fonts| fonts.layout_job(job))
+    }
+}
+
+impl Widget for Kbd<'_> {
+    fn ui(self, ui: &mut Ui) -> Response {
+        let theme = Theme::from_context(ui.ctx());
+        let p = theme.palette;
+        let galley = self.galley(ui);
         let desired = vec2(
             galley.size().x + 2.0 * control::KBD_PADDING_X,
             control::INDICATOR,

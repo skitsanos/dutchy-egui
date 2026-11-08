@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.23 — 2026-11-08
+
+- Add Foliopress-inspired MediaCard and SearchInput compositions with host-owned
+  state, independent native actions and an artwork-browser showcase (DS-059/060).
+- Root-anchor the package allowlist so nested video files sharing names such as
+  AGENTS.md are excluded from crate archives (DS-058).
+- Reduce README to setup, showcase and documentation links; move detailed
+  setup/development guidance into docs (DS-061).
+
 ## 1.0.22 — 2026-11-08
 
 - Add a native Dutchy `ColorPicker`: named palettes, hex entry, RGB and optional
