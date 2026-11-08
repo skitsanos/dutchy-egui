@@ -44,7 +44,8 @@ before implementation starts.
    commit and cancel. **PathInput** pairs a text field with a browse button that
    returns a typed file, folder or save request. **StatusBar** is a bottom strip
    of keyed segments (text, icon, progress, clickable) with overflow priority and
-   status semantics. A small file and record explorer demonstrates the set.
+   status semantics. The DutchyMail example demonstrates the set; see
+   [example applications](example-applications.md).
 3. **Powerful filtering.** A square **Chip** primitive with optional remove and
    toggle states is the shared base for **FilterChipGroup**, **TagInput** and
    **MultiSelect**; **RangeSlider** edits two endpoints on the existing rail;
@@ -76,6 +77,17 @@ with a drag region, square window controls and a brand slot. It depends on
 viewport commands for dragging, minimizing, maximizing and closing, behaves
 differently on each desktop platform (macOS keeps native window buttons), and
 is a no-op on the web. Verify it per platform before committing to a release.
+
+## Example applications
+
+Scenario applications under `examples/` complement the component gallery:
+they prove composition under application-owned state and surface gaps for
+this roadmap. DutchyTodo and DutchyAgent are buildable with shipped
+components; DutchyMail demonstrates the command-plumbing and workbench
+milestones; DutchyDash demonstrates the dashboards milestone. The shared
+rules (dev-only dependencies, fictional data, environment-only secrets, an
+offline mock provider and tests inside the examples), scopes and limits are
+in [example applications](example-applications.md).
 
 ## Further candidates
 
