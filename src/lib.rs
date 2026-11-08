@@ -30,8 +30,8 @@ pub use tokens::{
     MenuWidth, ModalWidth, Mode, ProgressSize, Spacing, TextSize, Tracking, Weight,
 };
 pub use widgets::forms::{
-    Checkbox, DatePicker, Field, Input, NumberInput, RadioGroup, Segmented, Select, SelectOption,
-    Slider, Switch, Textarea, TimePicker,
+    Checkbox, ColorPicker, ColorPreset, DatePicker, Field, Input, NumberInput, RadioGroup,
+    Segmented, Select, SelectOption, Slider, Switch, Textarea, TimePicker,
 };
 pub use widgets::{
     Accordion, AccordionItem, AccordionResponse, AccordionState, AccordionVariant, Alert,

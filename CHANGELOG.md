@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.22 — 2026-11-08
+
+- Add a native Dutchy `ColorPicker`: named palettes, hex entry, RGB and optional
+  alpha sliders/number inputs, transparency previews, copy, read-only/disabled
+  states and accessible keyboard-operated popups over host-owned colors.
+- Add a color-picker showcase and a Rust-focused component roadmap beyond the
+  web inventory (DS-056).
+- Increase the color-picker arrow's trailing inset to 16 points and reserve its
+  text gap; record the Foliopress card, dropdown and search references (DS-057).
+
 ## 1.0.21 — 2026-11-07
 
 - Upgrade the showcase-only native file-dialog dependency `rfd` from 0.17.2

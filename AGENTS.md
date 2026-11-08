@@ -2,6 +2,7 @@
 
 - Always communicate in English.
 - Build Dutchy as an idiomatic egui library. Keep application state in the host.
+- The web system is the visual reference, not a component inventory limit. Add useful native Rust controls and developer-facing polish; document their supported scope and remaining limits.
 - Use the most recent stable crate releases; verify versions when adding or upgrading them.
 - Keep runtime dependencies minimal. Prefer small, maintained-in-repository implementations over widget/helper crates. MIT-licensed ideas/code may be adapted with attribution and license notices; preserve all applicable notices.
 - Prefer low cognitive complexity, focused functions, and composition. Clippy's cognitive-complexity threshold is 15. Treat 400 lines per code file as a soft cap; split by responsibility before growing a large file.

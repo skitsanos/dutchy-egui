@@ -2,6 +2,7 @@
 
 pub mod close;
 mod color;
+pub mod color_picker;
 pub mod disclosure;
 pub mod image;
 pub mod layout;

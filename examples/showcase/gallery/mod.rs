@@ -1,3 +1,4 @@
+mod colors;
 mod components;
 mod disclosures;
 mod forms;
@@ -44,6 +45,7 @@ pub struct Showcase {
     pub native_checked: bool,
     pub forms: FormState,
     pub primitives: primitives::PrimitivesState,
+    pub colors: colors::ColorsState,
     pub surfaces: SurfacesState,
     pub loading: LoadingState,
     pub insights: InsightsState,
@@ -75,6 +77,7 @@ impl Default for Showcase {
             native_checked: true,
             forms: FormState::default(),
             primitives: primitives::PrimitivesState::default(),
+            colors: colors::ColorsState::default(),
             surfaces: SurfacesState::default(),
             loading: LoadingState::default(),
             insights: InsightsState::default(),
@@ -131,6 +134,7 @@ impl Showcase {
                             Page::Typography => typography::show(ui),
                             Page::Forms => forms::show(ui, &mut self.forms),
                             Page::Controls => primitives::show(ui, &mut self.primitives),
+                            Page::Colors => colors::show(ui, &mut self.colors),
                             Page::Cards => surfaces::cards(ui, &mut self.surfaces),
                             Page::Alerts => surfaces::alerts(ui, &mut self.surfaces),
                             Page::Progress => loading::progress(ui, &mut self.loading),

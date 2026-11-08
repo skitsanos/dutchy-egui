@@ -2,6 +2,7 @@
 
 mod calendar_grid;
 mod checkbox;
+mod color_picker;
 mod date;
 mod field;
 mod input;
@@ -18,6 +19,7 @@ mod toggle;
 mod typed;
 
 pub use checkbox::Checkbox;
+pub use color_picker::{ColorPicker, ColorPreset};
 pub use date::DatePicker;
 pub use field::Field;
 pub use input::Input;

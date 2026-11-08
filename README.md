@@ -2,17 +2,21 @@
 
 Dutchy Design System for egui: sharp geometry, warm colors, and bold typography.
 
-Version **1.0.20** adds the form primitives the web registry never listed:
+Version **1.0.22** adds ColorPicker: named palettes, hex editing/copy,
+RGB/alpha controls, transparent previews and accessible native popups.
+Version 1.0.20 added the form primitives the web registry never listed:
 `Switch`, `Kbd`, `Segmented`, `Slider`, `NumberInput`, `DatePicker` and
 `TimePicker`, with in-repository `calendar::Date` and `calendar::Time` values.
 Version 1.0.19 added opt-in Scribble pointer smoothing (DS-046); 1.0.18
 revealed showcase sidebar pages on arriving keyboard focus (DS-045).
 The core advanced-component inventory is implemented; supported scope remains explicit.
 The [coverage matrix](docs/coverage.md) tracks the remaining design system.
+Native additions go beyond the web inventory; see the
+[Rust component roadmap](docs/component-roadmap.md).
 
 ```toml
 [dependencies]
-dutchy-egui = "1.0.20"
+dutchy-egui = "1.0.22"
 ```
 
 The package is prepared locally; registry publication is a separate release step.
@@ -84,6 +88,11 @@ stepped numbers and ISO date/time entry; `Kbd` draws key chips. The date and
 time editors keep unparsable text while focused and revert on blur, and the
 calendar grid is keyboard-navigable. The library reads no clock: hosts pass
 `today`. See the [form primitives guide](docs/form-primitives.md).
+
+`ColorPicker` adds named palettes, hex entry/copy, RGB and optional alpha
+controls over an application-owned `Color32`, with transparent previews and
+read-only/disabled states. See the [color picker guide](docs/color-picker.md)
+and the showcase's **Color picker** page.
 
 ## Cards and alerts
 

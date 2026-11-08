@@ -17,8 +17,10 @@ The library must build independently of that checkout.
 - Appearance: `src/styles/dutchy.css`, component implementations, and rendered
   localhost reference (`http://localhost:4545/`).
 - Intended behavior: `docs/01-design-system/`, component demos, and handlers.
-- Scope: the registry's 27 groups, with individual controls/variants tracked
-  separately. Forms and dropdowns contain multiple controls.
+- Scope: the registry's 27 groups are the baseline, with individual controls
+  and variants tracked separately. Native additions extend the library for
+  Rust applications; the web inventory is not a ceiling. Priorities are recorded
+  in [the component roadmap](component-roadmap.md).
 - Preserve warm neutrals: background #FAF8F5, foreground #120F0C, border #E7DFDA.
   Resolve HSL tokens once to sRGB rather than copying inconsistent old hex examples.
 - Zero radius, flat fills, no gradients or blurred shadows. Soft-shadow examples
