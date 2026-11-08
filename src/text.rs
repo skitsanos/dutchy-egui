@@ -192,10 +192,38 @@ impl Widget for Text<'_> {
         }
         // Uppercase is a visual treatment; assistive technology gets the text as written.
         let name = self.uppercase.then(|| self.text.to_string());
-        let response = ui.add(Label::new(self.layout_job(&theme, ui.available_width())).wrap());
+        let response = add_ragged(ui, self.layout_job(&theme, ui.available_width()));
         if let Some(name) = &name {
             name_as_written(&response, name);
         }
         response
     }
+}
+
+/// Add wrapped text without inheriting the layout's horizontal justification.
+///
+/// egui's `Label` copies `Layout::horizontal_justify` into its layout job, so
+/// wrapped copy inside `Ui::columns`, `add_sized` boxes or other justified
+/// layouts stretches every interior line to the full width. In those layouts
+/// the text is laid out here with justification off and handed to `Label` as a
+/// finished galley; the allocated rect, placement and name are unchanged.
+pub(crate) fn add_ragged(ui: &mut Ui, mut job: LayoutJob) -> Response {
+    if !ui.layout().horizontal_justify() {
+        return ui.add(Label::new(job).wrap());
+    }
+    job.wrap.max_width = ui.available_width();
+    add_measured(ui, job)
+}
+
+/// Add text laid out at the job's own wrap width.
+///
+/// egui's `Label` substitutes the available width for a wrapped job's
+/// `wrap.max_width`; a finished galley keeps the narrower measure, so a row
+/// that reserves space beside the text (such as a card title next to its
+/// arrow) stays clear of it. Justification is never inherited.
+pub(crate) fn add_measured(ui: &mut Ui, mut job: LayoutJob) -> Response {
+    job.justify = false;
+    job.halign = ui.layout().horizontal_placement();
+    let galley = ui.fonts_mut(|fonts| fonts.layout_job(job));
+    ui.add(Label::new(galley))
 }

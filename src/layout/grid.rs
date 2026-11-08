@@ -4,7 +4,9 @@ use egui::{Align, IdSalt, InnerResponse, Layout, Ui, UiBuilder};
 /// Responsive equal-width columns with host-supplied, stable item keys.
 ///
 /// Draws each item once, in row-major order; rows use their tallest child's
-/// height. This is not a virtualized grid. Keys must be unique within this grid.
+/// height. Cells lay out top-down and left-aligned without justification;
+/// children size themselves and fill a cell through their own width options.
+/// This is not a virtualized grid. Keys must be unique within this grid.
 #[derive(Clone, Debug)]
 #[must_use = "Call show to lay out content"]
 pub struct ResponsiveGrid {
@@ -63,13 +65,12 @@ impl ResponsiveGrid {
                     ui.columns(count, |columns| {
                         for (column, item) in columns.iter_mut().zip(row) {
                             let item_id = id.with(IdSalt::new(key(item)));
-                            results.push(
-                                column
-                                    .scope_builder(UiBuilder::new().scope_id(item_id), |ui| {
-                                        contents(ui, item)
-                                    })
-                                    .inner,
-                            );
+                            // egui's columns justify their children; cells lay out
+                            // top-down and left-aligned so wrapped copy stays ragged.
+                            let cell = UiBuilder::new()
+                                .scope_id(item_id)
+                                .layout(Layout::top_down(Align::Min));
+                            results.push(column.scope_builder(cell, |ui| contents(ui, item)).inner);
                         }
                     });
                 }

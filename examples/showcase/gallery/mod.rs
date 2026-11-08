@@ -1,3 +1,4 @@
+mod actions;
 mod collection;
 mod colors;
 mod components;
@@ -7,6 +8,8 @@ mod help;
 mod insights;
 mod layout;
 mod loading;
+#[cfg(feature = "markdown")]
+mod markdown;
 pub(crate) mod media;
 mod menus;
 mod navigation;
@@ -48,6 +51,7 @@ pub struct Showcase {
     pub primitives: primitives::PrimitivesState,
     pub colors: colors::ColorsState,
     pub collection: collection::CollectionState,
+    pub actions: actions::ActionsState,
     pub surfaces: SurfacesState,
     pub loading: LoadingState,
     pub insights: InsightsState,
@@ -61,6 +65,8 @@ pub struct Showcase {
     pub overlays: overlays::OverlayState,
     pub notifications: notifications::NotificationState,
     pub tabular: tabular::TableState,
+    #[cfg(feature = "markdown")]
+    pub markdown: markdown::MarkdownState,
     pub media: media::MediaState,
     pub uploads: uploads::UploadState,
     pub sketch: sketch::SketchState,
@@ -81,6 +87,7 @@ impl Default for Showcase {
             primitives: primitives::PrimitivesState::default(),
             colors: colors::ColorsState::default(),
             collection: collection::CollectionState::default(),
+            actions: actions::ActionsState::default(),
             surfaces: SurfacesState::default(),
             loading: LoadingState::default(),
             insights: InsightsState::default(),
@@ -94,6 +101,8 @@ impl Default for Showcase {
             overlays: overlays::OverlayState::default(),
             notifications: notifications::NotificationState::default(),
             tabular: tabular::TableState::default(),
+            #[cfg(feature = "markdown")]
+            markdown: markdown::MarkdownState::default(),
             media: media::MediaState::default(),
             uploads: uploads::UploadState::default(),
             sketch: sketch::SketchState::default(),
@@ -128,8 +137,9 @@ impl Showcase {
                     ui.horizontal_wrapped(|ui| self.navigation(ui, false));
                     ui.add_space(space::LG);
                 }
+                // Each page keeps its own offset, so a newly opened page starts at the top.
                 egui::ScrollArea::vertical()
-                    .id_salt("showcase-content")
+                    .id_salt(("showcase-content", self.page))
                     .show(ui, |ui| {
                         ui.add_space(space::XS);
                         match self.page {
@@ -160,8 +170,13 @@ impl Showcase {
                             Page::Toasts => self.notifications.show(ui),
                             Page::DataTables => self.tabular.show(ui),
                             Page::Images => self.media.images(ui),
+                            Page::IconButtons => self.actions.icons(ui),
+                            Page::ToggleButtons => self.actions.toggles(ui),
+                            Page::Toolbars => self.actions.toolbars(ui),
                             Page::Galleries => self.media.galleries(ui),
                             Page::Lightboxes => self.media.lightboxes(ui),
+                            #[cfg(feature = "markdown")]
+                            Page::Markdown => markdown::show(ui, &mut self.markdown),
                             Page::FileUploads => self.uploads.show(ui),
                             Page::Scribble => self.sketch.show(ui),
                             Page::Buttons => components::buttons(ui, self),

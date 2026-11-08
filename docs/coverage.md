@@ -9,11 +9,13 @@ marks a control with no web counterpart.
 
 Version 1.0.22 adds ColorPicker. The native library intentionally
 extends beyond the web inventory; see the [component roadmap](component-roadmap.md).
-Version 1.0.23 adds MediaCard and SearchInput.
+Version 1.0.23 adds MediaCard and SearchInput. Version 1.0.24 adds
+IconButton, ToggleButton and Toolbar; see [their contract](actions-toolbars.md).
+Version 1.0.24 also integrates [Markdown and CodeBlock](markdown.md).
 
 | Web registry group | Status | Supported scope / next work |
 | --- | --- | --- |
-| Buttons | Visual proof | Five variants; three sizes; disabled/loading/full width; focus and keyboard. Compound/icon-only APIs remain planned. |
+| Buttons | Visual proof | Five variants; three sizes; disabled/loading/full width; focus and keyboard. IconButton adds named square actions, original/custom vector icons and shared variants/sizes. |
 | Forms | Application essentials | Input/password, checkbox, radio group, typed select, read-only/disabled; field labels/help/errors/required/pending/success; validation triggers and async tickets |
 | Cards | Application essentials | Six surfaces, four padding tiers, headers/footers, scoped text colors, interactive and disabled cards; host-owned actions |
 | Badges & Tags | Visual proof | Eight variants, uppercase labels, keyboard-accessible close affordance |
@@ -50,6 +52,11 @@ Version 1.0.23 adds MediaCard and SearchInput.
 | ColorPicker | Port addition | Named theme/host palettes, RGB/optional alpha sliders and numbers, hex editing/copy, transparency previews, constrained popup, disabled/read-only and keyboard/accessibility. No HSV/HSL, eyedropper, history service or HDR yet. |
 | MediaCard | Port addition | Image/URI/byte sources, category/title/description, independent preview/metadata/save/retry, host-owned saved state, responsive width and native loading/error pipeline. No custom metadata slots or masonry. |
 | SearchInput | Port addition | Native text/IME/clipboard, magnifier, conditional clear with focus return, optional Kbd hint, all sizes, disabled/read-only, char limits and narrow adaptation. Filtering, submission and shortcuts remain host-owned. |
+| ToggleButton | Port addition (1.0.24) | Host bool, text/icon/icon-only, pressed metadata, stable name/identity, pointer/Enter/Space, disabled/busy and shared variants/sizes. Two-state only. |
+| Toolbar | Port addition (1.0.24) | Typed action/toggle requests, named/oriented group, one remembered Tab stop, arrow/Home/End focus, disabled/busy skipping, separators, horizontal overflow/wrap, vertical layout and focus repair. Arbitrary child inputs, menu integration and shortcuts stay host-owned. |
+
+| Markdown | Port addition (1.0.24) | CommonMark plus tables, tasks, strikethrough, heading anchors and callouts; token typography, named focusable links, native/report policies, fragment scrolling, lists, quotes, figures and cached parsing. No footnotes, math, raw HTML rendering, inline image widgets or column spans. |
+| CodeBlock | Port addition (1.0.24) | Selectable code, language label, copy feedback, line numbers, host highlight spans, wrapping/horizontal scrolling and height cap. No bundled highlighter or diff view. |
 
 Foundation support: ten accent/mode combinations, custom semantic palette,
 standard egui styling, shared 32/48/56-point control heights, four-point spacing

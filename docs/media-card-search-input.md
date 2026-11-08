@@ -56,9 +56,11 @@ state without mutating host data. Save and retry must never open the card.
 Use stable IDs, native pointer/keyboard/assistive actions, explicit names and
 focus-visible cues. Show the image action on hover and keyboard focus. Keep
 normal image loading, failure, optional retry, lazy URI loading and reduced
-motion; preserve aspect through contain/cover. Text wraps within its column.
-Titles are capped at two visible rows, descriptions at three; accessible names
-retain the full title. Omitting `.saved(...)` removes the bookmark control.
+motion; preserve aspect through contain/cover. Text wraps within its column and
+stays left-aligned even inside justified host layouts such as `ui.columns`.
+Titles are capped at two visible rows and wrap at the width reserved beside the
+direction arrow; descriptions are capped at three rows; accessible names retain
+the full title. Omitting `.saved(...)` removes the bookmark control.
 The response includes the existing ImageResponse: inspect its status or
 `image.retry_requested` and perform the host's retry policy. Sources work under
 the same loader contract as Image; URI support is not installed by MediaCard.

@@ -47,7 +47,9 @@ closure-based show methods. Values and durable state remain application-owned;
 stateful controls accept stable IDs. Theme updates do not reinstall fonts.
 
 Use the latest stable egui release family and verify current versions whenever
-adding dependencies. egui is the sole default runtime crate. Optional HTTP(S)
+adding dependencies. egui is the UI runtime crate; the default `markdown`
+feature adds pulldown-cmark with default features disabled. The document/code
+renderers are maintained in this repository. Optional HTTP(S)
 PNG/JPEG loading uses ehttp and image; independent optional PNG drawing export
 reuses image without HTTP/JPEG, with repository-owned integration;
 eframe and egui_kittest are development dependencies. Implement small helpers
@@ -161,3 +163,12 @@ See [coverage](coverage.md), [accordion/tab decisions](accordions-tabs.md),
 [table decisions](data-tables.md), [media decisions](images-galleries-lightboxes.md),
 [file-selection decisions](file-uploads.md), and [Scribble decisions](scribble-export.md)
 for behavior and scope boundaries.
+
+## Markdown content integration — 1.0.24
+
+The parallel Markdown/CodeBlock implementation at `684a840` is integrated
+under DS-070/071 in 1.0.24. Its duplicated 1.0.23 label is not a new main release. Keep
+root-anchored package patterns and the current landing page. The showcase
+continues to support bundled fonts without the parser; Markdown contributes
+one conditional page. Qualify all features, parser-free and parser-only builds,
+the declared Rust minimum, native rendering and the actual crate contents.

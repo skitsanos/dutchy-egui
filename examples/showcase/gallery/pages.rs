@@ -1,4 +1,4 @@
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 pub enum Page {
     #[default]
     Overview,
@@ -28,8 +28,13 @@ pub enum Page {
     Toasts,
     DataTables,
     Images,
+    IconButtons,
+    ToggleButtons,
+    Toolbars,
     Galleries,
     Lightboxes,
+    #[cfg(feature = "markdown")]
+    Markdown,
     FileUploads,
     Scribble,
     Buttons,
@@ -43,7 +48,7 @@ impl Page {
     pub(crate) const FOUNDATION: [Self; 3] = [Self::Overview, Self::Typography, Self::Tokens];
 
     /// Component pages follow, sorted by display name.
-    pub(crate) const COMPONENTS: [Self; 32] = [
+    pub(crate) const COMPONENTS: [Self; 35 + cfg!(feature = "markdown") as usize] = [
         Self::Accordions,
         Self::Alerts,
         Self::Badges,
@@ -59,9 +64,12 @@ impl Page {
         Self::Controls,
         Self::Forms,
         Self::Galleries,
+        Self::IconButtons,
         Self::Images,
         Self::Layout,
         Self::Lightboxes,
+        #[cfg(feature = "markdown")]
+        Self::Markdown,
         Self::MediaCards,
         Self::Menus,
         Self::Modals,
@@ -75,6 +83,8 @@ impl Page {
         Self::Stepper,
         Self::Tabs,
         Self::Toasts,
+        Self::ToggleButtons,
+        Self::Toolbars,
         Self::Tooltips,
     ];
 
@@ -112,8 +122,13 @@ impl Page {
             Self::Toasts => "Toasts",
             Self::DataTables => "Data tables",
             Self::Images => "Images",
+            Self::IconButtons => "Icon buttons",
+            Self::ToggleButtons => "Toggle buttons",
+            Self::Toolbars => "Toolbars",
             Self::Galleries => "Galleries",
             Self::Lightboxes => "Lightboxes",
+            #[cfg(feature = "markdown")]
+            Self::Markdown => "Markdown",
             Self::Buttons => "Buttons",
             Self::Badges => "Badges",
             Self::Motion => "Motion",

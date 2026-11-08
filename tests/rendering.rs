@@ -226,8 +226,11 @@ fn showcase_page_groups_cover_every_page_once_in_sorted_order() {
         names.windows(2).all(|pair| pair[0] < pair[1]),
         "component pages are sorted by display name: {names:?}"
     );
-    // Thirty-five pages exist; a new page must join one of the two groups.
-    assert_eq!(Page::all().count(), 35);
+    // Markdown contributes one page only when its parser feature is enabled.
+    assert_eq!(
+        Page::all().count(),
+        38 + usize::from(cfg!(feature = "markdown"))
+    );
     for page in Page::all() {
         assert_eq!(Page::all().filter(|other| *other == page).count(), 1);
     }
@@ -341,4 +344,43 @@ fn sidebar_reveals_arriving_focus_without_overriding_manual_scrolling() {
         );
         assert_eq!(harness.get_by_label("01 / Foundation").rect(), footer);
     }
+}
+
+#[test]
+fn switching_pages_opens_the_new_page_at_the_top() {
+    use egui::{Event, Modifiers, MouseWheelSource, MouseWheelUnit, TouchPhase, pos2, vec2};
+    let mut harness = Harness::builder()
+        .with_size([1200.0, 700.0])
+        .with_theme(egui::Theme::Light)
+        .build_eframe(|cc| {
+            common::install(&cc.egui_ctx, Theme::default().with_reduced_motion(true));
+            gallery::Showcase {
+                page: gallery::Page::Colors,
+                reduced_motion: true,
+                ..Default::default()
+            }
+        });
+    harness.run();
+    let before = harness.get_by_label("Make it your color.").rect();
+    harness.hover_at(pos2(700.0, 600.0));
+    harness.run_steps(2);
+    harness.input_mut().events.push(Event::MouseWheel {
+        unit: MouseWheelUnit::Point,
+        phase: TouchPhase::Move,
+        source: MouseWheelSource::Unknown,
+        delta: vec2(0.0, -400.0),
+        modifiers: Modifiers::NONE,
+    });
+    harness.run_steps(80);
+    assert!(
+        harness.get_by_label("Make it your color.").rect().top() < before.top() - 100.0,
+        "the first page scrolled"
+    );
+    harness.state_mut().page = gallery::Page::IconButtons;
+    harness.run_steps(2);
+    let next = harness.get_by_label("Small targets. Clear actions.").rect();
+    assert!(
+        (next.top() - before.top()).abs() < 1.0,
+        "a newly opened page starts at the top: {next:?} vs {before:?}"
+    );
 }

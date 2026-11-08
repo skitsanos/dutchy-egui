@@ -195,3 +195,39 @@ fn identity_survives_renaming_and_insertions_and_disabled_parents_block_actions(
     assert_eq!(h.state().opens, 0);
     assert_eq!(h.state().saves, 0);
 }
+
+#[test]
+fn title_and_description_stay_ragged_inside_justified_host_layouts() {
+    let probe: media::Shared = Arc::new(Mutex::new(media::Probe::default()));
+    let setup = probe.clone();
+    let mut h = Harness::builder()
+        .with_size([360.0, 640.0])
+        .with_context_setup(move |ctx| {
+            common::install(ctx, Theme::default().with_reduced_motion(true));
+            media::install(ctx, setup.clone());
+        })
+        .build_ui(|ui| {
+            ui.columns(1, |columns| {
+                MediaCard::new(
+                    "ragged",
+                    "fixture://card",
+                    "Original canal illustration",
+                    "A long artwork title that wraps onto a second row",
+                )
+                .category("Illustration")
+                .description(
+                    "Sharp geometry, warm color and a clear visual hierarchy for every surface.",
+                )
+                .show(&mut columns[0]);
+            });
+        });
+    h.run_steps(3);
+    let galleys = common::galleys(&h.output().shapes);
+    assert!(
+        galleys.iter().filter(|g| g.rows.len() > 1).count() >= 2,
+        "title and description wrap"
+    );
+    for galley in galleys {
+        assert!(!galley.job.justify, "justified: {}", galley.job.text);
+    }
+}

@@ -128,7 +128,7 @@ fn details(ui: &mut Ui, root: Id, config: &MediaCard<'_>) -> Response {
                             .color(TextColor::Muted)
                             .layout_job(&Theme::from_context(ui.ctx()), ui.available_width());
                         job.wrap.max_rows = geometry::DESCRIPTION_ROWS;
-                        ui.add(egui::Label::new(job).wrap());
+                        crate::text::add_ragged(ui, job);
                     }
                 });
         },

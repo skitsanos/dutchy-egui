@@ -7,6 +7,8 @@ Start with [setup, themes and fonts](getting-started.md), the
 
 - [Forms and validation](forms.md), [form primitives](form-primitives.md),
   [color picker](color-picker.md), [MediaCard and SearchInput](media-card-search-input.md)
+- [IconButton, ToggleButton and Toolbar](actions-toolbars.md)
+- [Markdown and CodeBlock](markdown.md)
 - [Cards and alerts](cards-alerts.md), [stats and empty states](stats-empty-states.md),
   [progress and skeletons](progress-skeletons.md)
 - [Accordions and tabs](accordions-tabs.md), [menus and dropdowns](menus-dropdowns.md),

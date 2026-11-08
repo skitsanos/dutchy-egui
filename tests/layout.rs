@@ -3,7 +3,7 @@
 mod common;
 use dutchy_egui::{
     ColumnWidth, Container, ContainerWidth, CrossAlign, Flex, FlexDirection, Input, ResponsiveGrid,
-    Spacing, Theme,
+    Spacing, Text, Theme,
 };
 use egui::{Rect, Ui};
 use egui_kittest::{
@@ -185,4 +185,36 @@ fn empty_grid_has_no_callbacks_and_zero_columns_is_safe() {
         });
     h.run();
     assert!(h.query_by_label("Single").is_some());
+}
+
+#[test]
+fn grid_cells_and_dutchy_text_keep_wrapped_lines_ragged() {
+    const COPY: &str = "Sharp geometry, warm color and a clear visual hierarchy for every application surface and workflow.";
+    let mut h = Harness::builder()
+        .with_size([700.0, 500.0])
+        .with_context_setup(|ctx| common::install(ctx, Theme::default()))
+        .build_ui(|ui| {
+            ResponsiveGrid::new("copy").columns(2).show(
+                ui,
+                &[1u8, 2],
+                |item| *item,
+                |ui, _| {
+                    ui.label(COPY);
+                    ui.add(Text::new(COPY));
+                },
+            );
+            // A host-justified layout must not stretch Dutchy text either.
+            ui.columns(2, |columns| {
+                columns[0].add(Text::new(COPY));
+            });
+        });
+    h.run();
+    let galleys = common::galleys(&h.output().shapes);
+    assert!(
+        galleys.iter().filter(|g| g.rows.len() > 1).count() >= 5,
+        "copy wraps in every cell"
+    );
+    for galley in galleys {
+        assert!(!galley.job.justify, "justified: {}", galley.job.text);
+    }
 }

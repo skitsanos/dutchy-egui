@@ -1,18 +1,22 @@
 //! Dutchy components, implemented with egui primitives.
 
 mod accordion;
+mod actions;
 mod alert;
 mod badge;
 mod breadcrumbs;
 mod button;
 mod card;
 mod close;
+mod code_block;
 mod command_palette;
 mod dropdown;
 mod empty_state;
 pub mod forms;
 mod kbd;
 mod loading_motion;
+#[cfg(feature = "markdown")]
+mod markdown;
 mod media;
 pub(crate) mod menu;
 mod nav_icon;
@@ -36,6 +40,10 @@ mod upload;
 pub use accordion::{
     Accordion, AccordionItem, AccordionResponse, AccordionState, AccordionVariant,
 };
+pub use actions::{
+    IconButton, ToggleButton, Toolbar, ToolbarEvent, ToolbarItem, ToolbarOrientation,
+    ToolbarResponse,
+};
 pub use alert::{Alert, AlertResponse, AlertVariant};
 pub use badge::{Badge, BadgeVariant};
 pub use breadcrumbs::{
@@ -43,10 +51,13 @@ pub use breadcrumbs::{
 };
 pub use button::{Button, ButtonVariant};
 pub use card::{Card, CardVariant};
+pub use code_block::{CodeBlock, CodeHighlighter, CodeSpan};
 pub use command_palette::{CommandPalette, CommandPaletteResponse};
 pub use dropdown::{Dropdown, DropdownAlign, DropdownResponse};
 pub use empty_state::{EmptyState, EmptyStateIcon, EmptyStateResponse, EmptyStateVariant};
 pub use kbd::Kbd;
+#[cfg(feature = "markdown")]
+pub use markdown::{LinkPolicy, Markdown, MarkdownLink, MarkdownResponse};
 pub use menu::{Menu, MenuIconPainter, MenuItem, MenuItemVariant, MenuResponse};
 pub use pagination::{Pagination, PaginationResponse, PaginationVariant};
 pub use progress::{Progress, ProgressVariant};

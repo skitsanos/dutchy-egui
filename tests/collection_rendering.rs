@@ -119,6 +119,28 @@ fn long_card_copy_wraps_within_a_narrow_column() {
             galley.size()
         );
     }
+    // The title reserves the direction arrow's column: no row may run under it.
+    let details = h
+        .get_by_label("Open An unusually long title that still leaves the direction arrow visible")
+        .rect();
+    let arrow_left = details.right()
+        - dutchy_egui::tokens::media_card::PADDING
+        - dutchy_egui::tokens::media_card::ICON;
+    let title = h
+        .output()
+        .shapes
+        .iter()
+        .find_map(|clipped| match &clipped.shape {
+            egui::Shape::Text(text) if text.galley.job.text.starts_with("AN UNUSUALLY") => {
+                Some(text.pos.x + text.galley.rect.right())
+            }
+            _ => None,
+        })
+        .expect("title galley");
+    assert!(
+        title <= arrow_left + 0.5,
+        "title right edge {title} overlaps the arrow starting at {arrow_left}"
+    );
     std::fs::create_dir_all("target/collection-proof").unwrap();
     h.render()
         .unwrap()

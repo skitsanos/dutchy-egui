@@ -38,14 +38,17 @@ OFL notices with redistributed fonts.
 
 ## Crate dependencies
 
-egui is the default direct runtime crate. Optional `url-images` adds ehttp
-0.7.3 (HTTP transport) and image 0.25.10 (PNG/JPEG codecs). Independent
+egui is the core UI runtime crate. The default `markdown` feature adds
+MIT-licensed pulldown-cmark 0.13.6 with default features off. Its parser uses
+bitflags and unicase (MIT OR Apache-2.0), plus memchr (Unlicense OR MIT). The
+Markdown renderer and CodeBlock are repository-owned. Optional `url-images`
+adds ehttp 0.7.3 (HTTP transport) and image 0.25.10 (PNG/JPEG codecs). Independent
 `png-export` reuses image 0.25.10 with PNG only, without HTTP/JPEG. Scribble
 model, capture and raster/SVG helpers are repository-owned implementations.
-eframe and egui_kittest
-are development-only. The file-selection showcase additionally uses
+eframe and egui_kittest are development-only. The file-selection showcase additionally uses
 MIT-licensed rfd 0.18.0 as a development-only native picker. No rfd/widget helper
-implementation is vendored. These crates use MIT OR Apache-2.0; their transitive
+implementation is vendored. egui, ehttp, image, eframe and egui_kittest use
+MIT OR Apache-2.0; their transitive
 dependency licenses remain applicable. The loader integration is original code;
 no widget/helper library implementation was copied.
 

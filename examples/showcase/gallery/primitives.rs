@@ -62,7 +62,7 @@ fn host_today() -> Date {
 }
 
 pub fn show(ui: &mut egui::Ui, state: &mut PrimitivesState) {
-    ui.add(Text::label("Application essentials / Form primitives").color(TextColor::Primary));
+    ui.add(Text::label("Native additions / Form primitives").color(TextColor::Primary));
     ui.add(Text::heading("Switch. Step. Pick.").size(TextSize::Xl5));
     ui.add(
         Text::new("Switches, segments, key chips, sliders, stepped numbers and date or time entry, all over values your application owns.")

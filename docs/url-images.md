@@ -34,7 +34,9 @@ transport's policy. Non-2xx responses and invalid/unsupported content become
 
 The integration is original repository-owned code over ehttp **0.7.3** and image
 **0.25.10**, current stable releases verified on 2026-11-06. No widget/helper crate
-is added. Without this feature, egui remains the only direct runtime dependency.
+is added. This feature adds only the HTTP transport and image codec dependencies;
+the independent default `markdown` feature adds its parser. Disable all default
+and optional features for an egui-only direct runtime dependency set.
 The integration handles HTTP(S) textures only; file paths, SVG, byte sources,
 authenticated request configuration and additional formats need host loaders.
 Give included bytes a non-HTTP URI such as `bytes://logo.png` so they remain

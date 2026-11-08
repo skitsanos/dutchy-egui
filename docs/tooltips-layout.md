@@ -91,7 +91,10 @@ most three, minimum 280 points, gaps 24. Typed minima also include 160/240/320/3
 One column may shrink below the minimum; zero maximum columns means one. An
 empty slice calls no renderers. A partial final row keeps the preceding column
 widths. Row height follows its tallest child; painted tiles need not be equal
-height. There is no virtualization or two-pass child measurement.
+height. Cells lay out top-down and left-aligned: egui's column justification is
+not applied, so wrapped copy stays ragged and children fill a cell through their
+own width options (DS-063). There is no virtualization or two-pass child
+measurement.
 
 Layout helpers preserve normal control roles, keyboard behavior, and host state.
 They do not add unnecessary focusable wrappers. The showcase's Layout page

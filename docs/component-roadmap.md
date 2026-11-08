@@ -15,19 +15,17 @@ It is a port addition; see [the editing contract](color-picker.md).
 
 Version 1.0.23 adds **MediaCard** and **SearchInput**, with a
 searchable artwork-browser showcase. See the
-[composition guide](media-card-search-input.md). The standalone icon/toolbar,
-multi-select and workbench APIs below remain future milestones.
+[composition guide](media-card-search-input.md). Version 1.0.24 adds
+**IconButton**, **ToggleButton** and **Toolbar**, with 22
+built-in vector icons, host painters and three showcase pages. See
+[actions and toolbars](actions-toolbars.md). Version 1.0.24 also integrates
+[Markdown and CodeBlock](markdown.md) from the parallel implementation branch.
 
 ## Recommended next milestones
 
-1. **Actions and toolbars:** public IconButton, ToggleButton and Toolbar APIs.
-   The library currently has text buttons and private close/icon painting.
-   Add named icon-only actions, pressed state, consistent hit targets, tooltip
-   composition and roving toolbar focus. Include a small polished icon gallery
-   and host-provided icon painters, extending the independent action patterns
-   demonstrated by MediaCard and the [Foliopress showcase](references/foliopress-showcase.md).
-   Extend menus with checked actions/submenus
-   and an application menu bar as a follow-up.
+1. **Richer menus:** checked actions, nested submenus and an application menu
+   bar. Compose these with the new named icon actions and toolbars. Preserve
+   host-owned command execution, stable identity and native dismissal/focus.
 2. **Powerful filtering:** MultiSelect with removable chips, TagInput and
    RangeSlider. Current Select/SearchableSelect choose one value and Slider
    edits one endpoint. Ship a useful filter-builder example with keyboard
@@ -42,7 +40,7 @@ multi-select and workbench APIs below remain future milestones.
 
 | Addition | Useful outcome / implementation basis |
 | --- | --- |
-| CodeBlock with copy and line numbers | Share examples, diagnostics and generated snippets; host-provided highlighting first |
+| CodeBlock highlighting and diff views | Extend the shipped host highlighter hook when applications need richer code presentation |
 | JsonInspector / PropertyGrid | Inspect structured application state; compose tree and form primitives |
 | LogViewer | Filter, pause and follow logs with virtualization and bounded host buffers |
 | Sparklines / small bar and line charts | Compact dashboard context using Painter and shared tokens |

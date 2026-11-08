@@ -31,7 +31,7 @@ impl Default for ColorsState {
 }
 
 pub fn show(ui: &mut Ui, state: &mut ColorsState) {
-    ui.add(Text::label("Application essentials / Color").color(TextColor::Primary));
+    ui.add(Text::label("Native additions / Color").color(TextColor::Primary));
     ui.add(Text::heading("Make it your color.").size(TextSize::Xl5));
     ui.add(Text::new("Named palettes, exact hex entry and channel controls. Your application owns the color and decides what it changes.")
         .color(TextColor::Muted));

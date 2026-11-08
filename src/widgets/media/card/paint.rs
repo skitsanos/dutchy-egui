@@ -3,7 +3,7 @@ use crate::{
     interaction::{focus_is_visible, paint_focus_inside},
     tokens::{border, media_card as tokens},
 };
-use egui::{Rect, Response, Stroke, StrokeKind, Ui, pos2, vec2};
+use egui::{Align, Layout, Rect, Response, Stroke, StrokeKind, Ui, UiBuilder, pos2, vec2};
 
 pub(super) fn save(ui: &Ui, response: &Response, saved: bool) {
     if !ui.is_rect_visible(response.rect) {
@@ -95,7 +95,17 @@ pub(super) fn title(ui: &mut Ui, title: &str) {
         .color(TextColor::Foreground)
         .layout_job(&Theme::from_context(ui.ctx()), width);
     job.wrap.max_rows = tokens::TITLE_ROWS;
-    let response = ui.add(egui::Label::new(job).wrap());
+    // This row owns its alignment: a host's Center/Right placement must not
+    // move the measured label back into the reserved arrow column.
+    let response = ui
+        .scope_builder(
+            UiBuilder::new().layout(Layout::top_down(Align::Min)),
+            |ui| {
+                ui.set_min_width(ui.available_width());
+                crate::text::add_measured(ui, job)
+            },
+        )
+        .inner;
     response.ctx.accesskit_node_builder(response.id, |node| {
         node.set_role(egui::accesskit::Role::Heading);
         node.set_label(title);

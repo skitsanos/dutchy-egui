@@ -7,6 +7,7 @@ pub use egui;
 
 pub mod calendar;
 pub mod fonts;
+pub mod icons;
 #[cfg(feature = "url-images")]
 pub mod image_loaders;
 pub mod interaction;
@@ -18,6 +19,7 @@ pub mod tokens;
 pub mod validation;
 pub mod widgets;
 
+pub use icons::{Icon, IconPainter};
 pub use layout::{Container, CrossAlign, Flex, FlexDirection, ResponsiveGrid};
 pub use scribble::{
     ScribbleBrush, ScribbleDrawing, ScribbleError, ScribbleExportOptions, ScribbleSmoothing,
@@ -78,4 +80,12 @@ pub use widgets::{
     ImageStatus, Lightbox, LightboxResponse, MediaCard, MediaCardResponse,
 };
 
+pub use widgets::{
+    IconButton, ToggleButton, Toolbar, ToolbarEvent, ToolbarItem, ToolbarOrientation,
+    ToolbarResponse,
+};
 pub use widgets::{Scribble, ScribbleAction, ScribbleResponse};
+
+pub use widgets::{CodeBlock, CodeHighlighter, CodeSpan};
+#[cfg(feature = "markdown")]
+pub use widgets::{LinkPolicy, Markdown, MarkdownLink, MarkdownResponse};

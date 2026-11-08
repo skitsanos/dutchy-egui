@@ -1,8 +1,9 @@
 # Getting started
 
 Dutchy is an egui library. Applications own values, selection, visibility,
-navigation and action execution. The default runtime dependency is egui;
-eframe and egui_kittest are development-only. No web checkout is required.
+navigation and action execution. The core UI dependency is egui; the default
+`markdown` feature adds its parser. eframe and egui_kittest are development-only.
+No web checkout is required.
 
 The package is prepared locally; registry publication is a separate step.
 Use a path dependency while working from this checkout:
@@ -50,6 +51,7 @@ proportional and monospace fonts and the library embeds no font bytes.
 | Feature | Behavior |
 | --- | --- |
 | `bundled-fonts` (default) | Bundled display, body and mono faces |
+| `markdown` (default) | CommonMark parsing via pulldown-cmark; CodeBlock is unconditional |
 | `url-images` | ehttp/image-backed HTTP(S) PNG/JPEG loading |
 | `png-export` | Image-backed PNG drawing export without HTTP/JPEG |
 
@@ -57,7 +59,9 @@ proportional and monospace fonts and the library embeds no font bytes.
 cargo run --example showcase --all-features
 ```
 
-The showcase requires bundled fonts. It uses Glow; rendering tests use WGPU.
+The showcase requires bundled fonts; its Markdown page appears when `markdown`
+is enabled. Disable default features and enable only `bundled-fonts` for the
+parser-free showcase. It uses Glow; rendering tests use WGPU.
 The library is renderer-independent. Media pages start with original offline
 artwork; select **Use Picsum photos** to request online samples, and **Reload
 photos** for an explicit cache refresh. File browsing and drawing Save As are

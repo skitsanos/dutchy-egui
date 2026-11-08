@@ -75,3 +75,15 @@ The release repeats the full check matrix and archive-content gate against
 that package/lockfile version. README is reduced to essential setup and links;
 detailed guidance is indexed under docs. Earlier local-development evidence
 above describes the implementation before this release.
+
+## Ragged descriptions — DS-063, 2026-11-08
+
+MediaCard descriptions and titles no longer inherit justification from the
+host layout, and `ResponsiveGrid` cells no longer justify their children. The
+three `collection-*` baselines were refreshed for the changed word spacing in
+the descriptions and reviewed at 1x, 1.5x and 2x; nothing else in them changed.
+New regressions cover a card inside `ui.columns` and Dutchy text inside grid
+cells. Titles extending under the direction arrow at narrow widths were found
+in the narrow-card proof and fixed the same day ([DS-066](issues/DS-066.md)):
+the title galley is measured at the reserved width, and the narrow-card test
+asserts that it ends left of the arrow column. No baseline changed.

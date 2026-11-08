@@ -44,7 +44,7 @@ impl ButtonVariant {
         }
     }
 
-    fn visuals(self, theme: Theme, hovered: bool) -> egui::style::WidgetVisuals {
+    pub(super) fn visuals(self, theme: Theme, hovered: bool) -> egui::style::WidgetVisuals {
         let p = theme.palette;
         let (fill, text, stroke) = match self {
             Self::Primary => (p.primary, p.on_primary, Color32::TRANSPARENT),

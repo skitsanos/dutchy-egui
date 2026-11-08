@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.0.24 — 2026-11-08
+
+- Reserve MediaCard title allocation independently of host alignment and keep
+  Secondary toggle states visible with a pressed edge (DS-067/068).
+- Correct README API/dependency claims and clarify historical verification
+  records (DS-069).
+- Integrate Markdown and CodeBlock from `684a840`, reconcile feature flags and
+  ticket numbering, and retain current package exclusions. Preserve nested
+  emphasis, enforce the documented native link schemes, and fix document
+  composition, code wrapping and inverse-surface ink (DS-070/071).
+- Add IconButton, controlled ToggleButton and typed Toolbar with original vector
+  icons, host painters, native keyboard focus, overflow and showcase pages (DS-062).
+- Keep wrapped copy ragged: `ResponsiveGrid` cells no longer justify their
+  children, and `Text` and MediaCard titles/descriptions ignore host-justified
+  layouts such as `ui.columns` (DS-063).
+- Keep toggle states distinguishable while hovered: unpressed Outline toggles
+  hover with the muted fill and their stroke; pressed toggles keep the tinted
+  inverse fill instead of the accent (DS-064).
+- Showcase: each page keeps its own scroll offset so a newly opened page starts
+  at the top, and the port-addition pages share the "Native additions" kicker
+  (DS-065).
+- MediaCard titles wrap at the width reserved beside the direction arrow instead
+  of running under it at narrow widths (DS-066).
+- Rewrite the README as a developer landing page: value proposition, showcase
+  screenshots for light and dark mode, grouped component overview, Cargo feature
+  table and the existing documentation links.
+
 ## 1.0.23 — 2026-11-08
 
 - Add Foliopress-inspired MediaCard and SearchInput compositions with host-owned
