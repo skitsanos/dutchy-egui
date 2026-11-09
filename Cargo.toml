@@ -40,6 +40,12 @@ name = "showcase"
 path = "examples/showcase/main.rs"
 required-features = ["bundled-fonts"]
 
+[[example]]
+name = "dutchy_todo"
+path = "examples/dutchy_todo/main.rs"
+required-features = ["bundled-fonts"]
+test = true
+
 [lints.rust]
 unsafe_code = "forbid"
 missing_docs = "warn"

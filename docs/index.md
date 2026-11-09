@@ -24,8 +24,9 @@ Start with [setup, themes and fonts](getting-started.md), the
 ## Development and decisions
 
 [Development and verification](development.md), [implementation plan](plan.md),
-[reference decisions](reference.md), [Foliopress reference](references/foliopress-showcase.md)
-and the [Issues Ledger](issues/). The
+[example applications](example-applications.md), [reference decisions](reference.md),
+[Foliopress reference](references/foliopress-showcase.md) and the
+[Issues Ledger](issues/). The
 [menu interaction decisions](menu-interaction-decisions.md) explain cascade
 geometry, input ownership and the alternative drill-down presentation.
 
