@@ -66,6 +66,9 @@ host renders.
   solid except the file drop zone, whose dashed 2-point edge follows the
   file-upload component and its live implementation; the effects token page's
   "no dashed borders" statement is a documented exception.
+- egui 0.37 fades clipped scroll content behind an edge gradient by default; the
+  shared style sets `spacing.scroll.fade.strength` to zero so every scroll area
+  stays a flat fill (DS-078). Hosts that edit the installed style keep it at zero.
 - Buttons use egui's standard control for pointer/keyboard semantics inside a
   scoped variant style. Disabled/loading state also honors a disabled parent.
 - Badges dismiss only through the close affordance and report a named button.

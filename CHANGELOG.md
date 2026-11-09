@@ -19,6 +19,8 @@
 - Let Escape release focus from closed menu triggers as on other widgets,
   register menu-bar entries once with their menu-item role, and cover Up
   opening, icon-only menu buttons and diagonal pointer paths (DS-084).
+- Disable egui's scroll-edge fade gradient in the shared theme style so clipped
+  content keeps a flat fill in every Dutchy scroll area (DS-078).
 
 ## 1.0.25 — 2026-11-08
 

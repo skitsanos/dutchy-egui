@@ -34,9 +34,10 @@ fn content(ui: &mut egui::Ui) {
 
 Use `Theme::apply` for subsequent theme/motion changes. Choose Orange, Purple,
 Crimson, Blue or Green (`Accent::ALL`) in Light/Dark mode; customize semantic
-values through `theme.palette`. Uppercase is visual; accessible names retain
-the host's casing. Text supports family, size, actual weight, tracking, leading,
-color, wrapping and egui's italic treatment.
+values through `theme.palette`. The installed style also disables egui's
+scroll-edge fade so scroll areas keep flat fills. Uppercase is visual;
+accessible names retain the host's casing. Text supports family, size, actual
+weight, tracking, leading, color, wrapping and egui's italic treatment.
 
 `bundled-fonts` embeds twelve upright faces: Regular/Medium/SemiBold/Bold for
 Dutchy Display, Dutchy Body and Dutchy Mono, derived from Space Grotesk, Inter
