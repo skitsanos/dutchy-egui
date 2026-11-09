@@ -118,6 +118,10 @@ recorded. Three defects are confirmed and registered as open tickets:
   disabled, Left or Right refocuses the trigger while the popup stays open with
   no focused row.
 
+Later on 2026-11-09 all three were fixed in the richer-menus work with failing
+regressions first; the resolved tickets live in that work and supersede the
+open copies on this branch when the two merge.
+
 Observations without a ticket: inside one Toolbar, Escape keeps focus on a
 menu button but drops it from a plain tool (probe-confirmed, undocumented);
 MenuBar triggers register widget information twice, first as a Button and then
