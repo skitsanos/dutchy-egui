@@ -2,7 +2,7 @@
 //! and the single place where focus requests are queued.
 
 use crate::{
-    data, editor,
+    commands, data, editor,
     history::{History, UndoRequest},
     io::Io,
     sidebar,
@@ -17,7 +17,7 @@ use crate::{
 use dutchy_egui::{
     Flex, Text, TextColor, TextSize, ToastEvent, ToastQueue, Toasts, calendar::Date, tokens::space,
 };
-use egui::{Context, Key, Modifiers, Ui};
+use egui::{Context, Ui};
 
 /// Where keyboard focus should land once the target control exists.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -62,6 +62,8 @@ pub struct App {
     pub focus: Option<Focus>,
     /// Import and export jobs.
     pub io: Io,
+    /// Shared bindings, palette and shortcut settings.
+    pub commands: commands::Commands,
     /// Opt-in native frame capture for verification runs.
     pub capture: Capture,
 }
@@ -94,6 +96,7 @@ impl App {
             history: History::default(),
             focus: None,
             io: Io::default(),
+            commands: commands::Commands::default(),
             capture: Capture::default(),
         }
     }
@@ -102,7 +105,7 @@ impl App {
     pub fn show(&mut self, ui: &mut Ui) {
         let ctx = ui.ctx().clone();
         self.finish_jobs();
-        self.shortcuts(&ctx);
+        commands::shortcuts(self, &ctx);
         self.header(ui);
         self.status(ui);
         sidebar::show(ui, self);
@@ -111,6 +114,7 @@ impl App {
             .show(ui, |ui| tasks::show(ui, self));
         editor::drawer(self, &ctx);
         editor::confirm(self, &ctx);
+        commands::overlays(self, &ctx);
         self.notifications(&ctx);
         self.redirect_stale_focus();
         self.capture.tick(&ctx);
@@ -170,16 +174,6 @@ impl App {
         }
     }
 
-    /// `N` opens the editor when no text field, drawer or dialog has the keyboard.
-    fn shortcuts(&mut self, ctx: &Context) {
-        if self.editor.open || self.confirm.open || ctx.text_edit_focused() {
-            return;
-        }
-        if ctx.input_mut(|input| input.consume_key(Modifiers::NONE, Key::N)) {
-            self.create_task(None);
-        }
-    }
-
     fn header(&mut self, ui: &mut Ui) {
         shell::header(ui, "todo-header", |ui| {
             Flex::row("brand").wrap(true).show(ui, |ui| {
@@ -189,6 +183,8 @@ impl App {
                     Text::label(concat!("Example application · ", env!("CARGO_PKG_VERSION")))
                         .color(TextColor::Muted),
                 );
+                ui.add_space(space::LG);
+                commands::controls(ui, self);
             });
             ui.add_space(space::SM);
             self.theme.controls(ui);
@@ -213,9 +209,14 @@ impl App {
             ("Done", counts.done.to_string()),
             ("Shown", self.visible_tasks().len().to_string()),
         ];
-        const HINTS: [Hint<'static>; 5] = [
+        let new_hint = self
+            .commands
+            .registry
+            .shortcut_label(ui.ctx(), &commands::Action::New)
+            .unwrap_or_else(|| "Unbound".into());
+        let hints = [
             Hint {
-                key: "N",
+                key: &new_hint,
                 action: "New task",
             },
             Hint {
@@ -235,7 +236,7 @@ impl App {
                 action: "Close",
             },
         ];
-        shell::status_strip(ui, "todo-status", &segments, &HINTS);
+        shell::status_strip(ui, "todo-status", &segments, &hints);
     }
 
     fn notifications(&mut self, ctx: &Context) {

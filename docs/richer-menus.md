@@ -86,9 +86,10 @@ and [toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) patterns inform
 the navigation. This native egui implementation skips disabled entries rather
 than making them arrow-focusable. Alt/F10 system-menu activation, mnemonic
 letters, type-ahead, radio/mixed checks and operating-system menu integration
-are outside this milestone. Shortcut hints remain descriptive. CommandPalette
-continues to accept flat commands; it omits submenu branches rather than
-executing their keys or searching descendants automatically.
+are outside this milestone. Shortcut hints remain descriptive unless supplied through a host
+CommandRegistry. The 1.0.28 [command integration](commands-shortcuts.md)
+adds shared bindings and recursive leaf search in CommandPalette, with ancestor
+breadcrumbs; branches never execute.
 
 ## Acceptance plan and evidence
 

@@ -11,6 +11,7 @@ pub(crate) struct Results<'a, T> {
     pub name: &'a str,
     pub selected: Option<IdSalt>,
     pub height: f32,
+    pub words: bool,
 }
 pub(crate) struct ResultsResponse<T> {
     pub response: Response,
@@ -31,6 +32,12 @@ impl<T: Clone> Results<'_, T> {
             .items
             .iter()
             .filter(|item| {
+                if self.words {
+                    let text = format!("{} {}", item.group.as_deref().unwrap_or(""), item.label)
+                        .to_lowercase();
+                    return item.children.is_none()
+                        && needle.split_whitespace().all(|word| text.contains(word));
+                }
                 item.children.is_none()
                     && (item.label.to_lowercase().contains(&needle)
                         || item

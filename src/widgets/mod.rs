@@ -14,6 +14,7 @@ mod dropdown;
 mod empty_state;
 pub mod forms;
 mod kbd;
+mod key_recorder;
 mod loading_motion;
 #[cfg(feature = "markdown")]
 mod markdown;
@@ -31,6 +32,7 @@ pub(crate) mod search;
 mod searchable_select;
 mod skeleton;
 mod spinner;
+mod split_button;
 mod stats;
 mod stepper;
 mod table;
@@ -58,6 +60,7 @@ pub use command_palette::{CommandPalette, CommandPaletteResponse};
 pub use dropdown::{Dropdown, DropdownAlign, DropdownResponse};
 pub use empty_state::{EmptyState, EmptyStateIcon, EmptyStateResponse, EmptyStateVariant};
 pub use kbd::Kbd;
+pub use key_recorder::{KeyRecorder, KeyRecorderResponse};
 #[cfg(feature = "markdown")]
 pub use markdown::{LinkPolicy, Markdown, MarkdownLink, MarkdownResponse};
 pub use menu::{Menu, MenuEvent, MenuIconPainter, MenuItem, MenuItemVariant, MenuResponse};
@@ -68,6 +71,7 @@ pub use search::SearchState;
 pub use searchable_select::{SearchableSelect, SearchableSelectResponse};
 pub use skeleton::{Skeleton, SkeletonGroup, SkeletonVariant};
 pub use spinner::{Spinner, SpinnerSize};
+pub use split_button::{SplitButton, SplitButtonResponse};
 pub use stats::{
     Stat, StatSize, StatVariant, StatsGrid, StatsLayout, Trend, TrendDirection, TrendSentiment,
 };

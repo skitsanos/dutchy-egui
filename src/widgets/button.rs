@@ -44,6 +44,15 @@ impl ButtonVariant {
         }
     }
 
+    /// Focus ring colour, shared by composites that repaint rings over joints.
+    pub(crate) fn focus_color(self, theme: Theme) -> Color32 {
+        match self {
+            Self::Secondary => theme.palette.foreground,
+            Self::Destructive => theme.palette.destructive,
+            _ => theme.palette.primary,
+        }
+    }
+
     pub(super) fn visuals(self, theme: Theme, hovered: bool) -> egui::style::WidgetVisuals {
         let p = theme.palette;
         let (fill, text, stroke) = match self {
@@ -143,6 +152,11 @@ impl Widget for Button<'_> {
 }
 
 impl Button<'_> {
+    pub(crate) fn natural_width(&self, ui: &Ui) -> f32 {
+        let job = self.layout_job(Theme::from_context(ui.ctx()));
+        ui.fonts_mut(|fonts| fonts.layout_job(job).size().x) + 2.0 * self.size.padding()
+    }
+
     fn layout_job(&self, theme: Theme) -> egui::text::LayoutJob {
         let mut job = Text::new(self.label.clone())
             .size(self.size.text_size())
@@ -207,12 +221,7 @@ impl Button<'_> {
                 !theme.reduced_motion,
             );
         }
-        let focus = match self.variant {
-            ButtonVariant::Secondary => theme.palette.foreground,
-            ButtonVariant::Destructive => theme.palette.destructive,
-            _ => theme.palette.primary,
-        };
-        paint_focus(ui, &response, focus);
+        paint_focus(ui, &response, self.variant.focus_color(theme));
         response
     }
 }

@@ -194,7 +194,8 @@ impl Showcase {
             });
         self.media.render(ui.ctx());
         self.overlays.render(ui.ctx());
-        self.menus.commands(ui.ctx());
+        self.menus
+            .commands(ui.ctx(), matches!(self.page, Page::Menus | Page::Toolbars));
         self.notifications.render(ui.ctx());
     }
 

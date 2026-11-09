@@ -21,20 +21,15 @@ before implementation starts.
 - 1.0.26: checked menu actions, nested submenus, an in-window **MenuBar** and
   Toolbar menu buttons with a connected command-surface showcase; see
   [richer menus](richer-menus.md). The milestones below build on them.
+- 1.0.28: shared commands and shortcuts, with **CommandRegistry**,
+  **SplitButton**, **KeyRecorder**, nested command search, Todo and Canal
+  Studio integration and automated CI; see [the contract](commands-shortcuts.md),
+  [the plan](plan-1.0.28.md) and [the release record](verification-release-1.0.28.md).
+  DutchyAgent follows; workbench primitives then enable DutchyMail.
 
 ## Recommended next milestones
 
-1. **Command plumbing.** A host-owned shortcut registry maps key chords to
-   action keys, applies the platform modifier (Command or Control), detects
-   conflicts, dispatches each chord once per frame and renders the same `Kbd`
-   hints in Menu, MenuBar, Toolbar and CommandPalette. The guides currently
-   tell hosts to register bindings themselves; this closes that gap without
-   taking command execution away from the application. Ship with
-   **SplitButton** (a primary action with an attached chevron that opens
-   alternatives), **KeyRecorder** (an input that captures a chord for
-   keybinding settings) and a DataTable column-visibility menu built from
-   checked actions.
-2. **Workbench building blocks.** **List** provides keyed rows, none/single/
+1. **Workbench building blocks.** **List** provides keyed rows, none/single/
    multiple selection with Shift and Control ranges, type-ahead, roving focus,
    list box semantics and fixed-height virtualization over egui's row-range
    scrolling; it replaces the separate VirtualList idea. **TreeView** reuses the
@@ -46,7 +41,7 @@ before implementation starts.
    of keyed segments (text, icon, progress, clickable) with overflow priority and
    status semantics. The DutchyMail example demonstrates the set; see
    [example applications](example-applications.md).
-3. **Powerful filtering.** A square **Chip** primitive with optional remove and
+2. **Powerful filtering.** A square **Chip** primitive with optional remove and
    toggle states is the shared base for **FilterChipGroup**, **TagInput** and
    **MultiSelect**; **RangeSlider** edits two endpoints on the existing rail;
    **Combobox** accepts free text with suggestions where SearchableSelect only
@@ -55,7 +50,7 @@ before implementation starts.
    Compose a filter-builder example with SearchInput and the MediaCard browser,
    with keyboard removal, empty states, explicit commit behavior and typed
    host values.
-4. **Small wins.** **Dialog presets** (confirm, alert and prompt with typed
+3. **Small wins.** **Dialog presets** (confirm, alert and prompt with typed
    results, Enter and Escape mapping and optional type-to-confirm for
    destructive actions) built on Modal; **DescriptionList** for label and value
    rows with alignment, wrapping and copy; **Activity**, the port of the web
@@ -64,7 +59,7 @@ before implementation starts.
    swatches, mode and reduced motion in one settings control; and **Sidebar**
    with its icon-rail mode, the port of the web navigation surface, so the
    showcase can use the library's own navigation.
-5. **Dashboards.** A repository-owned charts family: sparkline, bar, donut,
+4. **Dashboards.** A repository-owned charts family: sparkline, bar, donut,
    gauge and calendar heatmap with flat fills, square markers, token colors,
    hover tooltips, host-formatted labels and an accessible text summary. No
    plotting crate. **BackgroundTasks** lists running operations with progress,
@@ -113,8 +108,9 @@ equivalents are MenuBar, Toolbar, TitleBar and Sidebar, so they are not ported.
 ## Existing components worth extending
 
 - DataTable: virtualization on the List row engine, column resizing, inline
-  cell editing and a column chooser menu are the most valuable desktop
-  upgrades; pinning and multicolumn sorting follow concrete application needs.
+  cell editing and a column chooser menu (checked commands from a host
+  CommandRegistry, deferred from the 1.0.28 command work) are the most
+  valuable desktop upgrades; pinning and multicolumn sorting follow concrete application needs.
 - DatePicker: ranges and locale-aware display; TimePicker: optional 12-hour entry.
 - Tabs: drag reordering and an overflow menu; Textarea: interactive resizing.
 - Toasts: exit transitions, and the history service noted above.

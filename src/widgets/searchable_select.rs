@@ -116,6 +116,7 @@ impl<'a, T: Clone + PartialEq> SearchableSelect<'a, T> {
             let mut result = None;
             let mut popup = None;
             if self.state.open {
+                crate::commands::dispatch::mark_overlay(ui.ctx());
                 let shown = egui::Popup::from_response(&response)
                     .id(root.with("popup"))
                     .open_bool(&mut self.state.open)
@@ -127,6 +128,7 @@ impl<'a, T: Clone + PartialEq> SearchableSelect<'a, T> {
                     .show(|ui| {
                         ui.set_width((response.rect.width() - border::STANDARD * 2.0).max(0.0));
                         Results {
+                            words: false,
                             items: &items,
                             query: &self.state.query,
                             name: &format!("{} options", self.name),

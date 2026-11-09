@@ -3,13 +3,14 @@
 
 use crate::{
     app::{App, Focus},
+    commands::{self, Action},
     row::{self, RowAction},
     store::{Filter, ProjectId, Task},
     support::shell,
 };
 use dutchy_egui::{
-    Button, EmptyState, EmptyStateIcon, EmptyStateVariant, Kbd, Progress, ProgressVariant,
-    SearchInput, Segmented, Stat, StatsGrid, StatsLayout, Text, TextColor, TextSize,
+    EmptyState, EmptyStateIcon, EmptyStateVariant, Kbd, Progress, ProgressVariant, SearchInput,
+    Segmented, SplitButton, Stat, StatsGrid, StatsLayout, Text, TextColor, TextSize,
     tokens::{ControlSize, ProgressSize, border, control, space},
 };
 use egui::{Ui, accesskit::Role};
@@ -35,8 +36,18 @@ fn heading(ui: &mut Ui, app: &mut App, project: ProjectId) {
         .project(project)
         .map_or_else(String::new, |project| project.name.clone());
     // Reserve the actions' width so the heading wraps instead of colliding.
-    let actions = shell::button_width(ui, "New task", ControlSize::Small)
-        + shell::kbd_width(ui, "N")
+    let hint = app
+        .commands
+        .registry
+        .shortcut_label(ui.ctx(), &Action::New)
+        .unwrap_or_else(|| "Unbound".into());
+    let alternatives = [Action::Import, Action::Export]
+        .iter()
+        .filter_map(|key| app.commands.registry.menu_item(ui.ctx(), key))
+        .collect::<Vec<_>>();
+    let actions = ControlSize::Small.height()
+        + shell::button_width(ui, "New task", ControlSize::Small)
+        + shell::kbd_width(ui, &hint)
         + 3.0 * space::SM;
     ui.horizontal(|ui| {
         let width = (ui.available_width() - actions).max(space::HERO_LARGE);
@@ -49,14 +60,26 @@ fn heading(ui: &mut Ui, app: &mut App, project: ProjectId) {
             },
         );
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            let button = ui.add(Button::new("New task").size(ControlSize::Small));
+            let output = SplitButton::new(
+                "new-task",
+                "New task",
+                &mut app.commands.split,
+                &alternatives,
+            )
+            .size(ControlSize::Small)
+            .alternatives_name("More task actions")
+            .show(ui);
+            let button = output.primary;
             if app.claim_focus(Focus::NewTask) {
                 button.request_focus();
             }
             if button.clicked() {
-                app.create_task(Some(button.id));
+                commands::execute(app, Action::New, Some(button.id), ui.ctx());
             }
-            ui.add(Kbd::new("N"));
+            if let Some(action) = output.action {
+                commands::execute(app, action, Some(button.id), ui.ctx());
+            }
+            ui.add(Kbd::new(hint));
         });
     });
 }

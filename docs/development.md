@@ -45,3 +45,23 @@ worktrees/metadata and unused merged branches. Preserve the active checkout,
 dirty/unmerged/in-use work, tracked assets/snapshots, media/storyboard work and
 unrelated processes. Record cleanup and retained work in private maintenance
 receipts. Registry publication is separate from a main push.
+
+## Automated qualification
+
+Run `bash scripts/check.sh` after installing stable rustfmt/Clippy, the
+`wasm32-unknown-unknown` target and Rust 1.95.0. It runs the required gates,
+partial-feature profiles, native example build and actual crate inspection.
+`python3 scripts/check_package.py [archive.crate]` also audits an existing
+archive for approved paths, matching source bytes, licences and packaged links.
+
+The repository's `.github/workflows/ci.yml` runs the gate on Ubuntu with
+software Vulkan and separately checks the library on macOS and Windows. It
+uses read-only repository permissions and a pinned official checkout action;
+no registry publication is performed. Hosted execution begins after an
+approved push or pull request. Native interaction remains a separate check.
+Rendering tests that include platform key labels explicitly select macOS
+formatting to keep their image baselines deterministic across hosts.
+Baselines are rendered with macOS Metal and compared strictly there; refresh
+them on macOS only. `kittest.toml` lets Linux software Vulkan differ in a
+bounded number of pixels per snapshot, because it rasterizes some edges one
+column differently. The macOS gate remains the authoritative visual check.

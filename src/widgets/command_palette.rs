@@ -69,6 +69,7 @@ impl<'a, T: Clone> CommandPalette<'a, T> {
     /// Filter commands, navigate with Up/Down/Home/End, activate with Enter, or
     /// dismiss with Escape/backdrop. Closing restores the preceding host focus.
     pub fn show(self, ctx: &Context) -> Option<CommandPaletteResponse<T>> {
+        let leaves = crate::widgets::search::tree::leaves(self.items);
         let root = Id::unique(("dutchy-command-palette", self.id));
         let key = root.with("transient-focus");
         let mut memory = ctx.data(|data| data.get_temp::<Memory>(key).unwrap_or_default());
@@ -160,11 +161,12 @@ impl<'a, T: Clone> CommandPalette<'a, T> {
                             .max(0.0),
                     );
                     let results = Results {
-                        items: self.items,
+                        items: &leaves,
                         query: &self.state.query,
                         name: self.name.as_ref(),
                         selected: None,
                         height,
+                        words: true,
                     }
                     .show(ui, root.with("results"), &mut cursor, &input.1);
                     input_metadata(&input.0, true, Some(results.response.id), results.active);

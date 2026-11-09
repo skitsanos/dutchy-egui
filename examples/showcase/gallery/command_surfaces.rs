@@ -1,30 +1,41 @@
+#[path = "command_surfaces/catalog.rs"]
+mod catalog;
+#[path = "command_surfaces/preview.rs"]
+mod preview;
 use dutchy_egui::{
-    Icon, MenuBar, MenuBarItem, MenuBarState, MenuEvent, MenuItem, Switch, Text, TextColor,
-    TextSize, Theme, Toolbar, ToolbarEvent, ToolbarItem,
-    tokens::{border, space},
+    Button, ButtonVariant, CommandPalette, CommandRegistry, CommandRequest, ControlSize, Field,
+    KeyRecorder, MenuBar, MenuBarItem, MenuBarState, SearchState, SplitButton, Switch, Text,
+    TextColor, TextSize, Toolbar, ToolbarEvent, ToolbarItem, tokens::space,
 };
-use egui::{Stroke, Ui, pos2, vec2};
+use egui::Ui;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
-enum Command {
+pub enum Action {
     Save,
     Undo,
     Copy,
+    CopySvg,
     Grid,
     Rulers,
     Export,
     Image,
     Png,
     Svg,
+    Palette,
+    File,
+    Edit,
+    View,
 }
-
 pub struct CommandState {
     pub bar: MenuBarState,
     pub grid: bool,
     pub rulers: bool,
+    pub registry: CommandRegistry<Action>,
+    pub palette: SearchState,
     accept: bool,
     saves: usize,
     last: String,
+    split: bool,
 }
 impl Default for CommandState {
     fn default() -> Self {
@@ -32,78 +43,93 @@ impl Default for CommandState {
             bar: MenuBarState::default(),
             grid: true,
             rulers: false,
+            registry: catalog::registry(),
+            palette: SearchState::default(),
             accept: true,
             saves: 0,
             last: "Ready to create".into(),
+            split: false,
         }
     }
 }
-
 pub fn show(ui: &mut Ui, state: &mut CommandState) {
-    let formats = [
-        MenuItem::new(Command::Png, "PNG image").shortcut("⇧ ⌘ E"),
-        MenuItem::new(Command::Svg, "SVG vector"),
-    ];
-    let exports = [
-        MenuItem::new(Command::Image, "Image format").submenu(&formats),
-        MenuItem::new(Command::Copy, "Copy SVG source"),
-    ];
-    let file = [
-        MenuItem::new(Command::Save, "Save document").shortcut("⌘ S"),
-        MenuItem::new(Command::Export, "Export artwork").submenu(&exports),
-    ];
-    let edit = [
-        MenuItem::new(Command::Undo, "Undo edit").enabled(false),
-        MenuItem::new(Command::Copy, "Copy selection"),
-    ];
-    let view = [
-        MenuItem::new(Command::Grid, "Show grid").checked(state.grid),
-        MenuItem::new(Command::Rulers, "Show rulers").checked(state.rulers),
-    ];
-    let menus = [
-        MenuBarItem::new("file", "File", &file),
-        MenuBarItem::new("edit", "Edit", &edit),
-        MenuBarItem::new("view", "View", &view),
-    ];
-    if let Some(event) = MenuBar::new("studio-menus", &mut state.bar, &menus)
-        .accessible_name("Canal Studio menus")
-        .show(ui)
-        .event
-    {
-        apply(state, event);
+    for request in state.registry.dispatch(ui.ctx()) {
+        apply(state, request);
     }
-    ui.add_space(space::SM);
-    let tools = [
-        ToolbarItem::action(Command::Save, "Save artwork").icon(Icon::Save),
-        ToolbarItem::action(Command::Undo, "Undo edit")
-            .icon(Icon::Undo)
-            .enabled(false),
-        ToolbarItem::toggle(Command::Grid, "Show grid", state.grid)
-            .icon(Icon::Grid)
-            .separator_before(true),
-        ToolbarItem::action(Command::Export, "Export artwork")
-            .icon(Icon::Download)
-            .icon_only(false)
-            .menu(&exports),
-    ];
-    if let Some(event) = Toolbar::new("studio-tools", &tools)
-        .accessible_name("Canal Studio tools")
-        .show(ui)
-        .event
-    {
-        apply(
-            state,
-            match event {
-                ToolbarEvent::Activated(value) => MenuEvent::Activated(value),
-                ToolbarEvent::Toggled { value, pressed } => MenuEvent::Checked {
-                    value,
-                    checked: pressed,
+    let registry = state.registry.clone();
+    let ctx = ui.ctx().clone();
+    catalog::with_tree(&registry, &ctx, |tree| {
+        let menus = [
+            MenuBarItem::new("file", "File", tree.file),
+            MenuBarItem::new("edit", "Edit", tree.edit),
+            MenuBarItem::new("view", "View", tree.view),
+        ];
+        if let Some(action) = MenuBar::new("studio-menus", &mut state.bar, &menus)
+            .accessible_name("Canal Studio menus")
+            .show(ui)
+            .action
+        {
+            activate(state, action);
+        }
+        ui.add_space(space::SM);
+        let tool = |key| {
+            registry
+                .toolbar_item(ui.ctx(), &key)
+                .expect("catalog action exists")
+        };
+        let tools = [
+            tool(Action::Save),
+            tool(Action::Undo),
+            tool(Action::Grid).separator_before(true),
+            ToolbarItem::action(Action::Export, "Export artwork")
+                .icon(dutchy_egui::Icon::Download)
+                .icon_only(false)
+                .menu(tree.exports),
+            tool(Action::Palette),
+        ];
+        if let Some(event) = Toolbar::new("studio-tools", &tools)
+            .accessible_name("Canal Studio tools")
+            .show(ui)
+            .event
+        {
+            activate(
+                state,
+                match event {
+                    ToolbarEvent::Activated(value) | ToolbarEvent::Toggled { value, .. } => value,
                 },
-            },
-        );
-    }
+            );
+        }
+        ui.add_space(space::MD);
+        ui.horizontal_wrapped(|ui| {
+            let out = SplitButton::new(
+                "studio-export",
+                "Export PNG",
+                &mut state.split,
+                tree.exports,
+            )
+            .size(ControlSize::Small)
+            .alternatives_name("Export alternatives")
+            .show(ui);
+            if out.primary_clicked {
+                activate(state, Action::Png);
+            }
+            if let Some(action) = out.action {
+                activate(state, action);
+            }
+            if ui
+                .add(
+                    Button::new("Find command")
+                        .size(ControlSize::Small)
+                        .variant(ButtonVariant::Outline),
+                )
+                .clicked()
+            {
+                state.palette.open = true;
+            }
+        });
+    });
     ui.add_space(space::LG);
-    preview(ui, state);
+    preview::show(ui, state);
     ui.add_space(space::MD);
     ui.add(
         Text::new(format!("{} · Saved {} times", state.last, state.saves))
@@ -115,72 +141,68 @@ pub fn show(ui: &mut Ui, state: &mut CommandState) {
         &mut state.accept,
         "Apply view changes",
     ));
-    ui.add(Text::new("File → Export artwork → Image format. The toolbar opens the same export commands. View checkmarks and the grid tool share your canvas settings.").size(TextSize::Sm).color(TextColor::Muted));
+    ui.add_space(space::MD);
+    let reserved = state.registry.shortcuts_except(&Action::Save);
+    let binding = &mut state.registry.get_mut(&Action::Save).unwrap().shortcut;
+    Field::new("Save shortcut").show(ui, |ui| {
+        KeyRecorder::new("studio-save", binding)
+            .accessible_name("Save shortcut")
+            .reserved(&reserved)
+            .size(ControlSize::Small)
+            .show(ui)
+            .response
+    });
+    ui.add(Text::new("Menus, tools and search share command metadata. Record a new Save shortcut; every hint follows the same binding.").size(TextSize::Sm).color(TextColor::Muted));
+    palette(state, ui.ctx());
 }
-
-fn apply(state: &mut CommandState, event: MenuEvent<Command>) {
-    match event {
-        MenuEvent::Checked { value, checked } => {
-            if state.accept {
-                match value {
-                    Command::Grid => state.grid = checked,
-                    Command::Rulers => state.rulers = checked,
-                    _ => {}
-                }
-                state.last = "View settings updated".into();
-            } else {
-                state.last = "View change declined".into();
-            }
+pub fn palette(state: &mut CommandState, ctx: &egui::Context) {
+    let registry = state.registry.clone();
+    catalog::with_tree(&registry, ctx, |tree| {
+        if let Some(out) = CommandPalette::new("studio-palette", &mut state.palette, tree.palette)
+            .shortcut(None)
+            .accessible_name("Canal Studio commands")
+            .show(ctx)
+            && let Some(action) = out.action
+        {
+            activate(state, action);
         }
-        MenuEvent::Activated(command) => {
-            state.last = match command {
-                Command::Save => {
-                    state.saves += 1;
-                    "Artwork saved"
-                }
-                Command::Png => "PNG export requested",
-                Command::Svg => "SVG export requested",
-                Command::Copy => "Copy requested",
-                _ => "Ready to create",
-            }
-            .into();
-        }
+    });
+}
+fn activate(state: &mut CommandState, action: Action) {
+    if let Some(request) = state.registry.request(&action) {
+        apply(state, request);
     }
 }
-
-fn preview(ui: &mut Ui, state: &CommandState) {
-    let p = Theme::from_context(ui.ctx()).palette;
-    egui::Frame::NONE
-        .fill(p.muted)
-        .stroke(Stroke::new(border::STANDARD, p.border))
-        .inner_margin(egui::Margin::same(space::XL as i8))
-        .show(ui, |ui| {
-            ui.set_min_size(vec2(ui.available_width(), space::XXL * 5.0));
-            let rect = egui::Rect::from_min_size(
-                ui.max_rect().min,
-                vec2(ui.available_width(), space::XXL * 5.0),
-            );
-            if state.grid {
-                let painter = ui.painter().with_clip_rect(rect);
-                for x in (0..(rect.width() / (space::XL * 2.0)) as usize)
-                    .map(|x| rect.left() + x as f32 * space::XL * 2.0)
-                {
-                    painter.line_segment(
-                        [pos2(x, rect.top()), pos2(x, rect.top() + space::XXL * 5.0)],
-                        Stroke::new(border::THIN, p.border),
-                    );
-                }
+fn apply(state: &mut CommandState, request: CommandRequest<Action>) {
+    if let Some(checked) = request.checked {
+        if state.accept {
+            match request.value {
+                Action::Grid => state.grid = checked,
+                Action::Rulers => state.rulers = checked,
+                _ => {}
             }
-            if state.rulers {
-                ui.painter().line_segment(
-                    [rect.min, rect.min + vec2(rect.width(), 0.0)],
-                    Stroke::new(border::ACCENT, p.primary),
-                );
+            state.registry.get_mut(&request.value).unwrap().checked = Some(checked);
+            state.last = "View settings updated".into();
+        } else {
+            state.last = "View change declined".into();
+        }
+    } else {
+        state.last = match request.value {
+            Action::Save => {
+                state.saves += 1;
+                "Artwork saved"
             }
-            ui.add_space(space::LG);
-            ui.add(Text::label("Canal Studio").color(TextColor::Primary));
-            ui.add(Text::heading("Make something sharp.").size(TextSize::Xl3));
-            ui.add(Text::new("Your commands. One connected workspace."));
-            ui.add_space(space::LG);
-        });
+            Action::Png => "PNG export requested",
+            Action::Svg => "SVG export requested",
+            Action::Copy | Action::CopySvg => "Copy requested",
+            Action::Palette => {
+                state.bar.close();
+                state.split = false;
+                state.palette.open = !state.palette.open;
+                "Find a command"
+            }
+            _ => "Ready to create",
+        }
+        .into();
+    }
 }

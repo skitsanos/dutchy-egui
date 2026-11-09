@@ -6,6 +6,7 @@
 pub use egui;
 
 pub mod calendar;
+pub mod commands;
 pub mod fonts;
 pub mod icons;
 #[cfg(feature = "url-images")]
@@ -19,6 +20,7 @@ pub mod tokens;
 pub mod validation;
 pub mod widgets;
 
+pub use commands::{Command, CommandRegistry, CommandRequest, CommandScope, ShortcutConflict};
 pub use icons::{Icon, IconPainter};
 pub use layout::{Container, CrossAlign, Flex, FlexDirection, ResponsiveGrid};
 pub use scribble::{
@@ -53,6 +55,7 @@ pub use widgets::{
     DataTable, DataTableResponse, TableAlign, TableColumn, TableColumnWidth, TableDensity,
     TableHeader, TableRowResponse, TableSelection, TableSort, TableSortDirection,
 };
+pub use widgets::{KeyRecorder, KeyRecorderResponse, SplitButton, SplitButtonResponse};
 pub use widgets::{
     Toast, ToastAppearance, ToastDismissal, ToastEvent, ToastId, ToastPosition, ToastQueue,
     ToastResponse, ToastVariant, Toasts, ToastsResponse,

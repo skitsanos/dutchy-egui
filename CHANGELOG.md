@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.28 — 2026-11-09
+
+- Add host-owned CommandRegistry with typed requests, scoped/conflict-aware
+  shortcut dispatch and shared menu/toolbar hints (DS-087).
+- Add SplitButton and KeyRecorder with native keyboard behavior (DS-088/089).
+- Search nested command leaves with stable keyed paths and breadcrumbs (DS-090).
+- Connect Todo and Canal Studio to shared commands and editable bindings (DS-091).
+- Add CI and reusable full qualification/package inspection scripts (DS-092).
+- Review fixes: focused controls keep bare activation keys and the recorder
+  needs a modifier for them; macOS Control stays in chords and matching is
+  exact; split buttons fade without a seam and keep focused chevrons; Linux
+  snapshots get a bounded allowance; roadmap and coverage updated (DS-093–DS-097).
+
 ## 1.0.27 — 2026-11-09
 
 - In DutchyTodo, invalidate old Undo requests and transient record bindings

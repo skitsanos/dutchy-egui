@@ -42,7 +42,7 @@ to read in one sitting and complete enough to feel like a product.
 ## DutchyTodo
 
 The smallest complete application and the tutorial companion to
-[getting started](getting-started.md). Buildable with shipped components.
+[getting started](getting-started.md). Shipped in 1.0.26, with import/Undo hardening in 1.0.27.
 
 - **Scope.** Projects in a sidebar with task counts (Badge); a task list with
   Checkbox completion, title and notes editing in a Drawer (InlineEdit when it
@@ -50,8 +50,10 @@ The smallest complete application and the tutorial companion to
   active and done, SearchInput, completion Progress and Stats, EmptyState per
   filter, Toast with undo for delete and complete, Kbd hints, and a Modal
   confirmation when deleting a project (Dialog preset when it lands).
-- **Keyboard.** N creates, Enter edits, Space toggles, Delete removes, Escape
-  closes editors; focus returns to the list row.
+- **Keyboard.** N creates by default, Enter edits, Space toggles, Delete removes,
+  Escape closes editors; focus returns to the list row. The 1.0.28
+  integration adds Command/Control+F search, Command/Control+K discovery and a
+  Shortcuts drawer for rebinding application commands.
 - **State.** An in-memory keyed store owned by the application, with optional
   import and export through the existing `rfd` dialog.
 - **Limits.** No synchronisation, recurring tasks, reminders or notifications.
@@ -65,9 +67,11 @@ The smallest complete application and the tutorial companion to
   `u64::MAX - 1`; the maximum value is reserved for exhaustion. Import errors
   leave the current list intact, and exhausted creation preserves drafts with
   an error message. See the [import safety verification](verification-todo-import-safety.md).
-  Kbd hints
-  sit in the status strip and the task search has no global shortcut. The
-  support module ships a theme switcher, header, sidebar and status-strip
+  Kbd hints sit in the status strip. The 1.0.28 command integration
+  shares live hints, availability and bindings across the header, palette,
+  sidebar and New task split action; file operations keep their busy gate.
+  See [command workflow verification](verification-command-workflow.md).
+  The support module ships a theme switcher, header, sidebar and status-strip
   frames, a seeded generator with fictional people, and capture hooks
   (`DUTCHY_EXAMPLE_ZOOM`, `DUTCHY_EXAMPLE_MODE`, `DUTCHY_EXAMPLE_CAPTURE`) that
   render a native frame at a chosen scale and mode for verification records;
@@ -76,8 +80,8 @@ The smallest complete application and the tutorial companion to
 
 ## DutchyAgent
 
-A chat client for an OpenAI-compatible chat completions endpoint with a mock
-provider. Buildable with shipped components; the flagship for Markdown and
+Planned after the 1.0.28 command integration release. A chat client for an
+OpenAI-compatible chat completions endpoint with a mock provider; the flagship for Markdown and
 CodeBlock.
 
 - **Scope.** Conversation list in the sidebar; a transcript of user and
@@ -138,11 +142,14 @@ application.
 
 ## Sequence
 
-1. Example scaffolding (`[[example]]` entries, shared shell, test hooks) and
-   DutchyTodo.
-2. DutchyAgent, including the dev-dependency additions and the mock provider.
-3. DutchyMail together with the command-plumbing and workbench milestones.
-4. DutchyDash together with the dashboards milestone.
+1. Shipped: example scaffolding and DutchyTodo (1.0.26), hardened in 1.0.27.
+2. Shipped in 1.0.28: shared commands,
+   shortcut editing and nested search in Todo and Canal Studio; see the
+   [implementation plan](plan-1.0.28.md). Hosted CI runs after the approved push.
+3. DutchyAgent with the offline mock provider and optional configured transport.
+4. Workbench releases: List/selection first, then TreeView/SplitPane and editing
+   helpers; DutchyMail composes those controls once available.
+5. DutchyDash together with the dashboards milestone.
 
 Each lands in its own release with its ticket, verification record and
 README line, and never pushes without authorization.

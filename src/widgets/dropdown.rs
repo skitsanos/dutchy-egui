@@ -262,6 +262,9 @@ impl<'a, T: Clone> Dropdown<'a, T> {
                 node.push_controlled(menu.response.id.accesskit_id());
             }
         });
+        if *self.open {
+            crate::commands::dispatch::mark_overlay(ui.ctx());
+        }
         if initially_open != *self.open {
             trigger.mark_changed();
             ui.ctx().request_repaint();

@@ -1,0 +1,7 @@
+# Image baselines are rendered with macOS Metal and compared strictly there;
+# the local macOS gate stays the authoritative visual check.
+# Linux software Vulkan (the CI quality job) rasterizes some edges one pixel
+# column differently: a 2026-11-09 arm64 rehearsal measured at most 234
+# differing pixels in a snapshot. Allow a bounded count on Linux only.
+[linux]
+max_failed_pixels = 512

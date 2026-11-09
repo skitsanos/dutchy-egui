@@ -1,6 +1,7 @@
 //! Tests run by `cargo test --all-features` through the `[[example]]` entry:
 //! store and format units, keyboard flows and two image baselines.
 
+mod commands;
 mod format;
 mod imports;
 mod keyboard;
@@ -23,6 +24,7 @@ fn harness_with(mut app: App, accent: Accent, mode: Mode, scale: f32) -> Harness
     app.theme.reduced_motion = true;
     let theme = app.theme.theme();
     let mut h = Harness::builder()
+        .with_os(egui::os::OperatingSystem::Mac)
         .with_size([1120.0, 900.0])
         .with_pixels_per_point(scale)
         .with_render_cursor(false)

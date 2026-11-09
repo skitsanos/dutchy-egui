@@ -12,6 +12,7 @@ mod support;
 
 mod actions;
 mod app;
+mod commands;
 mod data;
 mod editor;
 mod format;

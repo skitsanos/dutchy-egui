@@ -126,6 +126,7 @@ impl<'a> ColorPicker<'a> {
             .fill(p.background)
             .stroke(Stroke::new(border::STANDARD, p.border))
             .inner_margin(Margin::same(space::LG as i8));
+        crate::commands::dispatch::mark_overlay(ui.ctx());
         let mut open = state.open;
         let done = egui::Popup::from_response(trigger)
             .id(id.with("popup"))

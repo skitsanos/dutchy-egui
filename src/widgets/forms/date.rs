@@ -234,7 +234,8 @@ impl<'a> DatePicker<'a> {
             );
             // Hang the grid below the whole field, aligned with its start; the
             // button only toggles it.
-            let outcome =
+            let outcome = {
+                crate::commands::dispatch::mark_overlay(ui.ctx());
                 egui::Popup::new(id.with("calendar"), ui.ctx().clone(), field, ui.layer_id())
                     .anchor_widget(button.id)
                     .align(egui::RectAlign::BOTTOM_START)
@@ -243,7 +244,8 @@ impl<'a> DatePicker<'a> {
                     .gap(space::XS)
                     .frame(frame)
                     .show(|ui| calendar_grid::show(ui, id, value, today, bounds))
-                    .map(|inner| inner.inner);
+            }
+            .map(|inner| inner.inner);
             if let Some(Outcome::Selected(date)) = outcome {
                 changed = self.commit(Some(date));
                 open = false;

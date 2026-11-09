@@ -10,6 +10,7 @@ use egui_kittest::{Harness, SnapshotResults, kittest::Queryable};
 #[test]
 fn showcase_shares_checked_values_between_view_menu_and_toolbar() {
     let mut h = Harness::builder()
+        .with_os(egui::os::OperatingSystem::Mac)
         .with_size([1000.0, 650.0])
         .with_context_setup(|ctx| common::install(ctx, Theme::default()))
         .build_ui_state(
@@ -53,6 +54,7 @@ fn application_menus_and_nested_exports_render_at_three_themes_and_scales() {
     ] {
         let theme = Theme::new(accent, mode).with_reduced_motion(true);
         let mut h = Harness::builder()
+            .with_os(egui::os::OperatingSystem::Mac)
             .with_size([1100.0, 660.0])
             .with_pixels_per_point(scale)
             .with_render_cursor(false)
@@ -61,7 +63,9 @@ fn application_menus_and_nested_exports_render_at_three_themes_and_scales() {
             } else {
                 egui::Theme::Dark
             })
-            .with_context_setup(move |ctx| common::install(ctx, theme))
+            .with_context_setup(move |ctx| {
+                common::install(ctx, theme);
+            })
             .build_ui_state(
                 |ui, state: &mut command_surfaces::CommandState| {
                     ui.painter().rect_filled(
@@ -106,6 +110,7 @@ fn application_menus_and_nested_exports_render_at_three_themes_and_scales() {
 #[test]
 fn submenus_flip_and_stay_inside_a_narrow_viewport() {
     let mut h = Harness::builder()
+        .with_os(egui::os::OperatingSystem::Mac)
         .with_size([240.0, 220.0])
         .with_context_setup(|ctx| common::install(ctx, Theme::default().with_reduced_motion(true)))
         .build_ui(|ui| {

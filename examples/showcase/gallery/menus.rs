@@ -33,7 +33,15 @@ impl MenuState {
             self.actions += 1;
         }
     }
-    pub fn commands(&mut self, ctx: &egui::Context) {
+    pub fn commands(&mut self, ctx: &egui::Context, studio: bool) {
+        if studio {
+            self.palette.open = false;
+            return;
+        }
+        if self.rich.palette.open {
+            self.rich.palette.open = false;
+            super::command_surfaces::palette(&mut self.rich, ctx);
+        }
         if let Some(result) =
             CommandPalette::new("showcase-commands", &mut self.palette, &items()).show(ctx)
         {

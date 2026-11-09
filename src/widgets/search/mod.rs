@@ -1,5 +1,6 @@
 mod keys;
 mod results;
+pub(crate) mod tree;
 
 use egui::{Context, Id, IdSalt};
 pub(crate) use keys::{SearchKeys, input_metadata};

@@ -2,7 +2,7 @@
 
 use crate::{
     app::{App, Focus},
-    format,
+    commands::{self, Action},
 };
 use dutchy_egui::{
     Badge, BadgeVariant, Button, ButtonVariant, EmptyState, EmptyStateVariant, Input, Text,
@@ -138,7 +138,7 @@ fn actions(ui: &mut Ui, app: &mut App) {
             )
             .clicked()
         {
-            app.io.import(ui.ctx());
+            commands::execute(app, Action::Import, None, ui.ctx());
         }
         if ui
             .add(
@@ -149,9 +149,7 @@ fn actions(ui: &mut Ui, app: &mut App) {
             )
             .clicked()
         {
-            let text = format::export(&app.store);
-            let tasks = app.store.tasks().count();
-            app.io.export(ui.ctx(), text, tasks);
+            commands::execute(app, Action::Export, None, ui.ctx());
         }
     });
     ui.add_space(space::SM);
