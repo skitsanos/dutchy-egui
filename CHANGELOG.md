@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Documentation: rejoin the Markdown and CodeBlock rows to the coverage matrix
+  (DS-079), restore the upstream line endings of the Display font licence
+  (DS-080) and record the independent review of the DS-073 to DS-076 menu work.
+
 ## 1.0.25 — 2026-11-08
 
 - Documentation: state that the actions, Markdown and CodeBlock work shipped in
