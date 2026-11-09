@@ -21,6 +21,9 @@
   opening, icon-only menu buttons and diagonal pointer paths (DS-084).
 - Disable egui's scroll-edge fade gradient in the shared theme style so clipped
   content keeps a flat fill in every Dutchy scroll area (DS-078).
+- Documentation: rejoin the Markdown and CodeBlock rows to the coverage matrix
+  (DS-079), restore the upstream line endings of the Display font licence
+  (DS-080) and record the independent review of the DS-073 to DS-076 menu work.
 
 ## 1.0.25 — 2026-11-08
 
