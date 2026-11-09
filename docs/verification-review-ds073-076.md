@@ -1,5 +1,7 @@
 # Verification — independent review of the richer-menu work (DS-073 to DS-076)
 
+Shipped in release 1.0.26; see the [release record](verification-release-1.0.26.md).
+
 Date: 2026-11-09. Subject: the uncommitted working tree of
 `ticket/ds-073-richer-menus` (based on main `5d68a93`, version 1.0.25) that
 implements the richer-menus guide (`docs/richer-menus.md`) and the follow-up tickets

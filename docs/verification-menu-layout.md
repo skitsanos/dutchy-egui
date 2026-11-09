@@ -1,5 +1,7 @@
 # Verification — menu overlay layout
 
+Shipped in release 1.0.26; see the [release record](verification-release-1.0.26.md).
+
 Date: 2026-11-09. [DS-076](issues/DS-076.md), following the
 [focus and cascade review](verification-menu-polish.md). Work remains local on
 `ticket/ds-073-richer-menus`, based on `5d68a93`, version 1.0.25. No dependency,

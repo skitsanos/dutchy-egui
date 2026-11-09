@@ -1,5 +1,7 @@
 # Verification — menu focus and cascade review
 
+Shipped in release 1.0.26; see the [release record](verification-release-1.0.26.md).
+
 Subsequent layout correction: [DS-076](issues/DS-076.md) and its
 [verification report](verification-menu-layout.md) cover opening menus adding
 an extra layout gap. The results below describe the preceding source state.

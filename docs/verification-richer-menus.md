@@ -1,5 +1,7 @@
 # Verification — richer menus
 
+Shipped in release 1.0.26; see the [release record](verification-release-1.0.26.md).
+
 Historical DS-073 qualification before the follow-up review. See
 [DS-074/075 verification](verification-menu-polish.md) for the isolated native
 Tab cause, corrected cascades and current check results. The totals and native

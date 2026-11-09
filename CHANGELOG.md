@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.26 — 2026-11-09
 
 - Add controlled checked menu actions and typed MenuEvent requests, nested
   submenus, a host-controlled in-window MenuBar and Toolbar menu buttons (DS-073).
@@ -19,11 +19,17 @@
 - Let Escape release focus from closed menu triggers as on other widgets,
   register menu-bar entries once with their menu-item role, and cover Up
   opening, icon-only menu buttons and diagonal pointer paths (DS-084).
+- Add the DutchyTodo example application and shared example scaffolding
+  (`examples/support`): keyed tasks, Drawer editing, filters, search, Toast
+  undo, full keyboard flow and tab-separated import/export, run as Cargo
+  example tests (DS-077).
 - Disable egui's scroll-edge fade gradient in the shared theme style so clipped
   content keeps a flat fill in every Dutchy scroll area (DS-078).
-- Documentation: rejoin the Markdown and CodeBlock rows to the coverage matrix
-  (DS-079), restore the upstream line endings of the Display font licence
-  (DS-080) and record the independent review of the DS-073 to DS-076 menu work.
+- Documentation: rewrite the component roadmap around the next milestones,
+  plan the example applications, rejoin the Markdown and CodeBlock rows to the
+  coverage matrix (DS-079), restore the upstream line endings of the Display
+  font licence (DS-080), and record the independent review of the menu work
+  and the 1.0.26 release qualification.
 
 ## 1.0.25 — 2026-11-08
 

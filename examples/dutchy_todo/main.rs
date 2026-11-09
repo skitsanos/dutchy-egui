@@ -46,7 +46,6 @@ fn main() -> eframe::Result {
             }
             app.capture = support::capture::Capture::from_env();
             dutchy_egui::install(&cc.egui_ctx, app.theme.theme());
-            support::theme::flat_scrolling(&cc.egui_ctx);
             Ok(Box::new(app))
         }),
     )

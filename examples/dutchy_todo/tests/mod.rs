@@ -31,7 +31,6 @@ fn harness_with(mut app: App, accent: Accent, mode: Mode, scale: f32) -> Harness
         })
         .build_eframe(move |cc| {
             dutchy_egui::install(&cc.egui_ctx, theme);
-            crate::support::theme::flat_scrolling(&cc.egui_ctx);
             app
         });
     h.run();

@@ -30,10 +30,9 @@ impl ThemeSettings {
         Theme::new(self.accent, self.mode).with_reduced_motion(self.reduced_motion)
     }
 
-    /// Install the theme on a context and keep scrolling flat.
+    /// Install the theme on a context.
     pub fn apply(self, ctx: &Context) {
         self.theme().apply(ctx);
-        flat_scrolling(ctx);
     }
 
     /// Short accent label for compact controls.
@@ -90,11 +89,4 @@ impl ThemeSettings {
         }
         changed
     }
-}
-
-/// egui 0.37 fades clipped scroll content behind a 20-point gradient by
-/// default. The design system has no gradients, and `Theme::style` does not
-/// zero this yet, so the examples do it after every theme change.
-pub fn flat_scrolling(ctx: &Context) {
-    ctx.all_styles_mut(|style| style.spacing.scroll.fade.strength = 0.0);
 }

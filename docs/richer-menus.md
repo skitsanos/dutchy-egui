@@ -1,6 +1,6 @@
 # Richer menus and application command surfaces
 
-Local feature work after 1.0.25 (DS-073). The implementation extends Menu,
+Shipped in 1.0.26 (DS-073). The implementation extends Menu,
 Dropdown and Toolbar without a new dependency. Flat command lists and their
 `.action` handlers remain supported.
 
@@ -111,8 +111,8 @@ placement, inverse surfaces and a working command-surface showcase.
 Run formatting, all-feature/minimal tests, all three required Clippy profiles,
 strict rustdoc, feature-profile/WASM/MSRV checks, native showcase verification
 and the actual crate archive inspection. Record supported scope and remaining
-limits before marking DS-073 resolved. Keep version 1.0.25 until a release is
-explicitly requested.
+limits before marking DS-073 resolved. The work shipped in 1.0.26; see the
+[release record](verification-release-1.0.26.md).
 
 The Menus and Toolbars showcase pages both include Canal Studio: File/Edit/View
 menus, a three-level export tree, connected grid/ruler settings and a toolbar

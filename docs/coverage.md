@@ -12,6 +12,8 @@ extends beyond the web inventory; see the [component roadmap](component-roadmap.
 Version 1.0.23 adds MediaCard and SearchInput. Version 1.0.24 adds
 IconButton, ToggleButton and Toolbar; see [their contract](actions-toolbars.md).
 Version 1.0.24 also integrates [Markdown and CodeBlock](markdown.md).
+Version 1.0.26 adds MenuBar, checked and nested menus and Toolbar menu
+buttons; see [richer menus](richer-menus.md).
 
 | Web registry group | Status | Supported scope / next work |
 | --- | --- | --- |
@@ -38,7 +40,7 @@ Version 1.0.24 also integrates [Markdown and CodeBlock](markdown.md).
 | Image | Advanced components | Native source/texture presentation, sharp frames, explicit aspect/contain/cover, caption/source, busy/error/retry, keyed responsive galleries and constrained modal lightboxes with keyboard navigation, caption scrolling and focus return. Optional `url-images` installs HTTP(S) PNG/JPEG; other URI/byte loaders stay host-owned. No zoom/pan, slideshow, masonry or drag reorder. |
 | Breadcrumbs | Interaction components | Keyed destinations, current-page metadata, slash/chevron, icon root, muted bar, wrapping and collapsed-ancestor menus; host-owned routing and collapse policy |
 | Flex | Application essentials | Token gaps, row/column/reverse, row wrapping, native cross alignment; centered containers and keyed responsive grids. CSS baseline/distribution modes are outside this scope. |
-| Menu | Interaction components | Keyed actions, groups, separators, hints/icons and disabled/destructive states. Unreleased DS-073 adds controlled checks, nested submenus, viewport placement and one-level keyboard dismissal. Radio/mixed checks remain outside scope. |
+| Menu | Interaction components | Keyed actions, groups, separators, hints/icons and disabled/destructive states. 1.0.26 adds controlled checks, nested submenus, viewport placement and one-level keyboard dismissal. Radio/mixed checks remain outside scope. |
 | Text | Visual proof | Three roles; four actual weights; 12 sizes; tracking, leading, color, Unicode uppercase, italics, wrapping |
 | Scribble | Advanced components | Pointer/dot and keyboard drawing, host-owned bounded strokes/history, undoable clear, fixed paper, captured brushes, read-only/disabled, immutable snapshots, SVG/CPU raster/optional PNG, opt-in pointer smoothing and native demo Save As. No pressure/tilt, multitouch, eraser, tapered ends, history persistence or shape editor. |
 | Textarea | Application essentials (partial) | Multiline, row sizing, Unicode count/limit, read-only/disabled and field feedback. Interactive resize remains planned. |
@@ -53,8 +55,8 @@ Version 1.0.24 also integrates [Markdown and CodeBlock](markdown.md).
 | MediaCard | Port addition | Image/URI/byte sources, category/title/description, independent preview/metadata/save/retry, host-owned saved state, responsive width and native loading/error pipeline. No custom metadata slots or masonry. |
 | SearchInput | Port addition | Native text/IME/clipboard, magnifier, conditional clear with focus return, optional Kbd hint, all sizes, disabled/read-only, char limits and narrow adaptation. Filtering, submission and shortcuts remain host-owned. |
 | ToggleButton | Port addition (1.0.24) | Host bool, text/icon/icon-only, pressed metadata, stable name/identity, pointer/Enter/Space, disabled/busy and shared variants/sizes. Two-state only. |
-| Toolbar | Port addition (1.0.24) | Typed action/toggle requests, named/oriented group, one remembered Tab stop, arrow/Home/End focus, disabled/busy skipping, separators, horizontal overflow/wrap, vertical layout and focus repair. Unreleased DS-073 adds shared-tree menu buttons. Arbitrary child inputs and shortcuts stay host-owned. |
-| MenuBar | Port addition (Unreleased) | Host-controlled in-window menus, one remembered Tab stop, switching, checked/nested commands, popup metadata and dynamic focus repair. No operating-system menu integration or mnemonics. |
+| Toolbar | Port addition (1.0.24) | Typed action/toggle requests, named/oriented group, one remembered Tab stop, arrow/Home/End focus, disabled/busy skipping, separators, horizontal overflow/wrap, vertical layout and focus repair. 1.0.26 adds shared-tree menu buttons. Arbitrary child inputs and shortcuts stay host-owned. |
+| MenuBar | Port addition (1.0.26) | Host-controlled in-window menus, one remembered Tab stop, switching, checked/nested commands, popup metadata and dynamic focus repair. No operating-system menu integration or mnemonics. |
 | Markdown | Port addition (1.0.24) | CommonMark plus tables, tasks, strikethrough, heading anchors and callouts; token typography, named focusable links, native/report policies, fragment scrolling, lists, quotes, figures and cached parsing. No footnotes, math, raw HTML rendering, inline image widgets or column spans. |
 | CodeBlock | Port addition (1.0.24) | Selectable code, language label, copy feedback, line numbers, host highlight spans, wrapping/horizontal scrolling and height cap. No bundled highlighter or diff view. |
 
