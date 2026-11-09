@@ -1,4 +1,5 @@
-//! DutchyAgent: an offline chat application exercising Markdown and CodeBlock.
+//! DutchyAgent: a chat application with an offline mock and an optional OpenAI
+//! provider, exercising Markdown and CodeBlock.
 mod app;
 mod chat;
 mod composer;

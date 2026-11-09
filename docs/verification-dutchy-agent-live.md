@@ -51,6 +51,7 @@ settings, both response modes, HTTP errors and cancellation without external API
 
 Delivery uses a bounded channel; request/event/output sizes are capped at 2 MiB,
 with a 90-second response-body timeout; connection setup uses transport defaults.
+DS-103 later replaced that total body timeout with a 5-minute idle watchdog.
 Stop prevents local delivery immediately; transport aborts at its next callback
 or transport timeout and does not promise immediate server
 cancellation or billing termination. There is no automatic history compaction.

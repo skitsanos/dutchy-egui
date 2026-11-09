@@ -7,6 +7,9 @@ use sse::Sse;
 pub(crate) const MAX_BYTES: usize = 2 * 1024 * 1024;
 const INVALID: &str = "OpenAI returned an invalid response. Please retry.";
 const TRUNCATED: &str = "The OpenAI connection ended before the reply completed. Please retry.";
+pub(crate) const OUTPUT_LIMIT: &str = "OpenAI reached this example's output limit before finishing. Choose a lower effort or ask for a shorter reply.";
+pub(crate) const FILTERED: &str = "OpenAI's content filter stopped this reply.";
+pub(crate) const INCOMPLETE: &str = "OpenAI returned an incomplete reply. Please retry.";
 
 pub(crate) fn body(request: &Request) -> Result<Vec<u8>, &'static str> {
     if request.options.model.trim().is_empty() {
@@ -24,13 +27,23 @@ pub(crate) fn body(request: &Request) -> Result<Vec<u8>, &'static str> {
     let body = serde_json::to_vec(&json!({
         "model":request.options.model,"instructions":request.options.system_prompt,
         "input":input,"reasoning":{"effort":request.options.effort},
-        "stream":request.options.streaming,"store":false,"max_output_tokens":2048,
+        "stream":request.options.streaming,"store":false,
+        "max_output_tokens":output_limit(&request.options.effort),
     }))
     .map_err(|_| INVALID)?;
     if body.len() > MAX_BYTES {
         return Err("This conversation is too large. Start a new conversation.");
     }
     Ok(body)
+}
+
+/// Reasoning tokens count toward the output limit, so higher effort gets more room.
+fn output_limit(effort: &str) -> u32 {
+    match effort {
+        "high" => 8_192,
+        "medium" => 4_096,
+        _ => 2_048,
+    }
 }
 
 pub(crate) struct Decoder {
@@ -114,12 +127,15 @@ impl Decoder {
     }
     fn event(&mut self, event: &Value) -> Vec<Change> {
         match event["type"].as_str() {
-            Some("response.output_text.delta"|"response.refusal.delta") => {
-                match event["delta"].as_str() { Some(text)=>self.delta(text),None=>self.fail(INVALID) }
+            Some("response.output_text.delta" | "response.refusal.delta") => {
+                match event["delta"].as_str() {
+                    Some(text) => self.delta(text),
+                    None => self.fail(INVALID),
+                }
             }
-            Some("response.completed") => self.complete(&event["response"]),
-            Some("response.incomplete") => self.fail("OpenAI could not finish this reply within its output limit. Please retry or simplify the request."),
-            Some("response.failed"|"error") => self.fail("OpenAI could not complete this reply. Check the model settings and retry."),
+            Some("response.completed" | "response.incomplete") => self.complete(&event["response"]),
+            Some("response.failed" | "error") => self
+                .fail("OpenAI could not complete this reply. Check the model settings and retry."),
             Some(_) => Vec::new(),
             None => self.fail(INVALID),
         }
@@ -136,10 +152,9 @@ impl Decoder {
             vec![Change::Delta(text.to_owned())]
         }
     }
+    /// Finish from a final response object, in either mode. Text that only
+    /// the final object carries is kept, even when the reply is incomplete.
     fn complete(&mut self, response: &Value) -> Vec<Change> {
-        if response["status"] != "completed" {
-            return self.fail("OpenAI returned an incomplete reply. Please retry.");
-        }
         let mut changes = Vec::new();
         if !self.text_seen {
             changes.extend(self.delta(&text(response)));
@@ -147,11 +162,15 @@ impl Decoder {
         if self.terminal {
             return changes;
         }
-        if !self.text_seen {
-            return self.fail("OpenAI returned no text response. Please retry.");
-        }
-        self.terminal = true;
-        changes.push(Change::Complete(usage(response)));
+        changes.extend(match response["status"].as_str() {
+            Some("completed") if self.text_seen => {
+                self.terminal = true;
+                vec![Change::Complete(usage(response))]
+            }
+            Some("completed") => self.fail("OpenAI returned no text response. Please retry."),
+            Some("incomplete") => self.fail(incomplete(response)),
+            _ => self.fail(INCOMPLETE),
+        });
         changes
     }
     fn fail(&mut self, message: &'static str) -> Vec<Change> {
@@ -160,6 +179,13 @@ impl Decoder {
     }
 }
 
+fn incomplete(response: &Value) -> &'static str {
+    match response["incomplete_details"]["reason"].as_str() {
+        Some("max_output_tokens") => OUTPUT_LIMIT,
+        Some("content_filter") => FILTERED,
+        _ => INCOMPLETE,
+    }
+}
 fn text(response: &Value) -> String {
     let mut text = String::new();
     for item in response["output"].as_array().into_iter().flatten() {

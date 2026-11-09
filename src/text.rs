@@ -192,7 +192,18 @@ impl Widget for Text<'_> {
         }
         // Uppercase is a visual treatment; assistive technology gets the text as written.
         let name = self.uppercase.then(|| self.text.to_string());
-        let response = add_ragged(ui, self.layout_job(&theme, ui.available_width()));
+        let mut job = self.layout_job(&theme, ui.available_width());
+        // egui continues text in a left-to-right wrapping row and raises its
+        // first line to the row height. Place it there the way egui places its
+        // own labels (centered by default). Elsewhere the format is unchanged.
+        let layout = ui.layout();
+        if layout.main_wrap() && layout.main_dir() == egui::Direction::LeftToRight {
+            let valign = ui.text_valign();
+            for section in &mut job.sections {
+                section.format.valign = valign;
+            }
+        }
+        let response = add_ragged(ui, job);
         if let Some(name) = &name {
             name_as_written(&response, name);
         }

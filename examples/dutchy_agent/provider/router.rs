@@ -13,12 +13,12 @@ impl Router {
     pub fn start(&mut self, request: Request, mode: Mode, key: Option<&str>, now: f64) {
         match mode {
             Mode::Mock => self.mock.start(request, now),
-            Mode::OpenAi => self.live.start(request, key),
+            Mode::OpenAi => self.live.start(request, key, now),
         }
     }
     pub fn poll(&mut self, now: f64) -> Vec<Event> {
         let mut events = self.mock.poll(now);
-        events.extend(self.live.poll());
+        events.extend(self.live.poll(now));
         events
     }
     pub fn cancel(&mut self, id: u64) {
@@ -26,6 +26,9 @@ impl Router {
         self.live.cancel(id);
     }
     pub fn next_due(&self) -> Option<f64> {
-        self.mock.next_due()
+        match (self.mock.next_due(), self.live.next_due()) {
+            (Some(mock), Some(live)) => Some(mock.min(live)),
+            (mock, live) => mock.or(live),
+        }
     }
 }

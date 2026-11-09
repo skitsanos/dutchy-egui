@@ -48,9 +48,11 @@ generic feedback without echoing their contents.
 
 Requests use the fixed HTTPS Responses API endpoint at
 `https://api.openai.com/v1/responses`. Each sends the current system instruction
-and completed conversation messages, `reasoning.effort`, `store: false`, and a
-2,048-token output limit. `store: false` is a request setting, not a promise of
-zero data retention. No custom endpoint, temperature control or tools are exposed.
+and completed conversation messages, `reasoning.effort`, `store: false`, and an
+output limit that grows with effort: 2,048 tokens for Low, 4,096 for Medium and
+8,192 for High, because reasoning tokens count toward it. A reply that reaches
+the limit keeps its text and says so, in both modes. `store: false` is a request
+setting, not a promise of zero data retention. No custom endpoint, temperature control or tools are exposed.
 
 Streaming is on by default. Turning it off buffers a JSON response instead.
 The bounded SSE decoder handles fragmented Unicode, emits public text/refusal
@@ -61,12 +63,18 @@ callbacks wake egui and deliver through a bounded channel, without an async runt
 
 Usage is labelled **OpenAI tokens**, with the returned model and actual API
 counts. Missing usage is unavailable; it is never estimated. Text, request bodies
-and buffered events are limited to 2 MiB. The response-body timeout is 90 seconds;
-connection setup uses the HTTP transport's defaults, not an application-wide deadline.
-Oversized conversations require a new conversation; there is no automatic compaction.
+and buffered events are limited to 2 MiB. Oversized conversations require a new
+conversation; there is no automatic compaction.
+
+A watchdog stops waiting once OpenAI has sent nothing for 5 minutes, whether
+before the response headers or between stream events. It measures silence, so a
+long reply that keeps streaming is never cut off. Errors say whether OpenAI could
+not be reached, the connection broke after the reply started, or the watchdog
+stopped waiting. The transport's own body timeout is a 15-minute total that only
+ends reader threads the watchdog has abandoned.
 
 Stop immediately discards further local delivery and preserves partial text.
-The HTTP reader aborts at its next callback or transport timeout. This does not guarantee
+The HTTP reader stops at its next callback or when its connection closes. This does not guarantee
 immediate server cancellation or that billing has stopped. Deleting a conversation
 or quitting also discards delivery for its pending requests.
 
@@ -75,13 +83,16 @@ or quitting also discards delivery for its pending requests.
 The header pairs the title with a provider badge. **New chat** and the named
 settings icon sit on the right; narrow windows use a named plus icon for New chat.
 Sidebar conversation names share a left inset, with long names truncated inside
-their full-width targets. The [shell verification](verification-dutchy-agent-shell.md)
+their full-width targets. Each row reports whether it is selected, and a row with
+a reply running is described as such to assistive technology. The [shell verification](verification-dutchy-agent-shell.md)
 records the layout and focus checks.
 
-Write a message or use **Try the Rust example** with the selected provider.
+Write a message or use **Try the Rust example** with the selected provider; the
+example is sent on its own and leaves any typed draft in place.
 Enter sends; Shift+Enter adds a line. IME composition keeps Enter until committed.
 Command/Control+N starts another conversation, Command/Control+comma opens settings,
-and Command/Control+period stops the current reply. All actions have buttons.
+and Command/Control+period stops the current reply. Closing settings returns focus to
+where it was opened from, or to the message field. All actions have buttons.
 
 Conversations retain independent drafts and streams while another is selected.
 Retry replaces the latest stopped/failed reply without duplicating the user turn,

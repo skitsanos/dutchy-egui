@@ -30,7 +30,7 @@ pub(crate) fn show(ui: &mut Ui, app: &mut App) {
                         } else {
                             ButtonVariant::Ghost
                         };
-                        if ui
+                        let row = ui
                             .add(
                                 Button::new(label)
                                     .variant(variant)
@@ -38,9 +38,14 @@ pub(crate) fn show(ui: &mut Ui, app: &mut App) {
                                     .full_width(true)
                                     .text_align(egui::Align::Min),
                             )
-                            .accessible_name(format!("Open conversation: {title}"))
-                            .clicked()
-                        {
+                            .accessible_name(format!("Open conversation: {title}"));
+                        row.ctx.accesskit_node_builder(row.id, |node| {
+                            node.set_selected(id == app.chat.selected);
+                            if busy {
+                                node.set_description("Reply running");
+                            }
+                        });
+                        if row.clicked() {
                             app.chat.select(id);
                             app.focus_composer = true;
                         }

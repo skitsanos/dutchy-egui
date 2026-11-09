@@ -128,7 +128,12 @@ impl App {
         for request in commands.dispatch(ctx) {
             match request.value {
                 Action::New => self.new_chat(),
-                Action::Settings => self.settings_open = true,
+                Action::Settings => {
+                    // Return to where the shortcut was pressed, not to an
+                    // icon clicked earlier; fall back to the message field.
+                    self.settings_return = ctx.memory(|m| m.focused()).or(self.composer_id);
+                    self.settings_open = true;
+                }
                 Action::Stop => {
                     self.chat.stop();
                 }

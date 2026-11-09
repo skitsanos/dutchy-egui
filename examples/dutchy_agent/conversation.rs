@@ -87,8 +87,13 @@ pub(crate) fn show(ui: &mut Ui, app: &mut App, now: f64) {
         app.retry(now);
     }
     if sample {
-        app.chat.current_mut().draft = "Show a Rust example".into();
+        // The sample is a one-off request: keep anything the user has typed.
+        let draft = std::mem::replace(
+            &mut app.chat.current_mut().draft,
+            "Show a Rust example".into(),
+        );
         app.send(now);
+        app.chat.current_mut().draft = draft;
     }
     if link {
         app.toasts.push(dutchy_egui::Toast::new(
@@ -144,7 +149,7 @@ fn show_message(ui: &mut Ui, message: &Message, retryable: bool) -> (bool, bool)
                     .show(ui)
                     .links
                     .is_empty();
-            } else {
+            } else if !message.text.is_empty() {
                 ui.add(Text::new(&message.text));
             }
             match message.status {

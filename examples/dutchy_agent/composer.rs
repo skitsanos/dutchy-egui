@@ -1,7 +1,7 @@
 //! Composer keeps native multiline editing and consumes only plain Enter.
 use crate::{app::App, chat::MAX_PROMPT, support::shell};
 use dutchy_egui::{
-    Button, ButtonVariant, Flex, Text, TextColor, TextSize, Textarea, tokens::space,
+    Button, ButtonVariant, Flex, Text, TextColor, TextSize, Textarea, Theme, tokens::space,
 };
 use egui::{Event, ImeEvent, Key, Ui};
 
@@ -46,7 +46,8 @@ pub(crate) fn show(ui: &mut Ui, app: &mut App, now: f64) {
                     app.chat.stop();
                     app.focus_composer = true;
                 }
-                ui.add(
+                hint(
+                    ui,
                     Text::new(if ready {
                         "Enter sends · Shift+Enter adds a line"
                     } else {
@@ -60,6 +61,20 @@ pub(crate) fn show(ui: &mut Ui, app: &mut App, now: f64) {
                 app.send(now);
             }
         });
+}
+
+/// Keep the hint whole: egui continues text after the actions and wraps the
+/// rest under them, so a hint that does not fit starts its own row instead.
+fn hint(ui: &mut Ui, text: Text<'_>) {
+    let theme = Theme::from_context(ui.ctx());
+    let width = ui
+        .fonts_mut(|fonts| fonts.layout_job(text.layout_job(&theme, f32::INFINITY)))
+        .size()
+        .x;
+    if ui.available_size_before_wrap().x < width {
+        ui.end_row();
+    }
+    ui.add(text);
 }
 
 fn take_enter(ui: &mut Ui) -> bool {

@@ -9,7 +9,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-fn receive(socket: &mut TcpStream) -> String {
+pub(super) fn receive(socket: &mut TcpStream) -> String {
     socket
         .set_read_timeout(Some(Duration::from_secs(5)))
         .unwrap();
@@ -40,7 +40,7 @@ fn collect(provider: &mut OpenAi) -> Vec<Event> {
     let deadline = Instant::now() + Duration::from_secs(5);
     let mut all = Vec::new();
     loop {
-        all.extend(provider.poll());
+        all.extend(provider.poll(0.0));
         if all
             .iter()
             .any(|e| matches!(e.change, Change::Complete(_) | Change::Failed(_)))
@@ -90,7 +90,7 @@ fn live_transport_sends_authorized_json_and_handles_both_response_modes() {
             input
         });
         let mut provider = OpenAi::test_endpoint(url);
-        provider.start(request(streaming), Some("fixture-key"));
+        provider.start(request(streaming), Some("fixture-key"), 0.0);
         let events = collect(&mut provider);
         assert!(events.iter().all(|e| e.request == 7));
         assert!(
@@ -127,7 +127,7 @@ fn http_failures_do_not_echo_server_bodies_or_credentials() {
             );
         });
         let mut provider = OpenAi::test_endpoint(url);
-        provider.start(request(true), Some("fixture-key"));
+        provider.start(request(true), Some("fixture-key"), 0.0);
         let events = collect(&mut provider);
         assert!(matches!(
             events.as_slice(),
@@ -160,11 +160,11 @@ fn cancel_drops_delivery_while_the_network_reader_unwinds() {
         let _ = socket.write_all(rest.as_bytes());
     });
     let mut provider = OpenAi::test_endpoint(url);
-    provider.start(request(true), Some("fixture-key"));
+    provider.start(request(true), Some("fixture-key"), 0.0);
     let deadline = Instant::now() + Duration::from_secs(5);
     loop {
         if provider
-            .poll()
+            .poll(0.0)
             .iter()
             .any(|e| matches!(e.change, Change::Delta(_)))
         {
@@ -176,5 +176,5 @@ fn cancel_drops_delivery_while_the_network_reader_unwinds() {
     provider.cancel(7);
     release_tx.send(()).unwrap();
     server.join().unwrap();
-    assert!(provider.poll().is_empty());
+    assert!(provider.poll(0.0).is_empty());
 }

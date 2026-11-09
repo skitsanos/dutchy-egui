@@ -5,8 +5,10 @@ mod lifecycle;
 mod live_protocol;
 mod live_routing;
 mod live_transport;
+mod live_watchdog;
 mod provider;
 mod rendering;
+mod review;
 mod shell;
 
 use crate::{app::App, config::Config};

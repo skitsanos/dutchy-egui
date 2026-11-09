@@ -2,8 +2,8 @@
 
 mod common;
 use dutchy_egui::{
-    ColumnWidth, Container, ContainerWidth, CrossAlign, Flex, FlexDirection, Input, ResponsiveGrid,
-    Spacing, Text, Theme,
+    Button, ColumnWidth, Container, ContainerWidth, ControlSize, CrossAlign, Flex, FlexDirection,
+    Input, ResponsiveGrid, Spacing, Text, TextSize, Theme,
 };
 use egui::{Rect, Ui};
 use egui_kittest::{
@@ -217,4 +217,44 @@ fn grid_cells_and_dutchy_text_keep_wrapped_lines_ragged() {
     for galley in galleys {
         assert!(!galley.job.justify, "justified: {}", galley.job.text);
     }
+}
+
+#[test]
+fn text_centers_beside_controls_in_wrapping_rows() {
+    // Caps-only labels give comparable ink boxes across the two font sizes.
+    let mut h = Harness::builder()
+        .with_size([600.0, 300.0])
+        .with_context_setup(|ctx| common::install(ctx, Theme::default()))
+        .build_ui(|ui| {
+            Flex::row("flex-row").wrap(true).show(ui, |ui| {
+                ui.add(Button::new("FLEX").size(ControlSize::Small));
+                ui.add(Text::new("FLEX HINT").size(TextSize::Sm));
+            });
+            ui.horizontal_wrapped(|ui| {
+                ui.add(Button::new("NATIVE"));
+                ui.add(Text::new("NATIVE HINT"));
+            });
+        });
+    h.run();
+    let shapes = &h.output().shapes;
+    for (button, hint) in [("FLEX", "FLEX HINT"), ("NATIVE", "NATIVE HINT")] {
+        let offset = ink_center(shapes, hint) - ink_center(shapes, button);
+        assert!(offset.abs() <= 1.5, "{hint} sits {offset} points off");
+    }
+}
+
+fn ink_center(shapes: &[egui::epaint::ClippedShape], label: &str) -> f32 {
+    fn find(shape: &egui::Shape, label: &str) -> Option<f32> {
+        match shape {
+            egui::Shape::Text(text) if text.galley.job.text == label => {
+                Some(text.pos.y + text.galley.mesh_bounds.center().y)
+            }
+            egui::Shape::Vec(children) => children.iter().find_map(|s| find(s, label)),
+            _ => None,
+        }
+    }
+    shapes
+        .iter()
+        .find_map(|s| find(&s.shape, label))
+        .expect("label painted")
 }

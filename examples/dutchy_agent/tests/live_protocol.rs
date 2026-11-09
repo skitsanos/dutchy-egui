@@ -144,3 +144,40 @@ fn raw_error_messages_are_not_exposed_and_missing_usage_is_not_estimated() {
     };
     assert_eq!(usage.kind, UsageKind::Unavailable);
 }
+
+#[test]
+fn output_limit_scales_with_effort() {
+    for (effort, limit) in [("low", 2_048), ("medium", 4_096), ("high", 8_192)] {
+        let mut r = request(true);
+        r.options.effort = effort.into();
+        let body: Value = serde_json::from_slice(&protocol::body(&r).unwrap()).unwrap();
+        assert_eq!(body["max_output_tokens"], limit, "{effort}");
+    }
+}
+
+#[test]
+fn incomplete_replies_keep_text_and_name_their_cause_in_both_modes() {
+    for (reason, message) in [
+        ("max_output_tokens", protocol::OUTPUT_LIMIT),
+        ("content_filter", protocol::FILTERED),
+        ("unknown", protocol::INCOMPLETE),
+    ] {
+        let mut incomplete = response();
+        incomplete["status"] = "incomplete".into();
+        incomplete["incomplete_details"] = json!({ "reason": reason });
+        let expected = vec![
+            Change::Delta("Hi! How can I help?".into()),
+            Change::Failed(message),
+        ];
+        let streamed = event(json!({"type":"response.incomplete","response":incomplete}));
+        let mut decoder = Decoder::new(true);
+        assert_eq!(
+            decoder.feed(streamed.as_bytes()),
+            expected,
+            "streamed {reason}"
+        );
+        let mut decoder = Decoder::new(false);
+        decoder.feed(&serde_json::to_vec(&incomplete).unwrap());
+        assert_eq!(decoder.finish(), expected, "buffered {reason}");
+    }
+}
