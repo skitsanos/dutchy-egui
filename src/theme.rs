@@ -74,6 +74,9 @@ impl Theme {
         style.spacing.interact_size =
             vec2(ControlSize::Medium.height(), ControlSize::Medium.height());
         style.spacing.indent = space::XXL;
+        // egui fades clipped scroll content behind an edge gradient by default;
+        // Dutchy surfaces are flat fills, so the fade is disabled everywhere.
+        style.spacing.scroll.fade.strength = 0.0;
         style.animation_time = if self.reduced_motion {
             0.0
         } else {

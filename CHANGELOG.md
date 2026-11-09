@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Disable egui's scroll-edge fade gradient in the shared theme style so clipped
+  content keeps a flat fill in every Dutchy scroll area (DS-078).
+
 ## 1.0.25 — 2026-11-08
 
 - Documentation: state that the actions, Markdown and CodeBlock work shipped in
