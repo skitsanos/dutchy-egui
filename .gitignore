@@ -1,6 +1,8 @@
 .idea
 /target/
 /media/
+.env
+.env.*
 .DS_Store
 **/snapshots/**/*.diff.png
 **/snapshots/**/*.new.png

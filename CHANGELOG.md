@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased — planned 1.0.30
+
+- Add DutchyAgent: an offline scripted chat example with streaming, Stop/Retry,
+  independent conversations and Markdown/CodeBlock integration (DS-099).
+- Load local model settings from ignored `.env` files; exclude env files from
+  crate archives.
+- Connect DutchyAgent to OpenAI Responses using the configured key, model and
+  reasoning effort, with bounded streaming, reported usage and explicit Offline
+  mock selection. Add example-only HTTP/JSON dependencies and loopback tests (DS-100).
+- Refine DutchyAgent's responsive header and left-align conversation names;
+  add padded Button text alignment while retaining centered defaults (DS-101).
+
 ## 1.0.29 — 2026-11-09
 
 - Adopt Ubuntu 26.04 for the Linux CI quality job from Renovate PR #4
