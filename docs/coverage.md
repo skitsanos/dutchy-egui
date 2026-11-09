@@ -17,7 +17,7 @@ buttons; see [richer menus](richer-menus.md).
 
 | Web registry group | Status | Supported scope / next work |
 | --- | --- | --- |
-| Buttons | Visual proof | Five variants; three sizes; disabled/loading/full width; focus and keyboard. IconButton adds named square actions, original/custom vector icons and shared variants/sizes. |
+| Buttons | Visual proof | Five variants; three sizes; disabled/loading/full width; padded left/center/right text alignment; focus and keyboard. IconButton adds named square actions, original/custom vector icons and shared variants/sizes. |
 | Forms | Application essentials | Input/password, checkbox, radio group, typed select, read-only/disabled; field labels/help/errors/required/pending/success; validation triggers and async tickets |
 | Cards | Application essentials | Six surfaces, four padding tiers, headers/footers, scoped text colors, interactive and disabled cards; host-owned actions |
 | Badges & Tags | Visual proof | Eight variants, uppercase labels, keyboard-accessible close affordance |

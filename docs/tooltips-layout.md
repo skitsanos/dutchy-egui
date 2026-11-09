@@ -66,6 +66,12 @@ not CSS equal-height layout. Wrapping is supported for rows; column wrapping,
 baseline alignment, and CSS space-between/around/evenly are not implemented.
 Compose native egui controls/spacers when those patterns are needed.
 
+In a wrapping row, `Text` follows egui's label flow: it continues after the
+previous item and wraps its remainder onto the next row, centered on the row
+like egui's own labels (DS-104). Items placed earlier do not move when a taller
+item later grows the row. To keep short copy whole, call `Ui::end_row` first
+when it does not fit, as the DutchyAgent composer hint does.
+
 `Spacing` covers 0/2/4/6/8/12/16/20/24/32/40/48/64 points. `ContainerWidth`
 covers 384/448/512/576/672/896/1152/1280 points or Available. The maximum includes
 horizontal gutters: 16 points by default, 24 at viewport width 768+, or an

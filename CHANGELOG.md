@@ -1,10 +1,28 @@
 # Changelog
 
-## Unreleased
+## Unreleased — planned 1.0.30
 
+- Add DutchyAgent: an offline scripted chat example with streaming, Stop/Retry,
+  independent conversations and Markdown/CodeBlock integration (DS-099).
+- Load local model settings from ignored `.env` files; exclude env files from
+  crate archives.
+- Connect DutchyAgent to OpenAI Responses using the configured key, model and
+  reasoning effort, with bounded streaming, reported usage and explicit Offline
+  mock selection. Add example-only HTTP/JSON dependencies and loopback tests (DS-100).
+- Refine DutchyAgent's responsive header and left-align conversation names;
+  add padded Button text alignment while retaining centered defaults (DS-101).
 - Keep tests, image baselines and examples out of the published crate: the
   package drops from 11.5 MiB to 1.7 MiB compressed, under the crates.io
   upload limit; examples remain in the repository (DS-102).
+- Center `Text` in wrapping horizontal rows the way egui centers its own labels;
+  it previously sat at the bottom of the row. This also corrects the DutchyTodo
+  header and the media viewer's image counter (DS-104).
+- Fix DutchyAgent review findings: keep the typed draft when sending the sample,
+  return focus correctly after the settings shortcut, expose selected and running
+  sidebar rows, drop the empty row above reply errors and keep the running hint
+  whole. Replace the 90-second total body timeout with a 5-minute idle watchdog,
+  name connection failures accurately, scale the output limit with effort and
+  report incomplete replies by cause in both modes (DS-103).
 
 ## 1.0.29 — 2026-11-09
 

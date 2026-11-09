@@ -24,6 +24,7 @@ DIFFERENCES = (".diff.png", ".new.png", ".old.png")
 def approved(path):
     parts = PurePosixPath(path).parts
     return (parts and (parts[0] in SOURCE_DIRS or path in ROOT_FILES)
+            and not any(part == ".env" or part.startswith(".env.") for part in parts)
             and not path.endswith(DIFFERENCES)
             and not any(part in {"..", "target", ".git", ".idea", ".claude", "storyboard"} for part in parts))
 

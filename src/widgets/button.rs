@@ -88,6 +88,7 @@ pub struct Button<'a> {
     enabled: bool,
     loading: bool,
     full_width: bool,
+    text_align: egui::Align,
 }
 
 impl<'a> Button<'a> {
@@ -100,6 +101,7 @@ impl<'a> Button<'a> {
             enabled: true,
             loading: false,
             full_width: false,
+            text_align: egui::Align::Center,
         }
     }
 
@@ -126,6 +128,11 @@ impl<'a> Button<'a> {
     /// Fill available horizontal space.
     pub fn full_width(mut self, full_width: bool) -> Self {
         self.full_width = full_width;
+        self
+    }
+    /// Align the label within the padded button, centered by default.
+    pub fn text_align(mut self, align: egui::Align) -> Self {
+        self.text_align = align;
         self
     }
 }
@@ -195,9 +202,14 @@ impl Button<'_> {
         }
 
         // The uppercase treatment is visual; assistive technology gets the label as written.
+        let button = match self.text_align {
+            egui::Align::Min => egui::Button::new((job, egui::Atom::grow())).gap(0.0),
+            egui::Align::Center => egui::Button::new(job),
+            egui::Align::Max => egui::Button::new((egui::Atom::grow(), job)).gap(0.0),
+        };
         let response = ui
             .add(
-                egui::Button::new(job)
+                button
                     .truncate()
                     .min_size(vec2(width, self.size.height()))
                     .corner_radius(0),
@@ -209,8 +221,13 @@ impl Button<'_> {
                 .accesskit_node_builder(response.id, |node| node.set_busy());
             let width =
                 text_width.min((response.rect.width() - 2.0 * self.size.padding()).max(0.0));
+            let left = match self.text_align {
+                egui::Align::Min => response.rect.left() + self.size.padding(),
+                egui::Align::Center => response.rect.center().x - width / 2.0,
+                egui::Align::Max => response.rect.right() - self.size.padding() - width,
+            };
             let center = pos2(
-                response.rect.center().x - width / 2.0 + SpinnerSize::Small.extent() / 2.0,
+                left + SpinnerSize::Small.extent() / 2.0,
                 response.rect.center().y,
             );
             paint_spinner(

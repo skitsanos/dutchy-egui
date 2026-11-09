@@ -6,6 +6,8 @@ actions, nested submenus, MenuBar and Toolbar integration.
 Start with [setup, themes and fonts](getting-started.md), the
 [component coverage matrix](coverage.md), or the [native roadmap](component-roadmap.md).
 
+[DutchyAgent](dutchy-agent.md) demonstrates OpenAI/offline chat, Markdown and code copy.
+
 [Shared commands, shortcut editing and split actions](commands-shortcuts.md)
 shipped in 1.0.28; see [verification](verification-command-workflow.md)
 and the [independent review](verification-review-1.0.28.md).

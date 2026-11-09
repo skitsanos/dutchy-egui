@@ -16,19 +16,20 @@ to read in one sitting and complete enough to feel like a product.
   `cargo run --example dutchy_todo --all-features` and so on. Files follow the
   400-line soft cap and the cognitive-complexity threshold.
 - **Dependencies.** No new runtime dependency. Example-only crates are
-  dev-dependencies, as `rfd` already is for the showcase. Expected additions
-  are `ehttp` with streaming (already an optional dependency) and
-  `serde`/`serde_json` for chat request bodies; verify current versions when
-  adding them. No async runtime: network callbacks post to a `std::sync::mpsc`
-  channel and request a repaint.
+  dev-dependencies, as `rfd` already is for the showcase. DutchyAgent reuses
+  `ehttp` with streaming and adds `serde_json` for request/response bodies.
+  Verify current versions when adding or upgrading. No async runtime: network
+  callbacks post to a bounded `std::sync::mpsc` channel and request a repaint.
 - **Data.** Fictional and generated deterministically in code from a fixed
   seed: invented people and subjects, reserved domains (`example.com`,
   `example.org`), no real products, companies or people, and no bundled images
   or text corpora, because `examples/**` ships in the crate archive.
-- **Secrets and network.** API keys come only from an environment variable
-  named in the settings, are never persisted or logged and are shown masked.
-  Requests go only to the user-configured base URL. A scripted mock provider is
-  the default, so every application runs offline and in tests.
+- **Secrets and network.** API keys come from process configuration or the
+  gitignored local `.env`, are never saved by the application or logged, and
+  are shown masked. DutchyAgent retains a redacted in-memory credential for
+  the fixed OpenAI Responses HTTPS endpoint. It starts in OpenAI when a key
+  exists, otherwise Offline mock; both are explicit choices. Tests use injected
+  configuration and local fixtures, never machine credentials or external APIs.
 - **Shared shell.** `examples/support/` holds the theme switcher, sidebar
   frame, status strip and fictional-data helpers, included with `#[path]`.
   Once stable it informs an AppShell composition for the library.
@@ -80,26 +81,39 @@ The smallest complete application and the tutorial companion to
 
 ## DutchyAgent
 
-Planned after the 1.0.28 command integration release. A chat client for an
-OpenAI-compatible chat completions endpoint with a mock provider; the flagship for Markdown and
-CodeBlock.
+The current unreleased milestone is [DutchyAgent](dutchy-agent.md), following
+the 1.0.28 command integration and 1.0.29 CI release. It connects OpenAI Responses
+and an explicit offline mock to the Markdown and CodeBlock composition.
 
 - **Scope.** Conversation list in the sidebar; a transcript of user and
   assistant turns where assistant Markdown renders with CodeBlock copy;
   streamed tokens with a Stop button; a composer Textarea where Enter sends
-  and Shift+Enter inserts a newline, with Kbd hints; a settings Drawer for base
-  URL, model id, API key variable name (masked), temperature Slider, streaming
-  Switch and system prompt; Alerts with retry for authentication, rate-limit
-  and network errors; Stats for reported token usage; EmptyState for a new
+  and Shift+Enter inserts a newline, with Kbd hints; a settings Drawer for
+  provider, model id, reasoning effort, masked key presence, streaming Switch
+  and system prompt; Alerts with retry for authentication, rate-limit
+  and network errors; reported token usage; EmptyState for a new
   conversation; Skeleton until the first token; Toast on copy.
-- **Provider contract.** A `Provider` trait with `OpenAiCompatible` (streaming
-  server-sent events over `ehttp`) and a `Scripted` mock with deterministic
-  replies, simulated latency and error scenarios for tests. Further adapters,
-  such as Anthropic's Messages API, implement the same trait. The model id is
-  configuration: the example ships a placeholder that must name a model the
-  configured provider serves.
+- **Provider contract.** An application-owned Router shares request, delta,
+  completion, failure and cancellation messages between OpenAI and Scripted.
+  OpenAI uses Responses SSE or buffered JSON over `ehttp`; Scripted uses a
+  deterministic clock and simulated errors. No public provider trait is added
+  to the library. Defaults are `gpt-6-luna` and `low`, verified against current
+  API/model documentation. Live errors never trigger a scripted fallback.
 - **Limits.** No tool calling, attachments, image input, conversation
-  persistence or multiple provider accounts.
+  persistence, temperature control, custom endpoints or multiple provider accounts.
+- **Offline milestone** ([DS-099](issues/DS-099.md), unreleased): independent
+  conversations/drafts, deterministic streaming, Stop/Retry, Markdown/code copy,
+  simulated error scenarios, first-token Skeleton and estimated usage. Model
+  settings load from process values over ignored `.env`: `MODEL_NAME` defaults
+  to `gpt-6-luna`, `MODEL_EFFORT` to `low`. The initial implementation retained
+  key presence only. [Offline verification](verification-dutchy-agent.md)
+  records that stage.
+- **Live extension** ([DS-100](issues/DS-100.md), unreleased): configured
+  credentials select OpenAI at startup; explicit Mock selection remains offline.
+  Bounded transport/SSE parsing, cooperative cancellation, source labels and
+  API-reported usage are implemented. A real native "Hi" turn verified the
+  configured model. See the [milestone plan](plan-dutchy-agent.md) and
+  [live verification](verification-dutchy-agent-live.md) for checks and limits.
 
 ## DutchyMail
 
@@ -146,7 +160,8 @@ application.
 2. Shipped in 1.0.28: shared commands,
    shortcut editing and nested search in Todo and Canal Studio; see the
    [implementation plan](plan-1.0.28.md). Hosted CI runs after the approved push.
-3. DutchyAgent with the offline mock provider and optional configured transport.
+3. Current: DutchyAgent with OpenAI Responses and an explicit offline mock,
+   targeting 1.0.30 after local qualification and an authorized release.
 4. Workbench releases: List/selection first, then TreeView/SplitPane and editing
    helpers; DutchyMail composes those controls once available.
 5. DutchyDash together with the dashboards milestone.
