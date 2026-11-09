@@ -33,12 +33,18 @@ pub const PADDING_Y: f32 = space::MD;
 pub const ROW_HEIGHT: f32 = 44.0;
 /// Decorative icon allocation.
 pub const ICON_SIZE: f32 = space::XL;
+/// Checked action square; its glyph uses the shared border and icon geometry.
+pub const CHECK_SIZE: f32 = space::LG;
 /// Space between icon, label, and shortcut columns.
 pub const ITEM_GAP: f32 = space::MD;
 /// Group-label vertical padding.
 pub const GROUP_PADDING: i8 = 8;
 /// Gap between trigger and popup.
 pub const POPUP_GAP: f32 = space::XS;
+/// Menu-bar and child menu frames share their bordering edge.
+pub const ATTACHED_GAP: f32 = 0.0;
+/// Short child menus fit content without dropping below the compact width.
+pub const SUBMENU_MIN_WIDTH: f32 = MenuWidth::Compact.points();
 /// Searchable result-list maximum height.
 pub const RESULTS_HEIGHT: f32 = 240.0;
 /// Command result-list maximum height.

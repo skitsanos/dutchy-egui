@@ -1,5 +1,6 @@
-mod focus;
+pub(crate) mod focus;
 mod item;
+mod popup;
 use super::core;
 use crate::{
     ControlSize, Theme,
@@ -153,7 +154,7 @@ impl<'a, T: Clone> Toolbar<'a, T> {
                     let ids: Vec<_> = self
                         .items
                         .iter()
-                        .filter(|i| i.enabled && !i.loading && ui.is_enabled())
+                        .filter(|i| i.interactive() && ui.is_enabled())
                         .map(|i| root.with(i.id))
                         .collect();
                     let axis = if self.orientation == ToolbarOrientation::Horizontal {
@@ -161,8 +162,9 @@ impl<'a, T: Clone> Toolbar<'a, T> {
                     } else {
                         Axis::Vertical
                     };
+                    popup::tab_exit(ui, &mut memory);
                     memory.prepare(ui, &ids, axis, self.fallback);
-                    let result = self.layout(ui, root, &memory, axis);
+                    let result = self.layout(ui, root, &mut memory, axis);
                     memory.remember(ui, &ids);
                     result
                 })
@@ -194,7 +196,7 @@ impl<'a, T: Clone> Toolbar<'a, T> {
         &self,
         ui: &mut Ui,
         root: Id,
-        memory: &focus::Memory,
+        memory: &mut focus::Memory,
         axis: Axis,
     ) -> (Rect, Vec<(T, Response)>, Option<ToolbarEvent<T>>) {
         ui.spacing_mut().item_spacing = vec2(tokens::GAP, tokens::GAP);
@@ -246,7 +248,7 @@ impl<'a, T: Clone> Toolbar<'a, T> {
         &self,
         ui: &mut Ui,
         root: Id,
-        memory: &focus::Memory,
+        memory: &mut focus::Memory,
         axis: Axis,
     ) -> (Vec<(T, Response)>, Option<ToolbarEvent<T>>) {
         let anchor = ui.max_rect().min;
@@ -267,10 +269,12 @@ impl<'a, T: Clone> Toolbar<'a, T> {
                     pressed: item.pressed,
                     variant: item.variant,
                     size: self.size,
-                    enabled: item.enabled,
+                    enabled: item.interactive(),
                     loading: item.loading,
                     tooltip: item.tooltip.as_deref(),
                     inside_focus: true,
+                    menu: item.menu.is_some(),
+                    role: egui::accesskit::Role::Button,
                 },
                 if memory.tab == Some(id) {
                     Sense::click()
@@ -280,10 +284,20 @@ impl<'a, T: Clone> Toolbar<'a, T> {
                 None,
             );
             if response.has_focus() {
-                navigation::lock_arrows(ui, id, axis);
+                if item.menu.is_some() {
+                    crate::widgets::menu::memory::lock(&response, false);
+                } else {
+                    navigation::lock_arrows(ui, id, axis);
+                }
             }
             reveal_focused(ui, &response, anchor);
-            if response.clicked() && event.is_none() {
+            if item.menu.is_some() {
+                response.ctx.accesskit_node_builder(id, |n| {
+                    n.set_has_popup(egui::accesskit::HasPopup::Menu);
+                    n.set_expanded(memory.open == Some(id));
+                });
+            }
+            if response.clicked() && event.is_none() && item.menu.is_none() {
                 event = Some(match item.pressed {
                     Some(pressed) => ToolbarEvent::Toggled {
                         value: item.value.clone(),
@@ -294,7 +308,8 @@ impl<'a, T: Clone> Toolbar<'a, T> {
             }
             items.push((item.value.clone(), response));
         }
-        (items, event)
+        let menu_event = popup::show(ui, root, self.items, &items, memory);
+        (items, event.or(menu_event))
     }
     fn separator(&self, ui: &mut Ui) {
         let vertical = self.orientation == ToolbarOrientation::Vertical;

@@ -1,6 +1,7 @@
 mod actions;
 mod collection;
 mod colors;
+mod command_surfaces;
 mod components;
 mod disclosures;
 mod forms;
@@ -172,7 +173,7 @@ impl Showcase {
                             Page::Images => self.media.images(ui),
                             Page::IconButtons => self.actions.icons(ui),
                             Page::ToggleButtons => self.actions.toggles(ui),
-                            Page::Toolbars => self.actions.toolbars(ui),
+                            Page::Toolbars => self.actions.toolbars(ui, &mut self.menus.rich),
                             Page::Galleries => self.media.galleries(ui),
                             Page::Lightboxes => self.media.lightboxes(ui),
                             #[cfg(feature = "markdown")]

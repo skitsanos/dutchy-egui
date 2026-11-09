@@ -17,6 +17,7 @@ pub enum Action {
 
 #[derive(Default)]
 pub struct MenuState {
+    pub rich: super::command_surfaces::CommandState,
     pub open: bool,
     pub context: bool,
     pub search: SearchState,
@@ -102,6 +103,9 @@ pub fn menus(ui: &mut Ui, state: &mut MenuState) {
         ui.add(Text::new(
             "Shortcut hints are labels. The host registers actual application shortcuts and decides what each action does.",
         ).color(TextColor::Muted));
+    });
+    section(ui, "03", "Canal Studio / application menus", |ui| {
+        super::command_surfaces::show(ui, &mut state.rich);
     });
 }
 

@@ -19,10 +19,12 @@ mod loading_motion;
 mod markdown;
 mod media;
 pub(crate) mod menu;
+mod menu_bar;
 mod nav_icon;
 mod navigation;
 mod overlay;
 mod pagination;
+mod popup_focus;
 mod progress;
 mod scribble;
 pub(crate) mod search;
@@ -58,7 +60,8 @@ pub use empty_state::{EmptyState, EmptyStateIcon, EmptyStateResponse, EmptyState
 pub use kbd::Kbd;
 #[cfg(feature = "markdown")]
 pub use markdown::{LinkPolicy, Markdown, MarkdownLink, MarkdownResponse};
-pub use menu::{Menu, MenuIconPainter, MenuItem, MenuItemVariant, MenuResponse};
+pub use menu::{Menu, MenuEvent, MenuIconPainter, MenuItem, MenuItemVariant, MenuResponse};
+pub use menu_bar::{MenuBar, MenuBarItem, MenuBarResponse, MenuBarState};
 pub use pagination::{Pagination, PaginationResponse, PaginationVariant};
 pub use progress::{Progress, ProgressVariant};
 pub use search::SearchState;

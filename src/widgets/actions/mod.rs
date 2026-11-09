@@ -1,5 +1,5 @@
-mod core;
-mod toolbar;
+pub(crate) mod core;
+pub(crate) mod toolbar;
 use crate::{ButtonVariant, ControlSize, Icon};
 use egui::{IdSalt, Response, Sense, Ui, Widget};
 use std::borrow::Cow;
@@ -75,6 +75,8 @@ impl Widget for IconButton<'_> {
                 loading: self.loading,
                 tooltip: self.tooltip.as_deref(),
                 inside_focus: false,
+                menu: false,
+                role: egui::accesskit::Role::Button,
             },
             Sense::click(),
             None,
@@ -167,6 +169,8 @@ impl Widget for ToggleButton<'_> {
                 loading: self.loading,
                 tooltip: self.tooltip.as_deref(),
                 inside_focus: false,
+                menu: false,
+                role: egui::accesskit::Role::Button,
             },
             Sense::click(),
             Some(self.on),

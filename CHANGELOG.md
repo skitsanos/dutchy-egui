@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+- Add controlled checked menu actions and typed MenuEvent requests, nested
+  submenus, a host-controlled in-window MenuBar and Toolbar menu buttons (DS-073).
+- Share command trees across menu bars, dropdowns and toolbars with stable keys,
+  accessible checked/expanded states, nested keyboard dismissal, Tab exit,
+  viewport-aware popup placement and a connected Canal Studio showcase.
+- Route menu Tab exits using key-event modifiers, preserve host Tab shortcuts,
+  and return one submenu level on immediate Escape (DS-074).
+- Connect cascade borders, fit child widths to content, keep open ancestors
+  visually quiet and give pointer/keyboard input one active target (DS-075).
+- Keep following content fixed when menus open: attaching Dropdown to an
+  existing MenuBar/Toolbar/context target no longer allocates an empty row (DS-076).
+- Move Tab past menus attached to existing buttons, keep the keyboard-focused
+  row visible while the pointer owns the highlight, and keep the open menu when
+  it is a menu bar's only enabled entry (DS-081 to DS-083).
+- Let Escape release focus from closed menu triggers as on other widgets,
+  register menu-bar entries once with their menu-item role, and cover Up
+  opening, icon-only menu buttons and diagonal pointer paths (DS-084).
+
 ## 1.0.25 — 2026-11-08
 
 - Documentation: state that the actions, Markdown and CodeBlock work shipped in

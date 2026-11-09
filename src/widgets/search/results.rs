@@ -31,11 +31,12 @@ impl<T: Clone> Results<'_, T> {
             .items
             .iter()
             .filter(|item| {
-                item.label.to_lowercase().contains(&needle)
-                    || item
-                        .group
-                        .as_deref()
-                        .is_some_and(|group| group.to_lowercase().contains(&needle))
+                item.children.is_none()
+                    && (item.label.to_lowercase().contains(&needle)
+                        || item
+                            .group
+                            .as_deref()
+                            .is_some_and(|group| group.to_lowercase().contains(&needle)))
             })
             .collect();
         let enabled: Vec<_> = matches
@@ -107,6 +108,9 @@ impl<T: Clone> Results<'_, T> {
                                         active,
                                         selected: self.selected == Some(item.id),
                                         focusable: false,
+                                        check_slot: item.checked.is_some(),
+                                        pointer: true,
+                                        branch_open: false,
                                     },
                                 )
                             })

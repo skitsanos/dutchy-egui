@@ -33,6 +33,10 @@ pub struct MenuItem<'a, T> {
     pub separator_before: bool,
     /// Optional repository/host-painted decorative icon.
     pub icon: Option<MenuIconPainter>,
+    /// Host-owned checked state for a leaf action; None is an ordinary action.
+    pub checked: Option<bool>,
+    /// Borrowed child commands. A branch never emits its own action value.
+    pub children: Option<&'a [MenuItem<'a, T>]>,
     pub(crate) id: IdSalt,
 }
 impl<'a, T: egui::AsIdSalt> MenuItem<'a, T> {
@@ -48,10 +52,31 @@ impl<'a, T: egui::AsIdSalt> MenuItem<'a, T> {
             enabled: true,
             separator_before: false,
             icon: None,
+            checked: None,
+            children: None,
         }
     }
 }
 impl<'a, T> MenuItem<'a, T> {
+    /// Override identity for repeated values; keys must be unique among siblings.
+    pub fn id_salt(mut self, id: impl egui::AsIdSalt) -> Self {
+        self.id = IdSalt::new(id);
+        self
+    }
+    /// Controlled checked action. Activation requests the inverse value.
+    /// The host decides whether to accept it. Submenu branches ignore this value.
+    pub fn checked(mut self, checked: bool) -> Self {
+        self.checked = Some(checked);
+        self
+    }
+    /// Open a non-executing branch. An empty child list is inert.
+    pub fn submenu(mut self, children: &'a [MenuItem<'a, T>]) -> Self {
+        self.children = Some(children);
+        self
+    }
+    pub(crate) fn interactive(&self) -> bool {
+        self.enabled && self.children.is_none_or(|items| !items.is_empty())
+    }
     /// Consecutive equal group labels share a named group and heading.
     pub fn group(mut self, label: impl Into<Cow<'a, str>>) -> Self {
         self.group = Some(label.into());

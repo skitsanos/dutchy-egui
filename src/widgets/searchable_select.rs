@@ -94,6 +94,8 @@ impl<'a, T: Clone + PartialEq> SearchableSelect<'a, T> {
                 .options
                 .iter()
                 .map(|option| MenuItem {
+                    checked: None,
+                    children: None,
                     value: option.value.clone(),
                     label: option.label.clone(),
                     group: None,

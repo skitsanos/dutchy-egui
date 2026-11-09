@@ -1,14 +1,27 @@
 mod item;
+mod measure;
+pub(crate) mod memory;
 pub(crate) mod paint;
+mod render;
 
-use crate::{
-    MenuWidth, Text, TextColor, TextSize, Theme, Tracking, Weight,
-    tokens::{border, menu as geometry},
-    widgets::navigation::{self, Axis},
-};
+use crate::{MenuWidth, Theme, tokens::border};
 use egui::{Id, IdSalt, Response, Ui, UiBuilder, WidgetInfo};
 pub use item::{MenuIconPainter, MenuItem, MenuItemVariant};
 use std::borrow::Cow;
+
+/// Requested host change. Checked values are snapshots, never mutated by menus.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum MenuEvent<T> {
+    /// Execute the named host command.
+    Activated(T),
+    /// Accept or reject a requested checked state.
+    Checked {
+        /// Stable host command value.
+        value: T,
+        /// Requested new value.
+        checked: bool,
+    },
+}
 
 /// Named action results, with no application action executed by the widget.
 pub struct MenuResponse<T> {
@@ -18,6 +31,11 @@ pub struct MenuResponse<T> {
     pub action: Option<T>,
     /// Item responses in source order, including disabled items.
     pub items: Vec<Response>,
+    /// Typed leaf activation or proposed checked value.
+    pub event: Option<MenuEvent<T>>,
+    pub(crate) focus_ids: Vec<Id>,
+    pub(crate) popup_rects: Vec<egui::Rect>,
+    pub(crate) direction: i8,
 }
 
 /// Grouped action list with stable item IDs and native interaction.
@@ -28,6 +46,8 @@ pub struct Menu<'a, T> {
     width: MenuWidth,
     enabled: bool,
     name: Cow<'a, str>,
+    bar: bool,
+    keyboard_open: bool,
 }
 impl<'a, T: Clone> Menu<'a, T> {
     /// A 320-point menu, constrained to its parent.
@@ -38,6 +58,8 @@ impl<'a, T: Clone> Menu<'a, T> {
             width: MenuWidth::default(),
             enabled: true,
             name: Cow::Borrowed("Actions"),
+            bar: false,
+            keyboard_open: false,
         }
     }
     /// Preferred menu width.
@@ -62,11 +84,41 @@ impl<'a, T: Clone> Menu<'a, T> {
         let width = self.width.points().min(ui.available_width());
         self.render(ui, root, Some(width))
     }
+    pub(crate) fn in_menu_bar(mut self, bar: bool) -> Self {
+        self.bar = bar;
+        self
+    }
+    pub(crate) fn keyboard_open(mut self, keyboard: bool) -> Self {
+        self.keyboard_open = keyboard;
+        self
+    }
     pub(crate) fn show_unframed(self, ui: &mut Ui, root: Id) -> MenuResponse<T> {
         self.render(ui, root, None)
     }
 
     fn render(self, ui: &mut Ui, root: Id, framed_width: Option<f32>) -> MenuResponse<T> {
+        crate::widgets::popup_focus::track(ui.ctx());
+        let memory_id = root.with("tree-memory");
+        let mut memory = ui
+            .ctx()
+            .data(|d| d.get_temp::<memory::Memory>(memory_id))
+            .unwrap_or_default();
+        memory.direction = 0;
+        if self.enabled && ui.is_enabled() {
+            memory.prepare(ui, root, self.items, self.bar);
+            if self.keyboard_open {
+                memory.keyboard();
+            }
+        } else {
+            memory.path.clear();
+            memory.levels.clear();
+        }
+        let mut tree = render::Tree {
+            width: self.width,
+            memory,
+            focus_ids: Vec::new(),
+            rects: vec![egui::Rect::NOTHING],
+        };
         let result = ui.scope_builder(
             UiBuilder::new()
                 .scope_id(root)
@@ -75,24 +127,18 @@ impl<'a, T: Clone> Menu<'a, T> {
                 if !self.enabled {
                     ui.disable();
                 }
+                ui.visuals_mut().override_text_color = None;
                 ui.spacing_mut().item_spacing.y = 0.0;
-                let ids: Vec<_> = self
-                    .items
-                    .iter()
-                    .filter(|item| item.enabled)
-                    .map(|item| root.with(item.id))
-                    .collect();
-                navigation::navigate(ui, &ids, Axis::Vertical);
                 if let Some(width) = framed_width {
                     ui.set_width(width.max(0.0));
                     paint::frame(Theme::from_context(ui.ctx()))
                         .show(ui, |ui| {
                             ui.set_width((width - border::STANDARD * 2.0).max(0.0));
-                            self.contents(ui, root)
+                            tree.level(ui, root, self.items, 0)
                         })
                         .inner
                 } else {
-                    self.contents(ui, root)
+                    tree.level(ui, root, self.items, 0)
                 }
             },
         );
@@ -103,82 +149,30 @@ impl<'a, T: Clone> Menu<'a, T> {
                 self.name.as_ref(),
             )
         });
-        MenuResponse {
-            response: result.response,
-            action: result.inner.0,
-            items: result.inner.1,
-        }
-    }
-
-    fn contents(&self, ui: &mut Ui, root: Id) -> (Option<T>, Vec<Response>) {
-        let mut action = None;
-        let mut responses = Vec::with_capacity(self.items.len());
-        for (group_index, group) in self.items.chunk_by(|a, b| a.group == b.group).enumerate() {
-            if group_index > 0 {
-                paint::divider(ui, true);
+        tree.rects[0] = result.response.rect;
+        if result.inner.0.is_some() {
+            if let Some(parent) = tree
+                .memory
+                .path
+                .first()
+                .and_then(|id| result.inner.1.iter().find(|r| r.id == *id))
+            {
+                memory::focus(parent);
             }
-            let result = ui.scope_builder(
-                UiBuilder::new().scope_id(root.with(("group", group[0].id))),
-                |ui| {
-                    if let Some(label) = &group[0].group {
-                        egui::Frame::NONE
-                            .inner_margin(egui::Margin::symmetric(
-                                geometry::PADDING_X as i8,
-                                geometry::GROUP_PADDING,
-                            ))
-                            .show(ui, |ui| {
-                                ui.add(
-                                    Text::new(label.as_ref())
-                                        .size(TextSize::Xs)
-                                        .weight(Weight::Bold)
-                                        .tracking(Tracking::Wider)
-                                        .uppercase(true)
-                                        .color(TextColor::Muted),
-                                );
-                            });
-                    }
-                    for (index, item) in group.iter().enumerate() {
-                        if index > 0 || item.separator_before {
-                            paint::divider(ui, item.separator_before);
-                        }
-                        let response = ui
-                            .add_enabled_ui(item.enabled, |ui| {
-                                paint::row(
-                                    ui,
-                                    root.with(item.id),
-                                    item,
-                                    paint::RowState {
-                                        role: egui::accesskit::Role::MenuItem,
-                                        active: false,
-                                        selected: false,
-                                        focusable: true,
-                                    },
-                                )
-                            })
-                            .inner;
-                        navigation::lock_arrows(ui, response.id, Axis::Vertical);
-                        if response.clicked() {
-                            action = Some(item.value.clone());
-                            response.request_focus();
-                        }
-                        if response.gained_focus() {
-                            response
-                                .scroll_to_me_animation(None, egui::style::ScrollAnimation::none());
-                        }
-                        responses.push(response);
-                    }
-                },
-            );
-            if let Some(label) = &group[0].group {
-                result.response.widget_info(|| {
-                    WidgetInfo::labeled(
-                        egui::accesskit::Role::Group,
-                        ui.is_enabled(),
-                        label.as_ref(),
-                    )
-                });
-            }
+            tree.memory.path.clear();
+            tree.memory.pending = None;
         }
-        (action, responses)
+        if ui.input(|i| i.pointer.any_click())
+            && ui
+                .ctx()
+                .pointer_interact_pos()
+                .is_some_and(|pos| !tree.rects.iter().any(|r| r.contains(pos)))
+        {
+            tree.memory.path.clear();
+        }
+        tree.memory.rects = tree.rects.clone();
+        ui.ctx()
+            .data_mut(|d| d.insert_temp(memory_id, tree.memory.clone()));
+        render::finish(result.response, result.inner.0, result.inner.1, &tree)
     }
 }

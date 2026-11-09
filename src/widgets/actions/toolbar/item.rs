@@ -1,4 +1,4 @@
-use crate::{ButtonVariant, Icon};
+use crate::{ButtonVariant, Icon, MenuItem};
 use egui::IdSalt;
 use std::borrow::Cow;
 
@@ -25,6 +25,8 @@ pub struct ToolbarItem<'a, T> {
     pub separator_before: bool,
     /// Optional help; icon-only items default to their action name.
     pub tooltip: Option<Cow<'a, str>>,
+    /// Non-executing menu button using the shared command tree.
+    pub menu: Option<&'a [MenuItem<'a, T>]>,
     pub(super) id: IdSalt,
 }
 impl<'a, T: egui::AsIdSalt> ToolbarItem<'a, T> {
@@ -42,6 +44,7 @@ impl<'a, T: egui::AsIdSalt> ToolbarItem<'a, T> {
             icon_only: true,
             separator_before: false,
             tooltip: None,
+            menu: None,
         }
     }
     /// Controlled toggle. The toolbar returns a request; it never mutates state.
@@ -53,6 +56,16 @@ impl<'a, T: egui::AsIdSalt> ToolbarItem<'a, T> {
     }
 }
 impl<'a, T> ToolbarItem<'a, T> {
+    /// Turn this item into a menu button. Leaf events use the toolbar's event
+    /// channel; this item's value is identity only and never executes.
+    pub fn menu(mut self, items: &'a [MenuItem<'a, T>]) -> Self {
+        self.menu = Some(items);
+        self.pressed = None;
+        self
+    }
+    pub(super) fn interactive(&self) -> bool {
+        self.enabled && !self.loading && self.menu.is_none_or(|m| !m.is_empty())
+    }
     /// Explicit stable salt for repeated action values.
     pub fn id_salt(mut self, id: impl egui::AsIdSalt) -> Self {
         self.id = IdSalt::new(id);

@@ -10,7 +10,7 @@ use egui::{
     pos2, vec2,
 };
 
-pub(super) struct Action<'a> {
+pub(crate) struct Action<'a> {
     pub id: Id,
     pub label: &'a str,
     pub icon: Option<Icon>,
@@ -22,9 +22,12 @@ pub(super) struct Action<'a> {
     pub loading: bool,
     pub tooltip: Option<&'a str>,
     pub inside_focus: bool,
+    pub menu: bool,
+    /// Accessibility role, registered once per frame.
+    pub role: Role,
 }
 
-pub(super) fn show(
+pub(crate) fn show(
     ui: &mut Ui,
     mut action: Action<'_>,
     sense: Sense,
@@ -49,6 +52,10 @@ pub(super) fn show(
         action.size.height()
     } else {
         galley.as_ref().map_or(0.0, |g| g.size().x) + 2.0 * action.size.padding() + icon_width
+    } + if action.menu && !icon_only {
+        tokens::icon(action.size)
+    } else {
+        0.0
     };
     let (rect, _) = ui.allocate_exact_size(
         vec2(
@@ -66,6 +73,12 @@ pub(super) fn show(
         child.disable();
     }
     let ui = &mut child;
+    focus_request(ui, action.id);
+    let sense = if ui.memory(|m| m.has_focus(action.id)) {
+        Sense::click()
+    } else {
+        sense
+    };
     let mut response = ui.interact(rect, action.id, sense);
     if response.clicked() {
         response.request_focus();
@@ -75,8 +88,11 @@ pub(super) fn show(
             response.mark_changed();
         }
     }
-    response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), action.label));
+    response.widget_info(|| WidgetInfo::labeled(action.role, ui.is_enabled(), action.label));
     response.ctx.accesskit_node_builder(response.id, |node| {
+        if ui.is_enabled() {
+            node.add_action(egui::accesskit::Action::Focus);
+        }
         if let Some(pressed) = action.pressed {
             node.set_toggled(if pressed {
                 Toggled::True
@@ -96,6 +112,23 @@ pub(super) fn show(
         ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand);
     }
     response
+}
+
+// Roving composites omit inactive items from native Tab registration. They
+// still accept an explicit assistive-technology focus request by stable ID.
+fn focus_request(ui: &Ui, id: Id) {
+    if ui.is_enabled()
+        && ui.input(|i| {
+            i.events.iter().any(|event| {
+                matches!(event, egui::Event::AccessKitActionRequest(request)
+            if request.action == egui::accesskit::Action::Focus
+                && request.target_tree == egui::accesskit::TreeId::ROOT
+                && request.target_node == id.accesskit_id())
+            })
+        })
+    {
+        ui.memory_mut(|m| m.request_focus(id));
+    }
 }
 
 fn paint(
@@ -123,6 +156,27 @@ fn paint(
     );
     paint_pressed_marker(&painter, response.rect, action, p.primary);
     let ink = visuals.fg_stroke.color;
+    if action.menu && !icon_only && !action.loading {
+        let offset = tokens::icon(action.size) / 4.0;
+        let center = pos2(
+            response.rect.right() - action.size.padding() - offset,
+            response.rect.center().y,
+        );
+        painter.line_segment(
+            [
+                center + vec2(-offset, -offset / 2.0),
+                center + vec2(0.0, offset / 2.0),
+            ],
+            egui::Stroke::new(crate::tokens::border::STANDARD, ink),
+        );
+        painter.line_segment(
+            [
+                center + vec2(0.0, offset / 2.0),
+                center + vec2(offset, -offset / 2.0),
+            ],
+            egui::Stroke::new(crate::tokens::border::STANDARD, ink),
+        );
+    }
     let extent = tokens::icon(action.size)
         .min(response.rect.width())
         .min(response.rect.height());

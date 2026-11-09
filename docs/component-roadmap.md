@@ -21,17 +21,19 @@ built-in vector icons, host painters and three showcase pages. See
 [actions and toolbars](actions-toolbars.md). Version 1.0.24 also integrates
 [Markdown and CodeBlock](markdown.md) from the parallel implementation branch.
 
+Unreleased DS-073 implements **richer menus**: controlled checks, nested
+submenus, an in-window MenuBar and Toolbar menu buttons. The connected Canal
+Studio showcase shares view settings and export commands across these surfaces.
+See [the contract and qualification plan](richer-menus.md).
+
 ## Recommended next milestones
 
-1. **Richer menus:** checked actions, nested submenus and an application menu
-   bar. Compose these with the new named icon actions and toolbars. Preserve
-   host-owned command execution, stable identity and native dismissal/focus.
-2. **Powerful filtering:** MultiSelect with removable chips, TagInput and
+1. **Powerful filtering:** MultiSelect with removable chips, TagInput and
    RangeSlider. Current Select/SearchableSelect choose one value and Slider
    edits one endpoint. Ship a useful filter-builder example with keyboard
    removal, empty states, explicit commit behavior and typed host values.
    Compose these with the existing SearchInput and MediaCard browser example.
-3. **Workbench building blocks:** TreeView, VirtualList and resizable SplitPane.
+2. **Workbench building blocks:** TreeView, VirtualList and resizable SplitPane.
    Provide keyed selection/expansion, large collections, keyboard navigation
    and host-owned pane sizes. A small file/record explorer demonstrates the
    combination. These also support future property inspectors and log viewers.

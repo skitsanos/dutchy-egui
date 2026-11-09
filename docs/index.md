@@ -1,5 +1,8 @@
 # Documentation
 
+[Richer menus and application command surfaces](richer-menus.md) cover checked
+actions, nested submenus, MenuBar and Toolbar integration.
+
 Start with [setup, themes and fonts](getting-started.md), the
 [component coverage matrix](coverage.md), or the [native roadmap](component-roadmap.md).
 
@@ -22,7 +25,9 @@ Start with [setup, themes and fonts](getting-started.md), the
 
 [Development and verification](development.md), [implementation plan](plan.md),
 [reference decisions](reference.md), [Foliopress reference](references/foliopress-showcase.md)
-and the [Issues Ledger](issues/).
+and the [Issues Ledger](issues/). The
+[menu interaction decisions](menu-interaction-decisions.md) explain cascade
+geometry, input ownership and the alternative drill-down presentation.
 
 Release history belongs in [CHANGELOG.md](../CHANGELOG.md). Individual
 `verification-*.md` reports in this directory record checks and platform limits

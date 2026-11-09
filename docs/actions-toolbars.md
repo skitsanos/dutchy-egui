@@ -98,6 +98,16 @@ These conventions follow the [WAI toolbar pattern](https://www.w3.org/WAI/ARIA/a
 and [button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/). The native
 implementation is verified independently; web guidance is not a native parity claim.
 
+## Menu buttons
+
+`ToolbarItem::action(key, name).menu(&commands)` opens a shared MenuItem tree.
+The trigger key never executes; leaf commands return `ToolbarEvent::Activated`
+and checked leaves return `ToolbarEvent::Toggled { value, pressed }`.
+Horizontal menu buttons open with Up/Down; vertical ones use Right and retain
+Up/Down navigation. Escape returns to the trigger and Tab exits the whole
+toolbar. Stable keys, disabled/busy inheritance and focus repair still apply.
+See the [menu guide](richer-menus.md) for a connected showcase and full limits.
+
 ## Icons and scope
 
 `Icon::ALL` contains 22 original geometric glyphs. `Icon::Custom(fn)` accepts a
@@ -108,7 +118,8 @@ helper crate or borrowed source is bundled.
 
 The three showcase pages include an icon gallery/custom diamond, variants/sizes,
 pressed/disabled/busy toggles and a host-owned formatting preview with overflow,
-wrapping and vertical toolbars. Commands, persistence, shortcuts, menus, arbitrary
+wrapping and vertical toolbars. The connected command-surface section also
+demonstrates menu buttons. Commands, persistence, shortcuts, arbitrary
 child inputs and a rich-text editor remain application concerns. No mixed-state
 toggle, drag reorder or customizable overflow menu is included.
 

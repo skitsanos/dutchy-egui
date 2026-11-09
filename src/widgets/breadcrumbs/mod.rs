@@ -146,6 +146,8 @@ impl<'a, T: Clone> Breadcrumbs<'a, T> {
                     let actions: Vec<_> = self.items[1..start]
                         .iter()
                         .map(|item| MenuItem {
+                            checked: None,
+                            children: None,
                             value: item.value.clone(),
                             label: item.label.clone(),
                             enabled: item.enabled,

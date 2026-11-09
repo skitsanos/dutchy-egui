@@ -1,7 +1,7 @@
 use crate::{
     Menu, MenuItem, MenuResponse, MenuWidth, Theme,
     tokens::{border, menu as geometry},
-    widgets::menu::paint,
+    widgets::{menu::paint, popup_focus},
 };
 use egui::{Id, IdSalt, Key, Modifiers, Pos2, Response, Ui, UiBuilder};
 use std::borrow::Cow;
@@ -35,6 +35,7 @@ enum Edge {
 }
 #[derive(Clone, Default)]
 struct Memory {
+    last_frame: u64,
     was_open: bool,
     pending: Option<Edge>,
     items: Vec<Id>,
@@ -51,6 +52,8 @@ pub struct Dropdown<'a, T> {
     align: DropdownAlign,
     name: Cow<'a, str>,
     enabled: bool,
+    bar: bool,
+    attached: bool,
 }
 impl<'a, T: Clone> Dropdown<'a, T> {
     /// A 200-point popup. The caller supplies any native or Dutchy trigger.
@@ -63,6 +66,8 @@ impl<'a, T: Clone> Dropdown<'a, T> {
             align: DropdownAlign::default(),
             name: Cow::Borrowed("Actions"),
             enabled: true,
+            bar: false,
+            attached: false,
         }
     }
     /// Preferred popup width.
@@ -93,19 +98,46 @@ impl<'a, T: Clone> Dropdown<'a, T> {
         ui: &mut Ui,
         trigger: impl FnOnce(&mut Ui) -> Response,
     ) -> DropdownResponse<T> {
-        self.render(ui, trigger, false)
+        let enabled = self.enabled;
+        self.render(
+            ui,
+            |ui, root| {
+                ui.scope_builder(UiBuilder::new().scope_id(root), |ui| {
+                    if !enabled {
+                        ui.disable();
+                    }
+                    trigger(ui)
+                })
+                .inner
+            },
+            false,
+        )
     }
     /// Attach a context menu to an existing response. Secondary click or
     /// Shift+F10 opens it at a fixed pointer/trigger position. Tab dismisses
     /// back to this existing target; the next Tab follows normal host order.
     pub fn show_context(self, ui: &mut Ui, response: &Response) -> DropdownResponse<T> {
-        self.render(ui, |_| response.clone(), true)
+        self.render(ui, |_, _| response.clone(), true)
+    }
+    /// Attach to an already drawn, focusable menu button. Its name is retained.
+    /// Tab closes the entire menu tree and follows the button's host tab order.
+    /// The attachment allocates no additional host layout space.
+    pub fn show_for(self, ui: &mut Ui, response: &Response) -> DropdownResponse<T> {
+        let attached = Self {
+            attached: true,
+            ..self
+        };
+        attached.render(ui, |_, _| response.clone(), false)
+    }
+    pub(crate) fn in_menu_bar(mut self) -> Self {
+        self.bar = true;
+        self
     }
 
     fn render(
         self,
         ui: &mut Ui,
-        trigger: impl FnOnce(&mut Ui) -> Response,
+        trigger: impl FnOnce(&mut Ui, Id) -> Response,
         context: bool,
     ) -> DropdownResponse<T> {
         let root = ui.make_persistent_id(("dutchy-dropdown", self.id));
@@ -113,28 +145,27 @@ impl<'a, T: Clone> Dropdown<'a, T> {
         let mut memory = ui
             .ctx()
             .data(|data| data.get_temp::<Memory>(memory_id).unwrap_or_default());
-        let initially_open = *self.open;
-        if !context {
-            prepare_tab_exit(ui, &memory, initially_open);
+        let frame = ui.ctx().cumulative_frame_nr();
+        if memory.last_frame + 1 < frame {
+            memory.was_open = false;
+            memory.pending = None;
         }
-        let mut trigger = ui
-            .scope_builder(UiBuilder::new().scope_id(root), |ui| {
-                if !self.enabled {
-                    ui.disable();
-                }
-                trigger(ui)
-            })
-            .inner;
+        memory.last_frame = frame;
+        let initially_open = *self.open;
+        let routed_tab = !context && prepare_tab_exit(ui, &memory, initially_open, self.attached);
+        let mut trigger = trigger(ui, root);
         memory.trigger = Some(trigger.id);
         let open_edge = update_open_state(&trigger, root, context, self.enabled, self.open);
-        if *self.open && !memory.was_open {
+        if *self.open && (!memory.was_open || open_edge.is_some()) {
             memory.pending = Some(open_edge.unwrap_or(Edge::First));
         }
-        let tab = *self.open && ui.input(|input| input.key_pressed(Key::Tab));
-        let escape =
-            *self.open && ui.input_mut(|input| input.consume_key(Modifiers::NONE, Key::Escape));
-        if tab || escape {
+        let tab = *self.open && (routed_tab || popup_focus::tab_direction(ui).is_some());
+        if tab {
             *self.open = false;
+            if context {
+                popup_focus::consume_tab(ui);
+                ui.memory_mut(|m| m.move_focus(egui::FocusDirection::None));
+            }
         }
         let mut popup = None;
         let mut menu = None;
@@ -143,8 +174,12 @@ impl<'a, T: Clone> Dropdown<'a, T> {
             let mut native = egui::Popup::from_response(&trigger)
                 .id(root.with("popup"))
                 .open_bool(self.open)
-                .close_behavior(egui::PopupCloseBehavior::CloseOnClickOutside)
-                .gap(geometry::POPUP_GAP)
+                .close_behavior(egui::PopupCloseBehavior::IgnoreClicks)
+                .gap(if self.bar {
+                    geometry::ATTACHED_GAP
+                } else {
+                    geometry::POPUP_GAP
+                })
                 .width(width)
                 .frame(paint::frame(Theme::from_context(ui.ctx())))
                 .accessible_name(self.name.to_string())
@@ -168,17 +203,37 @@ impl<'a, T: Clone> Dropdown<'a, T> {
                         ))
                         .show(ui, |ui| {
                             Menu::new("actions", self.items)
+                                .width(self.width)
+                                .in_menu_bar(self.bar)
+                                .keyboard_open(open_edge.is_some())
                                 .accessible_name(self.name.as_ref())
                                 .show_unframed(ui, root.with("menu"))
                         })
                         .inner;
                 focus_opening_item(ui, &mut memory, &result.items);
+                memory.items = result.focus_ids.clone();
                 result
             });
             if let Some(result) = shown {
                 popup = Some(result.response);
                 menu = Some(result.inner);
             }
+        }
+        let escape =
+            initially_open && ui.input_mut(|i| i.consume_key(Modifiers::NONE, Key::Escape));
+        let outside = memory.was_open
+            && ui.input(|i| i.pointer.any_click())
+            && ui.ctx().pointer_interact_pos().is_some_and(|pos| {
+                !trigger.rect.contains(pos)
+                    && !popup
+                        .as_ref()
+                        .is_some_and(|r: &Response| r.rect.contains(pos))
+                    && !menu
+                        .as_ref()
+                        .is_some_and(|m| m.popup_rects.iter().any(|r| r.contains(pos)))
+            });
+        if escape || outside {
+            *self.open = false;
         }
         let action = menu.as_ref().and_then(|menu| menu.action.clone());
         if action.is_some() {
@@ -245,25 +300,21 @@ fn restore_focus(
     trigger.request_focus();
 }
 
-fn prepare_tab_exit(ui: &Ui, memory: &Memory, open: bool) {
+fn prepare_tab_exit(ui: &Ui, memory: &Memory, open: bool, attached: bool) -> bool {
     let Some(trigger) = memory.trigger else {
-        return;
+        return false;
     };
     let owns_focus = ui
         .memory(|mem| mem.focused())
         .is_some_and(|id| id == trigger || memory.items.contains(&id));
-    if !open || !owns_focus || !ui.input(|input| input.key_pressed(Key::Tab)) {
-        return;
+    if !open || !owns_focus {
+        return false;
     }
-    let direction = if ui.input(|input| input.modifiers.shift) {
-        egui::FocusDirection::Previous
-    } else {
-        egui::FocusDirection::Next
+    let Some(direction) = popup_focus::tab_direction(ui) else {
+        return false;
     };
-    ui.memory_mut(|memory| {
-        memory.request_focus(trigger);
-        memory.move_focus(direction);
-    });
+    popup_focus::leave(ui, trigger, direction, attached);
+    true
 }
 
 fn opening_key(trigger: &Response, context: bool) -> Option<Edge> {
@@ -293,7 +344,6 @@ fn opening_key(trigger: &Response, context: bool) -> Option<Edge> {
 }
 
 fn focus_opening_item(ui: &Ui, memory: &mut Memory, items: &[Response]) {
-    memory.items = items.iter().map(|response| response.id).collect();
     if ui.is_sizing_pass() {
         return;
     }
@@ -306,7 +356,7 @@ fn focus_opening_item(ui: &Ui, memory: &mut Memory, items: &[Response]) {
         Edge::Last => enabled.next_back(),
     };
     if let Some(target) = target {
-        target.request_focus();
+        crate::widgets::menu::memory::focus(target);
     }
 }
 

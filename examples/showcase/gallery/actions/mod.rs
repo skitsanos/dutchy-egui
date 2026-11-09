@@ -36,7 +36,11 @@ impl ActionsState {
         );
         toggles::show(ui, self);
     }
-    pub fn toolbars(&mut self, ui: &mut egui::Ui) {
+    pub fn toolbars(
+        &mut self,
+        ui: &mut egui::Ui,
+        commands: &mut super::command_surfaces::CommandState,
+    ) {
         heading(
             ui,
             "Toolbars",
@@ -44,6 +48,9 @@ impl ActionsState {
             "Tab enters once. Arrows move between tools. Enter or Space performs an action; moving focus never does.",
         );
         toolbars::show(ui, self);
+        super::section(ui, "04", "Menus / connected command surfaces", |ui| {
+            super::command_surfaces::show(ui, commands);
+        });
     }
 }
 

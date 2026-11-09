@@ -86,7 +86,7 @@ cargo run --example showcase --all-features
   NumberInput, DatePicker, TimePicker, ColorPicker.
 - **Surfaces and feedback:** Card, Alert, Badge, Stat and StatsGrid,
   EmptyState, Progress, Skeleton, Spinner, Toasts, Tooltip.
-- **Navigation and disclosure:** Accordion, Tabs, Menu, Dropdown,
+- **Navigation and disclosure:** Accordion, Tabs, Menu, MenuBar, Dropdown,
   CommandPalette, Breadcrumbs, Pagination, Stepper.
 - **Overlays:** Modal and Drawer with native modality and focus return.
 - **Data and media:** DataTable, Image, Gallery, Lightbox, MediaCard,

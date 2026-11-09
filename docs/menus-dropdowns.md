@@ -51,6 +51,10 @@ flat fills and a two-point outer border. Disabled items cannot activate.
 The host owns open flags and action execution. The library returns typed actions;
 it never deletes data or registers the shortcut hints.
 
+Checked actions, nested submenus, application menu bars and Toolbar menu buttons
+are covered by the [richer-menu contract](richer-menus.md). `MenuResponse.event`
+adds typed checked-state requests; `.action` remains a leaf-value result.
+
 ## Editable selection
 
 `SearchableSelect::new(id, &mut Option<T>, &mut SearchState, &options)` uses the
@@ -96,9 +100,9 @@ new focus destination. Host-set queries are retained between openings.
 
 ## Boundaries
 
-Filtering is substring search, not fuzzy ranking. No nested submenus, menu bar,
-checked/radio actions, rich arbitrary result bodies, asynchronous search, or
-virtualization is supplied. A general Modal/Drawer API remains a later step.
+Filtering is substring search, not fuzzy ranking. Command search uses flat
+leaf lists. Radio/mixed menu checks, rich arbitrary result bodies, asynchronous
+search and virtualization are outside the supported scope.
 Very long shortcut hints are clipped; avoid using hints for essential guidance.
 Native popup placement may settle after a sizing pass. Display scales use logical
 points, and source palette contrast limitations remain in DS-003.

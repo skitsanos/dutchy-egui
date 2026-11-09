@@ -1,23 +1,35 @@
 use super::{MenuItem, MenuItemVariant};
 use crate::{
-    Family, Text, TextSize, Theme, Weight,
-    interaction::focus_is_visible,
+    Family, Icon, Text, TextSize, Theme, Weight,
     tokens::{border, menu as geometry},
 };
-use egui::{Id, Rect, Response, Sense, Stroke, Ui, WidgetInfo, pos2, vec2};
+use egui::{Id, Rect, Response, Sense, Stroke, StrokeKind, Ui, WidgetInfo, pos2, vec2};
 
 pub(crate) struct RowState {
     pub role: egui::accesskit::Role,
     pub active: bool,
     pub selected: bool,
     pub focusable: bool,
+    pub check_slot: bool,
+    pub pointer: bool,
+    pub branch_open: bool,
 }
 
 pub(crate) fn row<T>(ui: &mut Ui, id: Id, item: &MenuItem<'_, T>, state: RowState) -> Response {
     let theme = Theme::from_context(ui.ctx());
     let p = theme.palette;
     let width = ui.available_width().max(0.0);
-    let content = (width - geometry::PADDING_X * 2.0).max(0.0);
+    let check_width = if state.check_slot {
+        geometry::ICON_SIZE + geometry::ITEM_GAP
+    } else {
+        0.0
+    };
+    let branch_width = if item.children.is_some() {
+        geometry::ICON_SIZE + geometry::ITEM_GAP
+    } else {
+        0.0
+    };
+    let content = (width - geometry::PADDING_X * 2.0 - check_width - branch_width).max(0.0);
     let icon_width = if item.icon.is_some() {
         geometry::ICON_SIZE + geometry::ITEM_GAP
     } else {
@@ -52,29 +64,91 @@ pub(crate) fn row<T>(ui: &mut Ui, id: Id, item: &MenuItem<'_, T>, state: RowStat
         Sense::CLICK
     };
     let response = ui.interact(rect, id, sense);
-    response.widget_info(|| WidgetInfo::labeled(state.role, ui.is_enabled(), item.label.as_ref()));
-    ui.ctx().accesskit_node_builder(id, |node| {
-        if state.role == egui::accesskit::Role::ListBoxOption {
-            node.set_selected(state.selected);
-        }
-        if let Some(hint) = &item.shortcut {
-            node.set_description(format!("Shortcut: {hint}"));
-        }
-    });
+    metadata(&response, item, &state);
     let highlighted = ui.is_enabled()
         && (state.active
-            || (state.focusable && (response.hovered() || focus_is_visible(&response))));
+            || (state.focusable
+                && if state.pointer {
+                    response.hovered()
+                } else {
+                    response.has_focus()
+                }));
     if !ui.is_rect_visible(rect) {
         return response;
     }
-    let destructive = item.variant == MenuItemVariant::Destructive;
+    // Under pointer ownership the keyboard-focused row stays visible as quiet
+    // context, so Enter never activates an unmarked row.
+    let focus_behind_pointer = state.pointer && !highlighted && response.has_focus();
+    let (fill, foreground) = colors(
+        p,
+        highlighted,
+        state.selected || state.branch_open || focus_behind_pointer,
+        item.variant,
+    );
+    let painter = ui.painter().with_clip_rect(ui.clip_rect().intersect(rect));
+    painter.rect_filled(rect, 0, fill);
+    let arrow_ink = if state.branch_open && !highlighted {
+        p.primary
+    } else {
+        foreground
+    };
+    decorations(&painter, rect, item, foreground, arrow_ink);
+    if let Some(icon) = item.icon {
+        icon(
+            &painter,
+            Rect::from_center_size(
+                pos2(
+                    rect.left() + geometry::PADDING_X + check_width + geometry::ICON_SIZE / 2.0,
+                    rect.center().y,
+                ),
+                vec2(geometry::ICON_SIZE, geometry::ICON_SIZE),
+            ),
+            foreground,
+        );
+    }
+    let text_left = rect.left() + geometry::PADDING_X + check_width + icon_width;
+    painter
+        .with_clip_rect(Rect::from_min_size(
+            pos2(text_left, rect.top()),
+            vec2(text_width, rect.height()),
+        ))
+        .galley_with_override_text_color(
+            pos2(text_left, rect.center().y - galley.size().y / 2.0),
+            galley,
+            foreground,
+        );
+    if let Some(hint) = hint {
+        let position = pos2(
+            rect.right() - geometry::PADDING_X - branch_width - hint.size().x,
+            rect.center().y - hint.size().y / 2.0,
+        );
+        painter.galley_with_override_text_color(
+            position,
+            hint,
+            if highlighted {
+                foreground
+            } else {
+                p.muted_foreground
+            },
+        );
+    }
+    response
+}
+
+fn colors(
+    p: crate::tokens::Palette,
+    highlighted: bool,
+    selected: bool,
+    variant: MenuItemVariant,
+) -> (egui::Color32, egui::Color32) {
+    let destructive = variant == MenuItemVariant::Destructive;
     let fill = if highlighted {
         if destructive {
             p.destructive
         } else {
             p.primary
         }
-    } else if state.selected {
+    } else if selected {
         p.muted
     } else {
         p.background
@@ -90,45 +164,82 @@ pub(crate) fn row<T>(ui: &mut Ui, id: Id, item: &MenuItem<'_, T>, state: RowStat
     } else {
         p.foreground
     };
-    let painter = ui.painter().with_clip_rect(ui.clip_rect().intersect(rect));
-    painter.rect_filled(rect, 0, fill);
-    if let Some(icon) = item.icon {
-        icon(
-            &painter,
-            Rect::from_center_size(
-                pos2(
-                    rect.left() + geometry::PADDING_X + geometry::ICON_SIZE / 2.0,
-                    rect.center().y,
-                ),
-                vec2(geometry::ICON_SIZE, geometry::ICON_SIZE),
-            ),
-            foreground,
-        );
-    }
-    painter.galley_with_override_text_color(
-        pos2(
-            rect.left() + geometry::PADDING_X + icon_width,
-            rect.center().y - galley.size().y / 2.0,
-        ),
-        galley,
-        foreground,
-    );
-    if let Some(hint) = hint {
-        let position = pos2(
-            rect.right() - geometry::PADDING_X - hint.size().x,
-            rect.center().y - hint.size().y / 2.0,
-        );
-        painter.galley_with_override_text_color(
-            position,
-            hint,
-            if highlighted {
-                foreground
+    (fill, foreground)
+}
+
+fn metadata<T>(response: &Response, item: &MenuItem<'_, T>, state: &RowState) {
+    let role = if state.role == egui::accesskit::Role::MenuItem
+        && item.children.is_none()
+        && item.checked.is_some()
+    {
+        egui::accesskit::Role::MenuItemCheckBox
+    } else {
+        state.role
+    };
+    response.widget_info(|| WidgetInfo::labeled(role, response.enabled(), item.label.as_ref()));
+    response.ctx.accesskit_node_builder(response.id, |node| {
+        if state.role == egui::accesskit::Role::ListBoxOption {
+            node.set_selected(state.selected);
+        }
+        if role == egui::accesskit::Role::MenuItemCheckBox {
+            node.set_toggled(if item.checked == Some(true) {
+                egui::accesskit::Toggled::True
             } else {
-                p.muted_foreground
-            },
+                egui::accesskit::Toggled::False
+            });
+        }
+        if let Some(hint) = &item.shortcut {
+            node.set_description(format!("Shortcut: {hint}"));
+        }
+    });
+}
+
+fn decorations<T>(
+    painter: &egui::Painter,
+    rect: Rect,
+    item: &MenuItem<'_, T>,
+    foreground: egui::Color32,
+    arrow_ink: egui::Color32,
+) {
+    if let Some(checked) = item.checked.filter(|_| item.children.is_none()) {
+        let check = Rect::from_center_size(
+            pos2(
+                rect.left() + geometry::PADDING_X + geometry::ICON_SIZE / 2.0,
+                rect.center().y,
+            ),
+            vec2(geometry::CHECK_SIZE, geometry::CHECK_SIZE),
+        );
+        painter.rect_stroke(
+            check,
+            0,
+            Stroke::new(border::THIN, foreground),
+            StrokeKind::Inside,
+        );
+        if checked {
+            Icon::Check.paint(painter, check.shrink(border::STANDARD), foreground);
+        }
+    }
+    if item.children.is_some() {
+        let center = pos2(
+            rect.right() - geometry::PADDING_X - geometry::ICON_SIZE / 2.0,
+            rect.center().y,
+        );
+        let offset = geometry::CHECK_SIZE / 4.0;
+        painter.line_segment(
+            [
+                center + vec2(-offset / 2.0, -offset),
+                center + vec2(offset / 2.0, 0.0),
+            ],
+            Stroke::new(border::STANDARD, arrow_ink),
+        );
+        painter.line_segment(
+            [
+                center + vec2(offset / 2.0, 0.0),
+                center + vec2(-offset / 2.0, offset),
+            ],
+            Stroke::new(border::STANDARD, arrow_ink),
         );
     }
-    response
 }
 
 pub(crate) fn divider(ui: &mut Ui, strong: bool) {
