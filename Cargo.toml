@@ -9,12 +9,12 @@ repository = "https://github.com/skitsanos/dutchy-egui"
 readme = "README.md"
 keywords = ["egui", "gui", "design-system", "widgets", "theme"]
 categories = ["gui"]
+# Tests, image baselines and examples stay in the repository (GitHub); the
+# package carries the library, fonts and licence notices, and docs.
 include = [
-    "/src/**", "/assets/**", "/examples/**", "/tests/**", "/docs/**",
-    "/scripts/prepare_fonts.py", "/.clippy.toml", "/kittest.toml", "/AGENTS.md", "/README.md",
+    "/src/**", "/assets/**", "/docs/**",
+    "/scripts/prepare_fonts.py", "/.clippy.toml", "/AGENTS.md", "/README.md",
     "/LICENSE", "/THIRD_PARTY.md", "/CHANGELOG.md", "/Cargo.lock",
-    "!/tests/snapshots/**/*.diff.png", "!/tests/snapshots/**/*.new.png",
-    "!/tests/snapshots/**/*.old.png",
 ]
 
 [features]

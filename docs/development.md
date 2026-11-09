@@ -36,8 +36,9 @@ regenerate them for the example's rendering test and confirm only the version
 digits differ.
 Never push without user authorization. Before delivery, run checks, generate
 and inspect the actual crate, verify its sources and bundled license notices,
-and ensure video work, storyboard outputs and generated snapshot differences
-are excluded. Explicit includes override gitignore, so keep package patterns
+and ensure tests, image baselines, examples, video work and storyboard outputs
+are excluded: the package carries the library, fonts with their licence
+notices and docs. Explicit includes override gitignore, so keep package patterns
 root-anchored. A failed gate stops delivery; commit and push are separate steps.
 
 After pushing, inspect and clean generated repository outputs, obsolete clean
@@ -52,7 +53,9 @@ Run `bash scripts/check.sh` after installing stable rustfmt/Clippy, the
 `wasm32-unknown-unknown` target and Rust 1.95.0. It runs the required gates,
 partial-feature profiles, native example build and actual crate inspection.
 `python3 scripts/check_package.py [archive.crate]` also audits an existing
-archive for approved paths, matching source bytes, licences and packaged links.
+archive for approved paths, matching source bytes, licences, packaged links
+and the crates.io upload limit. Tests and examples run from a repository
+checkout; `cargo package` warns once for each unpackaged target, as expected.
 
 The repository's `.github/workflows/ci.yml` runs the gate on Ubuntu with
 software Vulkan and separately checks the library on macOS and Windows. It

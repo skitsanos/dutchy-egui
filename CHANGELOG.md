@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Keep tests, image baselines and examples out of the published crate: the
+  package drops from 11.5 MiB to 1.7 MiB compressed, under the crates.io
+  upload limit; examples remain in the repository (DS-102).
+
 ## 1.0.29 — 2026-11-09
 
 - Adopt Ubuntu 26.04 for the Linux CI quality job from Renovate PR #4
