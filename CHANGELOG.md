@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — planned 1.0.30
+## 1.0.30 — 2026-11-09
 
 - Add DutchyAgent: an offline scripted chat example with streaming, Stop/Retry,
   independent conversations and Markdown/CodeBlock integration (DS-099).
@@ -23,6 +23,7 @@
   whole. Replace the 90-second total body timeout with a 5-minute idle watchdog,
   name connection failures accurately, scale the output limit with effort and
   report incomplete replies by cause in both modes (DS-103).
+- Refresh the DutchyTodo header baselines for the package version.
 
 ## 1.0.29 — 2026-11-09
 

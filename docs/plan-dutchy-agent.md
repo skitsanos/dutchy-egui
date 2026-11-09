@@ -1,6 +1,6 @@
 # DutchyAgent implementation plan
 
-Status: implemented and locally qualified; unreleased, planned 1.0.30.
+Status: implemented; shipped in 1.0.30 with review fixes ([DS-103](issues/DS-103.md)).
 The initial offline milestone below is
 tracked in [DS-099](issues/DS-099.md); see its
 [qualification](verification-dutchy-agent.md). The live extension is DS-100.

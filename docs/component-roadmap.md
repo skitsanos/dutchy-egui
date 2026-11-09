@@ -34,7 +34,7 @@ mock, independent conversations, streaming, Stop/Retry and Markdown/CodeBlock
 integration. See [the milestone plan](plan-dutchy-agent.md), original
 [offline verification](verification-dutchy-agent.md) (DS-099) and
 [live verification](verification-dutchy-agent-live.md) (DS-100).
-The work is unreleased, planned for 1.0.30.
+It shipped in 1.0.30 with its review fixes ([DS-103](issues/DS-103.md)).
 
 ## Recommended next milestones
 

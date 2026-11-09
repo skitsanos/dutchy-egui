@@ -1,5 +1,8 @@
 # DutchyAgent offline qualification
 
+Released in 1.0.30 with review fixes; see [DS-103](issues/DS-103.md) and the
+[release qualification](verification-release-1.0.30.md).
+
 Historical record of the initial offline implementation. The
 [live extension](verification-dutchy-agent-live.md) supersedes the provider and
 credential-retention limits below; this record preserves the earlier evidence.

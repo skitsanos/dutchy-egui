@@ -1,5 +1,8 @@
 # DutchyAgent live provider qualification
 
+Released in 1.0.30 with review fixes; see [DS-103](issues/DS-103.md) and the
+[release qualification](verification-release-1.0.30.md).
+
 This records DS-100 before the [header/sidebar follow-up](verification-dutchy-agent-shell.md)
 (DS-101). Its live-provider evidence still applies; the follow-up records the
 current presentation and test counts.

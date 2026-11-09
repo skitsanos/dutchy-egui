@@ -81,7 +81,7 @@ The smallest complete application and the tutorial companion to
 
 ## DutchyAgent
 
-The current unreleased milestone is [DutchyAgent](dutchy-agent.md), following
+[DutchyAgent](dutchy-agent.md) shipped in 1.0.30, following
 the 1.0.28 command integration and 1.0.29 CI release. It connects OpenAI Responses
 and an explicit offline mock to the Markdown and CodeBlock composition.
 
@@ -101,14 +101,14 @@ and an explicit offline mock to the Markdown and CodeBlock composition.
   API/model documentation. Live errors never trigger a scripted fallback.
 - **Limits.** No tool calling, attachments, image input, conversation
   persistence, temperature control, custom endpoints or multiple provider accounts.
-- **Offline milestone** ([DS-099](issues/DS-099.md), unreleased): independent
+- **Offline milestone** ([DS-099](issues/DS-099.md), 1.0.30): independent
   conversations/drafts, deterministic streaming, Stop/Retry, Markdown/code copy,
   simulated error scenarios, first-token Skeleton and estimated usage. Model
   settings load from process values over ignored `.env`: `MODEL_NAME` defaults
   to `gpt-6-luna`, `MODEL_EFFORT` to `low`. The initial implementation retained
   key presence only. [Offline verification](verification-dutchy-agent.md)
   records that stage.
-- **Live extension** ([DS-100](issues/DS-100.md), unreleased): configured
+- **Live extension** ([DS-100](issues/DS-100.md), 1.0.30): configured
   credentials select OpenAI at startup; explicit Mock selection remains offline.
   Bounded transport/SSE parsing, cooperative cancellation, source labels and
   API-reported usage are implemented. A real native "Hi" turn verified the
@@ -160,8 +160,8 @@ application.
 2. Shipped in 1.0.28: shared commands,
    shortcut editing and nested search in Todo and Canal Studio; see the
    [implementation plan](plan-1.0.28.md). Hosted CI runs after the approved push.
-3. Current: DutchyAgent with OpenAI Responses and an explicit offline mock,
-   targeting 1.0.30 after local qualification and an authorized release.
+3. Shipped in 1.0.30: DutchyAgent with OpenAI Responses and an explicit offline
+   mock, with its review fixes (DS-103) and wrapping-row Text alignment (DS-104).
 4. Workbench releases: List/selection first, then TreeView/SplitPane and editing
    helpers; DutchyMail composes those controls once available.
 5. DutchyDash together with the dashboards milestone.

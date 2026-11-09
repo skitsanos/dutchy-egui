@@ -1,5 +1,8 @@
 # DutchyAgent header and sidebar verification
 
+Released in 1.0.30 with review fixes; see [DS-103](issues/DS-103.md) and the
+[release qualification](verification-release-1.0.30.md).
+
 Date: 2026-11-09. [DS-101](issues/DS-101.md), on
 `ticket/ds-099-dutchy-agent`, targeting the unreleased 1.0.30 scope. Package
 version remains 1.0.29; no commit or push is part of this change.
