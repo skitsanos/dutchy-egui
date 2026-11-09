@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.29 — 2026-11-09
+
+- Adopt Ubuntu 26.04 for the Linux CI quality job from Renovate PR #4
+  (DS-098). Keep the macOS/Windows feature checks and qualification matrix.
+- Register the verified runner label for actionlint 1.7.12.
+- Refresh the DutchyTodo header baselines for the package version.
+
 ## 1.0.28 — 2026-11-09
 
 - Add host-owned CommandRegistry with typed requests, scoped/conflict-aware

@@ -65,3 +65,8 @@ Baselines are rendered with macOS Metal and compared strictly there; refresh
 them on macOS only. `kittest.toml` lets Linux software Vulkan differ in a
 bounded number of pixels per snapshot, because it rasterizes some edges one
 column differently. The macOS gate remains the authoritative visual check.
+
+The quality job uses Ubuntu 26.04. Stable actionlint 1.7.12 predates that
+hosted label; `.github/actionlint.yaml` adds only the verified `ubuntu-26.04`
+label through its custom-label configuration. No lint rule is suppressed.
+Remove the entry when a stable actionlint release includes the runner.

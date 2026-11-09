@@ -1,0 +1,5 @@
+# Ubuntu 26.04 is hosted and verified in PR #4. Stable actionlint 1.7.12
+# predates its runner inventory entry. Remove this label when upstream adds it.
+self-hosted-runner:
+  labels:
+    - ubuntu-26.04
