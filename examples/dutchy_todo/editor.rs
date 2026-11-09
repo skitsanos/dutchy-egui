@@ -6,8 +6,8 @@ use crate::{
     store::{Priority, ProjectId, Task, TaskDraft, TaskId},
 };
 use dutchy_egui::{
-    Button, ButtonVariant, DatePicker, Drawer, DrawerWidth, Field, Input, Modal, ModalWidth,
-    OverlayOptions, Segmented, Text, TextColor, Textarea,
+    Alert, AlertVariant, Button, ButtonVariant, DatePicker, Drawer, DrawerWidth, Field, Input,
+    Modal, ModalWidth, OverlayOptions, Segmented, Text, TextColor, Textarea,
     calendar::Date,
     tokens::{ControlSize, space},
     validation::{FieldValidation, Rule},
@@ -39,6 +39,8 @@ pub struct Editor {
     pub focus_title: bool,
     /// Title validation shown by the Field.
     pub validation: FieldValidation,
+    /// A save failure that must remain visible inside the drawer.
+    pub save_error: Option<&'static str>,
 }
 
 impl Editor {
@@ -63,6 +65,7 @@ impl Editor {
         self.return_focus = return_focus;
         self.focus_title = true;
         self.validation.clear();
+        self.save_error = None;
     }
 }
 
@@ -103,6 +106,7 @@ pub fn drawer(app: &mut App, ctx: &Context) {
         return_focus,
         focus_title,
         validation,
+        save_error,
     } = &mut app.editor;
     let existing = matches!(target, Target::Existing(_));
     let title = if existing { "Edit task" } else { "New task" };
@@ -114,7 +118,16 @@ pub fn drawer(app: &mut App, ctx: &Context) {
         })
         .show_with_footer(
             ctx,
-            |ui| fields(ui, draft, validation, focus_title, today),
+            |ui| {
+                if let Some(message) = *save_error {
+                    Alert::new("task-save-error", message)
+                        .title("Task limit reached")
+                        .variant(AlertVariant::Error)
+                        .show(ui);
+                    ui.add_space(space::MD);
+                }
+                fields(ui, draft, validation, focus_title, today)
+            },
             |ui| footer(ui, existing),
         );
     let Some(result) = result else {
@@ -206,6 +219,7 @@ fn footer(ui: &mut Ui, existing: bool) -> Option<Action> {
 }
 
 fn save(app: &mut App) {
+    app.editor.save_error = None;
     let rules = [Rule::required("Enter a title before saving.")];
     if !app
         .editor
@@ -219,8 +233,13 @@ fn save(app: &mut App) {
     match app.editor.target {
         Target::New => {
             if let Some(project) = app.selected {
-                let id = app.store.add_task(project, draft);
-                app.focus = Some(Focus::Row(id));
+                match app.store.add_task(project, draft) {
+                    Ok(id) => app.focus = Some(Focus::Row(id)),
+                    Err(_) => {
+                        app.editor.save_error = Some("No more tasks can be added to this list.");
+                        return;
+                    }
+                }
             }
         }
         Target::Existing(id) => {

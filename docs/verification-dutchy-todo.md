@@ -1,6 +1,8 @@
 # Verification — DutchyTodo example application
 
 Shipped in release 1.0.26; see the [release record](verification-release-1.0.26.md).
+For subsequent import and Undo fixes, see the
+[import safety verification](verification-todo-import-safety.md).
 
 Date: 2026-11-08. Local work after repository release 1.0.25 (`5d68a93`),
 tracked as [DS-077](issues/DS-077.md). No dependency was added: the example

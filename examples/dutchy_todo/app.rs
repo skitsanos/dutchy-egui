@@ -3,9 +3,10 @@
 
 use crate::{
     data, editor,
+    history::{History, UndoRequest},
     io::Io,
     sidebar,
-    store::{Filter, ProjectId, RemovedProject, Store, Task, TaskId},
+    store::{Filter, ProjectId, Store, Task, TaskId},
     support::{
         capture::Capture,
         shell::{self, Hint},
@@ -17,18 +18,6 @@ use dutchy_egui::{
     Flex, Text, TextColor, TextSize, ToastEvent, ToastQueue, Toasts, calendar::Date, tokens::space,
 };
 use egui::{Context, Key, Modifiers, Ui};
-
-/// Single-use payload returned by an undo toast.
-pub enum Undo {
-    /// Put a deleted task back.
-    Delete(Task),
-    /// Reopen a completed task.
-    Complete(TaskId),
-    /// Put a deleted project and its tasks back.
-    DeleteProject(RemovedProject),
-    /// Restore the store that an import replaced.
-    Import(Store),
-}
 
 /// Where keyboard focus should land once the target control exists.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -66,7 +55,9 @@ pub struct App {
     /// Project deletion confirmation.
     pub confirm: editor::Confirm,
     /// Notifications with undo payloads.
-    pub toasts: ToastQueue<Undo>,
+    pub toasts: ToastQueue<UndoRequest>,
+    /// Identity of the store that can accept current Undo requests.
+    pub history: History,
     /// Pending focus request, consumed by the view that owns the target.
     pub focus: Option<Focus>,
     /// Import and export jobs.
@@ -100,6 +91,7 @@ impl App {
             editor: editor::Editor::default(),
             confirm: editor::Confirm::default(),
             toasts: ToastQueue::new(),
+            history: History::default(),
             focus: None,
             io: Io::default(),
             capture: Capture::default(),

@@ -59,7 +59,13 @@ The smallest complete application and the tutorial companion to
   Up/Down, Home and End move between rows, a pointer click focuses a row and a
   double-click edits it, while the Checkbox keeps its own activation. Import
   and export use a tab-separated line format instead of serde, and an import
-  replaces the store with an undo toast rather than asking first. Kbd hints
+  replaces the store with an undo toast rather than asking first. Replacing
+  the store (also through undo-import) discards older Undo actions and closes
+  editors bound to the old records. Project and task IDs range from zero to
+  `u64::MAX - 1`; the maximum value is reserved for exhaustion. Import errors
+  leave the current list intact, and exhausted creation preserves drafts with
+  an error message. See the [import safety verification](verification-todo-import-safety.md).
+  Kbd hints
   sit in the status strip and the task search has no global shortcut. The
   support module ships a theme switcher, header, sidebar and status-strip
   frames, a seeded generator with fictional people, and capture hooks

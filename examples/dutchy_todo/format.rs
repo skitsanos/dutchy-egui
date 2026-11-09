@@ -83,13 +83,17 @@ pub fn import(text: &str) -> Result<Store, ImportError> {
         }
         let fields: Vec<&str> = line.split('\t').collect();
         match fields[0] {
-            "project" => store.insert_project(project(number, &fields)?),
+            "project" => store
+                .insert_project(project(number, &fields)?)
+                .map_err(|error| fail(number, error.to_string()))?,
             "task" => {
                 let task = task(number, &fields)?;
                 if store.project(task.project).is_none() {
                     return Err(fail(number, format!("Unknown project {}", task.project.0)));
                 }
-                store.insert_task(task);
+                store
+                    .insert_task(task)
+                    .map_err(|error| fail(number, error.to_string()))?;
             }
             other => return Err(fail(number, format!("Unknown record `{other}`"))),
         }

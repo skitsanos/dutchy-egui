@@ -15,6 +15,7 @@ mod app;
 mod data;
 mod editor;
 mod format;
+mod history;
 mod io;
 mod row;
 mod sidebar;

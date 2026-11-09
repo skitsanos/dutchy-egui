@@ -3,9 +3,10 @@
 //! focus and selection rules live in one place.
 
 use crate::{
-    app::{App, Focus, Undo},
+    app::{App, Focus},
+    history::{Undo, UndoRequest},
     io::Outcome,
-    store::{ProjectId, TaskId},
+    store::{ProjectId, Store, TaskId},
 };
 use dutchy_egui::{Toast, ToastVariant};
 use egui::Id;
@@ -66,7 +67,18 @@ impl App {
 
     /// Create a project from the sidebar draft and show it.
     pub fn add_project(&mut self) {
-        let id = self.store.add_project(&self.new_project);
+        let id = match self.store.add_project(&self.new_project) {
+            Ok(id) => id,
+            Err(_) => {
+                self.notify(
+                    "Project limit reached",
+                    "No more projects can be added to this list.",
+                    ToastVariant::Error,
+                    None,
+                );
+                return;
+            }
+        };
         self.new_project.clear();
         self.selected = Some(id);
         self.focus = Some(Focus::Project(id));
@@ -103,18 +115,22 @@ impl App {
         let mut toast = Toast::new(message).title(title).variant(variant);
         if let Some(undo) = undo {
             toast = toast
-                .action("Undo", undo)
+                .action("Undo", self.history.request(undo))
                 .timeout(Some(Duration::from_secs(8)));
         }
         self.toasts.push(toast);
     }
 
-    pub(crate) fn undo(&mut self, undo: Undo) {
+    pub(crate) fn undo(&mut self, request: UndoRequest) {
+        let Some(undo) = self.history.take(request) else {
+            return;
+        };
         match undo {
             Undo::Delete(task) => {
                 let id = task.id;
-                self.store.restore_task(task);
-                self.focus = Some(Focus::Row(id));
+                if self.store.restore_task(task).is_ok() {
+                    self.focus = Some(Focus::Row(id));
+                }
             }
             Undo::Complete(id) => {
                 self.store.set_done(id, false);
@@ -122,28 +138,33 @@ impl App {
             }
             Undo::DeleteProject(removed) => {
                 let id = removed.project.id;
-                self.store.restore_project(removed);
-                self.selected = Some(id);
-                self.focus = Some(Focus::Project(id));
+                if self.store.restore_project(removed).is_ok() {
+                    self.selected = Some(id);
+                    self.focus = Some(Focus::Project(id));
+                }
             }
             Undo::Import(previous) => {
-                self.store = previous;
-                self.ensure_selection();
+                self.replace_store(previous);
             }
         }
     }
 
     pub(crate) fn finish_jobs(&mut self) {
-        match self.io.poll() {
-            Some(Outcome::Exported { name, tasks }) => self.notify(
+        if let Some(outcome) = self.io.poll() {
+            self.finish_job(outcome);
+        }
+    }
+
+    pub(crate) fn finish_job(&mut self, outcome: Outcome) {
+        match outcome {
+            Outcome::Exported { name, tasks } => self.notify(
                 "Exported",
                 format!("Wrote {tasks} tasks to {name}."),
                 ToastVariant::Success,
                 None,
             ),
-            Some(Outcome::Imported { name, store }) => {
-                let previous = std::mem::replace(&mut self.store, store);
-                self.ensure_selection();
+            Outcome::Imported { name, store } => {
+                let previous = self.replace_store(store);
                 let tasks = self.store.tasks().count();
                 self.notify(
                     "Imported",
@@ -152,7 +173,7 @@ impl App {
                     Some(Undo::Import(previous)),
                 );
             }
-            Some(Outcome::Failed(message)) => {
+            Outcome::Failed(message) => {
                 self.notify(
                     "Import or export failed",
                     message,
@@ -160,7 +181,17 @@ impl App {
                     None,
                 );
             }
-            None => {}
         }
+    }
+
+    fn replace_store(&mut self, store: Store) -> Store {
+        self.history.invalidate();
+        self.toasts.clear();
+        self.editor = Default::default();
+        self.confirm = Default::default();
+        let previous = std::mem::replace(&mut self.store, store);
+        self.ensure_selection();
+        self.focus = Some(self.selected.map_or(Focus::NewProject, Focus::Project));
+        previous
     }
 }

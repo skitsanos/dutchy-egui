@@ -15,15 +15,21 @@ fn draft(title: &str, priority: Priority, due: Option<i64>) -> TaskDraft {
 #[test]
 fn tasks_keep_stable_ids_and_restore_under_the_same_key() {
     let mut store = Store::new();
-    let project = store.add_project("  Garden  ");
+    let project = store.add_project("  Garden  ").unwrap();
     assert_eq!(store.project(project).unwrap().name, "Garden");
-    let first = store.add_task(project, draft("First", Priority::Low, None));
-    let second = store.add_task(project, draft("Second", Priority::Low, None));
+    let first = store
+        .add_task(project, draft("First", Priority::Low, None))
+        .unwrap();
+    let second = store
+        .add_task(project, draft("Second", Priority::Low, None))
+        .unwrap();
     let removed = store.remove_task(first).unwrap();
     assert!(store.task(first).is_none());
-    let third = store.add_task(project, draft("Third", Priority::Low, None));
+    let third = store
+        .add_task(project, draft("Third", Priority::Low, None))
+        .unwrap();
     assert_ne!(third, first, "ids are never reused");
-    store.restore_task(removed);
+    store.restore_task(removed).unwrap();
     let order: Vec<_> = store.tasks().map(|task| task.id).collect();
     assert_eq!(
         order,
@@ -35,9 +41,11 @@ fn tasks_keep_stable_ids_and_restore_under_the_same_key() {
 #[test]
 fn blank_titles_fall_back_and_updates_keep_the_old_title() {
     let mut store = Store::new();
-    let project = store.add_project("");
+    let project = store.add_project("").unwrap();
     assert_eq!(store.project(project).unwrap().name, "Untitled project");
-    let id = store.add_task(project, draft("   ", Priority::High, None));
+    let id = store
+        .add_task(project, draft("   ", Priority::High, None))
+        .unwrap();
     assert_eq!(store.task(id).unwrap().title, "Untitled task");
     let mut update = draft("", Priority::Low, Some(2));
     update.notes = "Keep going\n\n".into();
@@ -53,11 +61,19 @@ fn blank_titles_fall_back_and_updates_keep_the_old_title() {
 #[test]
 fn counts_distinguish_open_done_overdue_and_due_today() {
     let mut store = Store::new();
-    let project = store.add_project("Garden");
-    store.add_task(project, draft("Overdue", Priority::Medium, Some(-1)));
-    store.add_task(project, draft("Today", Priority::Medium, Some(0)));
-    store.add_task(project, draft("Later", Priority::Medium, Some(3)));
-    let done = store.add_task(project, draft("Done but late", Priority::Medium, Some(-5)));
+    let project = store.add_project("Garden").unwrap();
+    store
+        .add_task(project, draft("Overdue", Priority::Medium, Some(-1)))
+        .unwrap();
+    store
+        .add_task(project, draft("Today", Priority::Medium, Some(0)))
+        .unwrap();
+    store
+        .add_task(project, draft("Later", Priority::Medium, Some(3)))
+        .unwrap();
+    let done = store
+        .add_task(project, draft("Done but late", Priority::Medium, Some(-5)))
+        .unwrap();
     store.set_done(done, true);
     let counts = store.counts(project, FIXED_TODAY);
     assert_eq!(
@@ -78,14 +94,24 @@ fn counts_distinguish_open_done_overdue_and_due_today() {
 #[test]
 fn visible_applies_filter_search_and_a_stable_order() {
     let mut store = Store::new();
-    let project = store.add_project("Garden");
-    let other = store.add_project("Kitchen");
-    let low = store.add_task(project, draft("Water ferns", Priority::Low, Some(1)));
-    let high = store.add_task(project, draft("Order trays", Priority::High, Some(5)));
-    let undated = store.add_task(project, draft("Compare tanks", Priority::High, None));
-    let done = store.add_task(project, draft("Clear gutters", Priority::High, Some(-1)));
+    let project = store.add_project("Garden").unwrap();
+    let other = store.add_project("Kitchen").unwrap();
+    let low = store
+        .add_task(project, draft("Water ferns", Priority::Low, Some(1)))
+        .unwrap();
+    let high = store
+        .add_task(project, draft("Order trays", Priority::High, Some(5)))
+        .unwrap();
+    let undated = store
+        .add_task(project, draft("Compare tanks", Priority::High, None))
+        .unwrap();
+    let done = store
+        .add_task(project, draft("Clear gutters", Priority::High, Some(-1)))
+        .unwrap();
     store.set_done(done, true);
-    store.add_task(other, draft("Measure alcove", Priority::High, None));
+    store
+        .add_task(other, draft("Measure alcove", Priority::High, None))
+        .unwrap();
     let ids = |store: &Store, filter, query: &str| -> Vec<_> {
         store
             .visible(project, filter, query)
@@ -106,11 +132,15 @@ fn visible_applies_filter_search_and_a_stable_order() {
 #[test]
 fn removing_a_project_takes_its_tasks_and_restores_them_in_place() {
     let mut store = Store::new();
-    let garden = store.add_project("Garden");
-    let kitchen = store.add_project("Kitchen");
-    let reading = store.add_project("Reading");
-    let task = store.add_task(kitchen, draft("Measure", Priority::Medium, None));
-    store.add_task(garden, draft("Dig", Priority::Medium, None));
+    let garden = store.add_project("Garden").unwrap();
+    let kitchen = store.add_project("Kitchen").unwrap();
+    let reading = store.add_project("Reading").unwrap();
+    let task = store
+        .add_task(kitchen, draft("Measure", Priority::Medium, None))
+        .unwrap();
+    store
+        .add_task(garden, draft("Dig", Priority::Medium, None))
+        .unwrap();
     let removed = store.remove_project(kitchen).unwrap();
     assert_eq!(removed.index, 1);
     assert_eq!(removed.tasks.len(), 1);
@@ -118,7 +148,7 @@ fn removing_a_project_takes_its_tasks_and_restores_them_in_place() {
     assert_eq!(store.tasks().count(), 1);
     let names: Vec<_> = store.projects().iter().map(|p| p.name.as_str()).collect();
     assert_eq!(names, ["Garden", "Reading"]);
-    store.restore_project(removed);
+    store.restore_project(removed).unwrap();
     let names: Vec<_> = store.projects().iter().map(|p| p.name.as_str()).collect();
     assert_eq!(names, ["Garden", "Kitchen", "Reading"]);
     assert_eq!(store.task(task).unwrap().project, kitchen);

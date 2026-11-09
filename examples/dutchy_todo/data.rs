@@ -114,26 +114,34 @@ const READING_NOUNS: [&str; 6] = [
 /// Build the demo store and return it with the first project selected.
 pub fn seeded(today: Date) -> (Store, ProjectId) {
     let mut store = Store::new();
-    let garden = store.add_project("Garden renovation");
+    let garden = store
+        .add_project("Garden renovation")
+        .expect("seed project ids fit");
     fill(&mut store, garden, &GARDEN, today);
-    let kitchen = store.add_project("Kitchen refit");
+    let kitchen = store
+        .add_project("Kitchen refit")
+        .expect("seed project ids fit");
     fill(&mut store, kitchen, &KITCHEN, today);
-    let reading = store.add_project("Reading list");
+    let reading = store
+        .add_project("Reading list")
+        .expect("seed project ids fit");
     reading_list(&mut store, reading, today);
     (store, garden)
 }
 
 fn fill(store: &mut Store, project: ProjectId, seeds: &[Seed], today: Date) {
     for seed in seeds {
-        let id = store.add_task(
-            project,
-            TaskDraft {
-                title: seed.title.into(),
-                notes: seed.notes.into(),
-                due: seed.due.and_then(|days| today.add_days(days)),
-                priority: seed.priority,
-            },
-        );
+        let id = store
+            .add_task(
+                project,
+                TaskDraft {
+                    title: seed.title.into(),
+                    notes: seed.notes.into(),
+                    due: seed.due.and_then(|days| today.add_days(days)),
+                    priority: seed.priority,
+                },
+            )
+            .expect("seed task ids fit");
         if seed.done {
             store.set_done(id, true);
         }
@@ -150,18 +158,20 @@ fn reading_list(store: &mut Store, project: ProjectId, today: Date) {
             .then(|| today.add_days(i64::from(rng.below(21)) - 5))
             .flatten();
         let priority = *rng.pick(&Priority::ALL);
-        let id = store.add_task(
-            project,
-            TaskDraft {
-                title: format!("Read \"{adjective} {noun}\""),
-                notes: format!(
-                    "Recommended by {}.",
-                    rng.pick(&crate::support::data::PEOPLE)
-                ),
-                due,
-                priority,
-            },
-        );
+        let id = store
+            .add_task(
+                project,
+                TaskDraft {
+                    title: format!("Read \"{adjective} {noun}\""),
+                    notes: format!(
+                        "Recommended by {}.",
+                        rng.pick(&crate::support::data::PEOPLE)
+                    ),
+                    due,
+                    priority,
+                },
+            )
+            .expect("seed task ids fit");
         if rng.chance(30) {
             store.set_done(id, true);
         }

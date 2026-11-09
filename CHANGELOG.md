@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.27 — 2026-11-09
+
+- In DutchyTodo, invalidate old Undo requests and transient record bindings
+  when import or undo-import replaces the store (DS-085).
+- Reject overflowing imported IDs with line-numbered errors, preserve drafts
+  when IDs are exhausted, and recover from failed file workers (DS-086).
+
 ## 1.0.26 — 2026-11-09
 
 - Add controlled checked menu actions and typed MenuEvent requests, nested

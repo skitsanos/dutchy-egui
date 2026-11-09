@@ -3,8 +3,11 @@
 //! Records are keyed by stable ids and kept in creation order. Nothing here
 //! draws anything; the views read this model and call its operations.
 
+mod ids;
 mod kinds;
 
+use ids::Counter;
+pub use ids::IdExhausted;
 pub use kinds::{Filter, Priority};
 
 use dutchy_egui::calendar::Date;
@@ -105,8 +108,8 @@ impl Counts {
 pub struct Store {
     projects: Vec<Project>,
     tasks: BTreeMap<TaskId, Task>,
-    next_project: u64,
-    next_task: u64,
+    next_project: Counter,
+    next_task: Counter,
 }
 
 impl Store {
@@ -136,9 +139,8 @@ impl Store {
     }
 
     /// Create a project; blank names become "Untitled project".
-    pub fn add_project(&mut self, name: &str) -> ProjectId {
-        let id = ProjectId(self.next_project);
-        self.next_project += 1;
+    pub fn add_project(&mut self, name: &str) -> Result<ProjectId, IdExhausted> {
+        let id = ProjectId(self.next_project.allocate()?);
         let name = name.trim();
         self.projects.push(Project {
             id,
@@ -148,7 +150,7 @@ impl Store {
                 name.to_owned()
             },
         });
-        id
+        Ok(id)
     }
 
     /// Remove a project with its tasks, returning them for undo.
@@ -172,18 +174,30 @@ impl Store {
     }
 
     /// Put a removed project and its tasks back at their former position.
-    pub fn restore_project(&mut self, removed: RemovedProject) {
+    pub fn restore_project(&mut self, removed: RemovedProject) -> Result<(), IdExhausted> {
+        let mut projects = self.next_project;
+        let mut tasks = self.next_task;
+        projects.reserve(removed.project.id.0)?;
+        for task in &removed.tasks {
+            tasks.reserve(task.id.0)?;
+        }
+        self.next_project = projects;
+        self.next_task = tasks;
         let index = removed.index.min(self.projects.len());
         self.projects.insert(index, removed.project);
         for task in removed.tasks {
             self.tasks.insert(task.id, task);
         }
+        Ok(())
     }
 
     /// Create a task from a draft. Blank titles become "Untitled task".
-    pub fn add_task(&mut self, project: ProjectId, draft: TaskDraft) -> TaskId {
-        let id = TaskId(self.next_task);
-        self.next_task += 1;
+    pub fn add_task(
+        &mut self,
+        project: ProjectId,
+        draft: TaskDraft,
+    ) -> Result<TaskId, IdExhausted> {
+        let id = TaskId(self.next_task.allocate()?);
         let title = draft.title.trim();
         self.tasks.insert(
             id,
@@ -201,7 +215,7 @@ impl Store {
                 done: false,
             },
         );
-        id
+        Ok(id)
     }
 
     /// Apply a draft to an existing task; reports whether it exists.
@@ -238,21 +252,23 @@ impl Store {
     }
 
     /// Put a removed task back under its original key.
-    pub fn restore_task(&mut self, task: Task) {
-        self.next_task = self.next_task.max(task.id.0 + 1);
+    pub fn restore_task(&mut self, task: Task) -> Result<(), IdExhausted> {
+        self.next_task.reserve(task.id.0)?;
         self.tasks.insert(task.id, task);
+        Ok(())
     }
 
     /// Insert a project with an explicit id, used by import.
-    pub(crate) fn insert_project(&mut self, project: Project) {
-        self.next_project = self.next_project.max(project.id.0 + 1);
+    pub(crate) fn insert_project(&mut self, project: Project) -> Result<(), IdExhausted> {
+        self.next_project.reserve(project.id.0)?;
         self.projects.retain(|existing| existing.id != project.id);
         self.projects.push(project);
+        Ok(())
     }
 
     /// Insert a task with an explicit id, used by import.
-    pub(crate) fn insert_task(&mut self, task: Task) {
-        self.restore_task(task);
+    pub(crate) fn insert_task(&mut self, task: Task) -> Result<(), IdExhausted> {
+        self.restore_task(task)
     }
 
     /// Counts for one project; `today` decides overdue and due-today.
