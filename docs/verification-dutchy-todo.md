@@ -1,7 +1,7 @@
 # Verification — DutchyTodo example application
 
 Date: 2026-11-08. Local work after repository release 1.0.25 (`5d68a93`),
-tracked as [DS-074](issues/DS-074.md). No dependency was added: the example
+tracked as [DS-077](issues/DS-077.md). No dependency was added: the example
 uses the existing `rfd`, `eframe` and `egui_kittest` dev-dependencies and a
 plain-text exchange format instead of serde.
 
@@ -71,4 +71,4 @@ Import and export open the host's `rfd` dialog, which the tests do not drive;
 the format and the store replacement are covered by unit tests and the dialog
 by the native run. No Windows or Linux run, no screen-reader session, and no
 browser build: `rfd` and `eframe` are desktop dev-dependencies. Each task row
-has two tab stops (row and Checkbox); see the gaps in DS-074.
+has two tab stops (row and Checkbox); see the gaps in DS-077.

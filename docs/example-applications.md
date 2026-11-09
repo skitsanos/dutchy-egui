@@ -55,7 +55,7 @@ The smallest complete application and the tutorial companion to
 - **State.** An in-memory keyed store owned by the application, with optional
   import and export through the existing `rfd` dialog.
 - **Limits.** No synchronisation, recurring tasks, reminders or notifications.
-- **As built** ([DS-074](issues/DS-074.md)). Rows are the keyboard anchor:
+- **As built** ([DS-077](issues/DS-077.md)). Rows are the keyboard anchor:
   Up/Down, Home and End move between rows, a pointer click focuses a row and a
   double-click edits it, while the Checkbox keeps its own activation. Import
   and export use a tab-separated line format instead of serde, and an import
