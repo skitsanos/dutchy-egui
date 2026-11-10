@@ -9,10 +9,9 @@ use egui_kittest::{
     kittest::{NodeT, Queryable},
 };
 
-#[test]
-fn both_notebook_dividers_accept_pointer_drags_beside_scroll_areas() {
+fn notebook(size: [f32; 2]) -> Harness<'static, gallery::Showcase> {
     let mut h = Harness::builder()
-        .with_size([1200.0, 1000.0])
+        .with_size(size)
         .with_context_setup(|ctx| {
             common::install(ctx, dutchy_egui::Theme::default().with_reduced_motion(true))
         })
@@ -25,6 +24,28 @@ fn both_notebook_dividers_accept_pointer_drags_beside_scroll_areas() {
             },
         );
     h.run_steps(4);
+    h
+}
+
+#[test]
+fn short_windows_scroll_to_the_notebook_instead_of_squeezing_it() {
+    // The minimum native window and a short laptop window place the notebook
+    // partly below the fold of the page's scroll area.
+    for size in [[440.0, 560.0], [1200.0, 700.0]] {
+        let h = notebook(size);
+        let outer = h.get_by_role_and_label(Role::Splitter, "Notebook");
+        assert_eq!(outer.rect().height(), 480.0, "{size:?}");
+        let inner = h.get_by_role_and_label(Role::Splitter, "Document preview");
+        assert!(
+            inner.accesskit_node().numeric_value() >= Some(216.0),
+            "{size:?}"
+        );
+    }
+}
+
+#[test]
+fn both_notebook_dividers_accept_pointer_drags_beside_scroll_areas() {
+    let mut h = notebook([1200.0, 1000.0]);
     for (name, delta) in [
         ("Notebook", egui::vec2(50.0, 0.0)),
         ("Document preview", egui::vec2(0.0, 30.0)),
@@ -52,20 +73,7 @@ fn both_notebook_dividers_accept_pointer_drags_beside_scroll_areas() {
 
 #[test]
 fn switching_documents_and_resizing_preserve_notebook_drafts() {
-    let mut h = Harness::builder()
-        .with_size([1200.0, 1000.0])
-        .with_context_setup(|ctx| {
-            common::install(ctx, dutchy_egui::Theme::default().with_reduced_motion(true))
-        })
-        .build_ui_state(
-            |ui, s: &mut gallery::Showcase| s.show(ui),
-            gallery::Showcase {
-                page: gallery::Page::SplitPanes,
-                reduced_motion: true,
-                ..Default::default()
-            },
-        );
-    h.run_steps(4);
+    let mut h = notebook([1200.0, 1000.0]);
     h.get_by_label("Note source").focus();
     h.run_steps(3);
     h.get_by_label("Note source").type_text("Retained draft. ");

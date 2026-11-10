@@ -8,13 +8,12 @@ Issues Ledger ticket before work starts.
 
 ## Recommended next milestones
 
-1. **Workbench building blocks.** **InlineEdit** renames a label
-   in place with commit and cancel. **PathInput** pairs a text field with a
-   browse button that returns a typed file, folder or save request.
-   **StatusBar** is a bottom strip of keyed segments (text, icon, progress,
-   clickable) with overflow priority and status semantics. The DutchyMail
-   example demonstrates the set; see
-   [example applications](example-applications.md).
+1. **Workbench building blocks.** **InlineEdit** renames a label in place with
+   commit and cancel. **PathInput** pairs a text field with a browse button
+   that returns a typed file, folder or save request. **StatusBar** is a bottom
+   strip of keyed segments (text, icon, progress, clickable) with overflow
+   priority and status semantics. The DutchyMail example demonstrates the set;
+   see [example applications](example-applications.md).
 2. **Powerful filtering.** A square **Chip** primitive with optional remove and
    toggle states is the shared base for **FilterChipGroup**, **TagInput** and
    **MultiSelect**; **RangeSlider** edits two endpoints on the existing rail;

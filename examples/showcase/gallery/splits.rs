@@ -10,6 +10,11 @@ const NOTES: [&str; 3] = [
     "# Ready to ship\n\n- [x] Review the changes\n- [x] Run the checks\n- [ ] Write the release note\n\n> Make the next step clear.",
     "# Small ideas, big canvas\n\nA reading pane, an editor, a notebook. Compose them into a workspace that fits the task.",
 ];
+// The outer grip sits halfway down the notebook; keep the inner divider clear.
+const LEFT: f32 = space::XXL * 10.0;
+const TOP: f32 = space::XXL * 12.0;
+const HINT: &str =
+    "Focus a divider, then use its arrow keys. Shift moves faster; Home and End reach the limits.";
 pub struct SplitsState {
     left: f32,
     top: f32,
@@ -25,8 +30,8 @@ impl Default for SplitsState {
         tree.expanded.insert(10);
         tree.rows.selected.insert(0);
         Self {
-            left: space::XXL * 10.0,
-            top: space::XXL * 9.0,
+            left: LEFT,
+            top: TOP,
             tree,
             sources: NOTES.map(str::to_owned),
             current: 0,
@@ -57,8 +62,8 @@ pub fn show(ui: &mut Ui, state: &mut SplitsState) {
             .add(Button::new("Reset sizes").size(ControlSize::Small))
             .clicked()
         {
-            state.left = space::XXL * 10.0;
-            state.top = space::XXL * 9.0;
+            state.left = LEFT;
+            state.top = TOP;
         }
     });
     ui.add_space(space::LG);
@@ -108,24 +113,7 @@ pub fn show(ui: &mut Ui, state: &mut SplitsState) {
                     .show(
                         ui,
                         |ui| preview(ui, &preview_source, TITLES[current]),
-                        |ui| {
-                            Frame::NONE
-                                .inner_margin(Margin::same(space::LG as i8))
-                                .show(ui, |ui| {
-                                    ui.add(Text::label("Markdown source").color(TextColor::Muted));
-                                    egui::ScrollArea::vertical().id_salt("source-scroll").show(
-                                        ui,
-                                        |ui| {
-                                            ui.add(
-                                                Textarea::new("source", source)
-                                                    .accessible_name("Note source")
-                                                    .rows(4)
-                                                    .show_count(false),
-                                            );
-                                        },
-                                    );
-                                });
-                        },
+                        |ui| editor(ui, source),
                     );
             },
         );
@@ -140,7 +128,24 @@ pub fn show(ui: &mut Ui, state: &mut SplitsState) {
         "Notebook {:.0} pt / Preview {:.0} pt",
         state.left, state.top
     )));
-    ui.add(Text::new("Focus a divider, then use its arrow keys. Shift moves faster; Home and End reach the limits.").size(TextSize::Sm).color(TextColor::Muted));
+    ui.add(Text::new(HINT).size(TextSize::Sm).color(TextColor::Muted));
+}
+fn editor(ui: &mut Ui, source: &mut String) {
+    Frame::NONE
+        .inner_margin(Margin::same(space::LG as i8))
+        .show(ui, |ui| {
+            ui.add(Text::label("Markdown source").color(TextColor::Muted));
+            egui::ScrollArea::vertical()
+                .id_salt("source-scroll")
+                .show(ui, |ui| {
+                    ui.add(
+                        Textarea::new("source", source)
+                            .accessible_name("Note source")
+                            .rows(4)
+                            .show_count(false),
+                    );
+                });
+        });
 }
 fn preview(ui: &mut Ui, source: &str, title: &str) {
     Frame::NONE

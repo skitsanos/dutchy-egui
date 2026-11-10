@@ -58,7 +58,8 @@ impl<'a> SplitPane<'a> {
         self.min_sizes = [first, second];
         self
     }
-    /// Allocated height, capped by available height; defaults to 320 points.
+    /// Allocated height in logical points; defaults to 320 points. It is not
+    /// capped by available height, so panes keep it on scrolling pages.
     pub fn height(mut self, height: f32) -> Self {
         self.height = height;
         self
@@ -86,10 +87,11 @@ impl<'a> SplitPane<'a> {
         first: impl FnOnce(&mut Ui) -> A,
         second: impl FnOnce(&mut Ui) -> B,
     ) -> SplitPaneResponse<A, B> {
+        // A vertical ScrollArea reports only the viewport left below the cursor
+        // as available height, so a requested height is never capped by it.
         let size = vec2(
             dimension(ui.available_width(), tokens::WIDTH),
-            dimension(self.height, tokens::HEIGHT)
-                .min(dimension(ui.available_height(), tokens::MAX_SIZE)),
+            dimension(self.height, tokens::HEIGHT),
         );
         let (_, rect) = ui.allocate_space(size);
         let id = ui.make_persistent_id(("dutchy-split-pane", self.id));

@@ -79,6 +79,33 @@ fn invalid_values_and_zero_available_space_keep_all_geometry_finite() {
     }
 }
 #[test]
+fn panes_below_the_fold_of_a_scroll_area_keep_their_requested_height() {
+    // Vertical ScrollArea content gets a finite viewport height, so the space
+    // left below the fold is not a limit for a scrolling page.
+    for spacer in [0.0, 450.0, 700.0] {
+        let mut h = Harness::builder()
+            .with_size([600.0, 500.0])
+            .with_context_setup(|ctx| super::common::install(ctx, Theme::default()))
+            .build_ui_state(
+                move |ui, p: &mut (f32, Rect)| {
+                    egui::ScrollArea::vertical().show(ui, |ui| {
+                        ui.add_space(spacer);
+                        p.1 = SplitPane::horizontal("fold", &mut p.0)
+                            .height(300.0)
+                            .show(ui, |ui| ui.label("First"), |ui| ui.label("Second"))
+                            .response
+                            .rect;
+                        ui.add_space(400.0);
+                    });
+                },
+                (200.0, Rect::NOTHING),
+            );
+        h.run_steps(3);
+        assert_eq!(h.state().1.height(), 300.0, "spacer {spacer}");
+        assert_eq!(h.state().0, 200.0, "spacer {spacer}");
+    }
+}
+#[test]
 fn overflowing_content_is_clipped_and_does_not_move_following_controls() {
     let mut h = Harness::builder()
         .with_size([600.0, 400.0])

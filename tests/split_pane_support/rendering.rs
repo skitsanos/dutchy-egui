@@ -1,13 +1,26 @@
-use dutchy_egui::{Accent, Mode, Theme};
+use Divider::{Focused, Hovered, Rest};
+use dutchy_egui::{
+    Accent::{Blue, Orange},
+    Mode::{Dark, Light},
+    Theme,
+};
 use egui::accesskit::Role;
 use egui_kittest::{Harness, SnapshotResults, kittest::Queryable};
+
+#[derive(Clone, Copy)]
+enum Divider {
+    Rest,
+    Hovered,
+    Focused,
+}
+
 #[test]
-fn split_panes_render_both_axes_across_themes_and_scales() {
+fn split_panes_render_rest_hover_and_focus_across_themes_and_scales() {
     let mut results = SnapshotResults::new();
-    for (accent, mode, scale, vertical, name) in [
-        (Accent::Orange, Mode::Light, 1.0, false, "light-1x"),
-        (Accent::Orange, Mode::Dark, 1.5, false, "dark-1_5x"),
-        (Accent::Blue, Mode::Light, 2.0, true, "blue-2x"),
+    for (accent, mode, scale, vertical, divider, name) in [
+        (Orange, Light, 1.0, false, Rest, "light-1x"),
+        (Orange, Dark, 1.5, false, Hovered, "dark-1_5x"),
+        (Blue, Light, 2.0, true, Focused, "blue-2x"),
     ] {
         let mut h = Harness::builder()
             .with_size([600.0, 420.0])
@@ -25,7 +38,15 @@ fn split_panes_render_both_axes_across_themes_and_scales() {
                 },
             );
         h.run_steps(3);
-        h.get_by_role_and_label(Role::Splitter, "Folders").focus();
+        let splitter = h.get_by_role_and_label(Role::Splitter, "Folders");
+        match divider {
+            Divider::Rest => {}
+            Divider::Hovered => {
+                let center = splitter.rect().center();
+                h.hover_at(center);
+            }
+            Divider::Focused => splitter.focus(),
+        }
         h.run_steps(3);
         h.check_accessibility();
         h.snapshot(format!("split-pane-{name}"));

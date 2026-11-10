@@ -50,6 +50,31 @@ fn vertical_resize_uses_up_down_and_leaves_host_shortcuts_alone() {
     assert!(h.state().remaining_keys.contains(&Key::ArrowLeft));
 }
 #[test]
+fn cross_axis_arrows_neither_resize_nor_move_focus_off_the_divider() {
+    for vertical in [false, true] {
+        let mut h = harness(Page {
+            vertical,
+            ..Default::default()
+        });
+        focus(&mut h);
+        let size = h.state().first;
+        let cross = if vertical {
+            [Key::ArrowLeft, Key::ArrowRight]
+        } else {
+            [Key::ArrowUp, Key::ArrowDown]
+        };
+        for arrow in cross {
+            key(&mut h, arrow, Modifiers::NONE);
+            assert_eq!(h.state().first, size, "{arrow:?}");
+            assert!(
+                h.get_by_role_and_label(Role::Splitter, "Folders")
+                    .is_focused(),
+                "{arrow:?} on a vertical={vertical} divider moved focus"
+            );
+        }
+    }
+}
+#[test]
 fn divider_is_one_tab_stop_between_native_child_controls() {
     let mut h = harness(Page::default());
     h.get_by_label("Draft").focus();

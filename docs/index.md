@@ -16,9 +16,8 @@ Start with [setup, themes and fonts](getting-started.md) and the
   [breadcrumbs and pagination](breadcrumbs-pagination.md), [stepper](stepper.md)
 - [Shared commands, shortcut editing and split actions](commands-shortcuts.md)
 - [Modals and drawers](modals-drawers.md), [toasts](toasts.md),
-  [tooltips and layout](tooltips-layout.md)
+  [tooltips and layout](tooltips-layout.md), [SplitPane](split-pane.md)
 - [Lists](lists.md), [TreeView](tree-view.md), [data tables](data-tables.md),
-  [SplitPane](split-pane.md),
   [images, galleries and lightboxes](images-galleries-lightboxes.md),
   [URL images](url-images.md), [file uploads](file-uploads.md), [Scribble and export](scribble-export.md)
 

@@ -20,10 +20,12 @@ fn workspace(ui: &mut egui::Ui, folders_width: &mut f32) {
 ```
 
 `horizontal` lays out left/right panes; `vertical` lays out top/bottom panes.
-Both fill the available width. Height defaults to 320 points and is capped by
-available height. Use `.height(ui.available_height())` to fill a bounded host
-region. Unbounded or invalid dimensions get finite defaults, and dimensions
-are capped at 32768 points. Ordering is physical, including in right-to-left UIs.
+Both fill the available width. Height defaults to 320 points and is allocated
+as given, also below the fold of a ScrollArea, whose content only sees the
+viewport as available height. Use `.height(ui.available_height())` to fill a
+bounded host region. Unbounded or invalid dimensions get finite defaults, and
+dimensions are capped at 32768 points. Ordering is physical, including in
+right-to-left UIs.
 
 ## Sizing and composition
 
@@ -52,10 +54,11 @@ one string, capture a preview copy before passing a mutable editor reference.
 ## Interaction and accessibility
 
 - Drag the divider to resize. The grab offset is preserved; release applies the
-  final pointer position. Locking or changing orientation cancels an active drag.
+  final pointer position. Locking or changing orientation cancels an active
+  drag.
 - Matching-axis arrows resize by 8 points; Shift+arrow uses 32 points. Home and
-  End reach the allowed minimum and maximum. Control/Command/Alt shortcuts
-  remain with the host.
+  End reach the allowed minimum and maximum. Cross-axis arrows keep focus on
+  the divider. Control/Command/Alt shortcuts remain with the host.
 - Tab visits first-pane controls, the divider, then second-pane controls.
   Child editing/focus stays native, with stable identities while panes resize.
 - `read_only(true)` locks resizing and keeps child controls usable.

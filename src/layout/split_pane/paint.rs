@@ -61,12 +61,14 @@ pub(super) fn metadata(ui: &Ui, response: &Response, info: Info<'_>) {
         }
     });
     if response.has_focus() {
+        // Hold both arrow axes: cross-axis arrows would otherwise move focus
+        // into a pane. Tab still leaves the divider.
         ui.memory_mut(|m| {
             m.set_focus_lock_filter(
                 response.id,
                 egui::EventFilter {
-                    horizontal_arrows: axis == Axis::Horizontal,
-                    vertical_arrows: axis == Axis::Vertical,
+                    horizontal_arrows: true,
+                    vertical_arrows: true,
                     ..Default::default()
                 },
             )
