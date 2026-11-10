@@ -72,6 +72,9 @@ pub(super) fn content(
             .layout(egui::Layout::left_to_right(egui::Align::Center)),
         |ui| {
             ui.set_clip_rect(ui.clip_rect().intersect(inner));
+            // Row text belongs to the row: selectable labels would sense clicks
+            // and drags on top of it and take the row's hover, click and focus.
+            ui.style_mut().interaction.selectable_labels = false;
             content(ui);
         },
     );

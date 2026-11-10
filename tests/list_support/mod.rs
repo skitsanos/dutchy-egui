@@ -16,6 +16,7 @@ pub struct Page {
     pub range: Range<usize>,
     pub viewport: Rect,
     pub row_ids: Vec<Id>,
+    pub hovered: Option<u32>,
 }
 impl Page {
     pub fn new(count: u32) -> Self {
@@ -34,6 +35,7 @@ impl Page {
             range: 0..0,
             viewport: Rect::NOTHING,
             row_ids: Vec::new(),
+            hovered: None,
         }
     }
 }
@@ -55,6 +57,11 @@ pub fn show(ui: &mut egui::Ui, page: &mut Page) {
     page.range = output.visible_range;
     page.viewport = output.viewport;
     page.row_ids = output.rows.iter().map(|row| row.response.id).collect();
+    page.hovered = output
+        .rows
+        .iter()
+        .find(|row| row.response.hovered())
+        .map(|row| row.key);
     page.activated.extend(output.activated);
     let _ = ui.button("After list");
 }

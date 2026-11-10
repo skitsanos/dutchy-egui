@@ -72,11 +72,12 @@ scans the current view; content layout and painting scale with the viewport.
 `show` paints each label on one line and ends a label that does not fit in
 "…". An empty view shows muted `empty_text` (default "No items"); keep it to a
 short line. `show_with` composes passive text, icons and badges inside the
-fixed clipped row. It does not support embedded buttons, checkboxes or editors: those need
-a different composite such as DataTable. Use a unique list ID per surface and
-keep callback side effects safe for egui's sizing/discard passes. Variable
-height, drag reorder, trees and asynchronous data sources are outside this
-component's scope.
+fixed clipped row. Labels there are not selectable, so a click on the text
+selects the row. It does not support embedded buttons, checkboxes or editors:
+those need a different composite such as DataTable. Use a unique list ID per
+surface and keep callback side effects safe for egui's sizing/discard passes.
+Variable height, drag reorder, trees and asynchronous data sources are outside
+this component's scope.
 
 Selectable modes expose ListBox/ListBoxOption roles, selection, total size and
 zero-based AccessKit positions. None uses List/ListItem roles. Virtualized

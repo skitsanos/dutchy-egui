@@ -6,6 +6,8 @@
   list box accessibility, fixed-height virtualization, elided labels and host
   empty text; replace the separate VirtualList plan and add a 10,000-row
   showcase (DS-107).
+- Make text composed into List rows leave clicks to the row, and check every
+  showcase page for selectable text over a clickable control (DS-108).
 
 ## 1.1.1 — 2026-11-10
 
