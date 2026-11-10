@@ -119,7 +119,7 @@ fn long_values_and_all_surfaces_fit_narrow_columns_without_style_leaks() {
         .build_ui(|ui| {
             let bounds = ui.available_rect_before_wrap();
             let before = ui.style().clone();
-            for variant in StatVariant::ALL {
+            for &variant in StatVariant::ALL {
                 let response = ui.add(
                     Stat::new(variant.name(), "€12345678901234567890.12")
                         .variant(variant)

@@ -109,7 +109,7 @@ fn surfaces_do_not_leak_style_and_nested_cards_restore_text_colors() {
         .with_context_setup(|ctx| common::install(ctx, Theme::default()))
         .build_ui(|ui| {
             let before = ui.style().clone();
-            for variant in CardVariant::ALL {
+            for &variant in CardVariant::ALL {
                 Card::new().variant(variant).show(ui, |ui| {
                     let inverse = matches!(variant, CardVariant::Dark | CardVariant::Primary);
                     assert_eq!(ui.visuals().override_text_color.is_some(), inverse);

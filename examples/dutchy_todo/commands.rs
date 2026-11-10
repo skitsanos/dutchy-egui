@@ -142,10 +142,7 @@ pub fn overlays(app: &mut App, ctx: &Context) {
         "Keyboard shortcuts",
     )
     .width(DrawerWidth::Medium)
-    .options(OverlayOptions {
-        return_focus: commands.return_focus,
-        ..Default::default()
-    })
+    .options(OverlayOptions::default().return_focus(commands.return_focus))
     .show(ctx, |ui| {
         ui.add(Text::new("Bindings belong to this application session.").color(TextColor::Muted));
         ui.add_space(space::MD);

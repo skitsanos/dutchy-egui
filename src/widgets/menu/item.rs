@@ -6,6 +6,7 @@ pub type MenuIconPainter = fn(&Painter, Rect, Color32);
 
 /// Action emphasis.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum MenuItemVariant {
     /// Standard action.
     #[default]

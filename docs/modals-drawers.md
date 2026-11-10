@@ -65,7 +65,9 @@ A drawer is a blocking overlay; use native egui panels for docked layouts.
 ## Dismissal and focus
 
 `OverlayOptions` exposes independent `dismiss_on_escape`, `dismiss_on_backdrop`,
-and `show_close_button` flags, all true by default. A content closure can call
+and `show_close_button` flags, all true by default. Each field has a chainable
+setter of the same name, such as `OverlayOptions::default().dismiss_on_backdrop(false)`;
+the struct is non-exhaustive, so it can't be built as a literal. A content closure can call
 `ui.close()` regardless of these flags. Close/Escape/backdrop/content dismissal
 sets the bound open flag false and returns the corresponding
 `OverlayDismissal` in `response.dismissed`. A host closing its own flag after an

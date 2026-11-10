@@ -27,7 +27,7 @@ fn matrix(ui: &mut egui::Ui) {
         });
         ui.add_space(8.0);
     }
-    for variant in AlertVariant::ALL {
+    for &variant in AlertVariant::ALL {
         Alert::new(
             variant.name(),
             "Your work is retained. Review the next step before continuing.",

@@ -278,10 +278,12 @@ fn assert_gutter(position: ToastPosition, first: Rect, last: Rect) {
     let (x, expected_x) = match position {
         ToastPosition::TopLeft | ToastPosition::BottomLeft => (first.left(), 24.0),
         ToastPosition::TopRight | ToastPosition::BottomRight => (first.right(), 776.0),
+        _ => unreachable!("only the four corners are tested"),
     };
     let (y, expected_y) = match position {
         ToastPosition::TopLeft | ToastPosition::TopRight => (first.top(), 24.0),
         ToastPosition::BottomLeft | ToastPosition::BottomRight => (last.bottom(), 676.0),
+        _ => unreachable!("only the four corners are tested"),
     };
     assert!(
         (x - expected_x).abs() < 0.5,

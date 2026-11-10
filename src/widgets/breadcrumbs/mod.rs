@@ -10,6 +10,7 @@ use std::borrow::Cow;
 
 /// Decorative hierarchy separator.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum BreadcrumbSeparator {
     /// Diagonal slash.
     Slash,
@@ -18,6 +19,7 @@ pub enum BreadcrumbSeparator {
     Chevron,
 }
 /// Navigation request and visible destination responses.
+#[non_exhaustive]
 pub struct BreadcrumbsResponse<T> {
     /// Named navigation region.
     pub response: Response,

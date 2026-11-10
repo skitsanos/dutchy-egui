@@ -9,6 +9,7 @@ use egui::{Color32, Response, Stroke, Ui, Widget, pos2, vec2};
 
 /// Button emphasis and intent.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ButtonVariant {
     /// Brand-colored action.
     #[default]
@@ -25,7 +26,7 @@ pub enum ButtonVariant {
 
 impl ButtonVariant {
     /// All supported variants, in display order.
-    pub const ALL: [Self; 5] = [
+    pub const ALL: &[Self] = &[
         Self::Primary,
         Self::Secondary,
         Self::Outline,

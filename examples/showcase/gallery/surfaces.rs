@@ -40,7 +40,7 @@ pub fn cards(ui: &mut Ui, state: &mut SurfacesState) {
                 ui.add_space(space::MD);
             }
         } else {
-            for variant in CardVariant::ALL {
+            for &variant in CardVariant::ALL {
                 sample_card(ui, variant);
                 ui.add_space(space::MD);
             }

@@ -3,6 +3,7 @@ pub use crate::AlertVariant as ToastVariant;
 use egui::Response;
 /// Notification surface treatment.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ToastAppearance {
     /// Live web treatment: solid severity fill and uppercase text.
     #[default]
@@ -12,6 +13,7 @@ pub enum ToastAppearance {
 }
 /// Stack attachment corner.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ToastPosition {
     /// Top left.
     TopLeft,
@@ -38,6 +40,7 @@ impl ToastPosition {
 pub struct ToastId(pub(super) u64);
 /// Why a notification left the queue without an action.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ToastDismissal {
     /// Manual close-button activation.
     CloseButton,
@@ -46,6 +49,7 @@ pub enum ToastDismissal {
 }
 /// Notification outcome; the library never executes the action payload.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ToastEvent<T> {
     /// Removed by the user or lifetime policy.
     Dismissed {
@@ -63,6 +67,7 @@ pub enum ToastEvent<T> {
     },
 }
 /// Native geometry and controls of a rendered notification.
+#[non_exhaustive]
 pub struct ToastResponse {
     /// Queue key.
     pub id: ToastId,
@@ -79,6 +84,7 @@ impl ToastResponse {
     }
 }
 /// Stack geometry and outcomes, also returned while the queue is empty or suspended.
+#[non_exhaustive]
 pub struct ToastsResponse<T> {
     /// Stack response, or None when not rendered.
     pub response: Option<Response>,

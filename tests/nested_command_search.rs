@@ -41,10 +41,7 @@ fn harness() -> Harness<'static, State> {
                 }
             },
             State {
-                search: SearchState {
-                    open: true,
-                    query: String::new(),
-                },
+                search: open_search(),
                 actions: Vec::new(),
                 disabled: false,
                 renamed: false,
@@ -102,4 +99,11 @@ fn full_key_paths_distinguish_equal_leaf_values_and_labels_can_change() {
     h.key_press(Key::Enter);
     h.run();
     assert!(h.state().actions.is_empty());
+}
+
+/// An open palette with an empty query; hosts assign `SearchState` fields.
+fn open_search() -> SearchState {
+    let mut search = SearchState::default();
+    search.open = true;
+    search
 }

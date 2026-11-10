@@ -11,6 +11,7 @@ use std::borrow::Cow;
 
 /// Requested host change. Checked values are snapshots, never mutated by menus.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum MenuEvent<T> {
     /// Execute the named host command.
     Activated(T),

@@ -2,6 +2,7 @@ use egui::Color32;
 
 /// Brand accent, independent of light/dark mode.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Accent {
     /// Dutch Orange, HSL(25, 95%, 53%).
     #[default]
@@ -18,7 +19,7 @@ pub enum Accent {
 
 impl Accent {
     /// Every preset in documented order, for theme pickers.
-    pub const ALL: [Self; 5] = [
+    pub const ALL: &[Self] = &[
         Self::Orange,
         Self::Purple,
         Self::Crimson,
@@ -61,6 +62,7 @@ pub enum Mode {
 
 /// Semantic colors. Public fields allow application-specific palette overrides.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct Palette {
     /// Surface background.
     pub background: Color32,

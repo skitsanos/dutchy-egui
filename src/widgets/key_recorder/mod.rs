@@ -12,6 +12,7 @@ use state::{Captured, Memory, Rejection};
 use std::borrow::Cow;
 
 /// Shortcut edit outcome. Only an accepted chord or explicit Clear changes the value.
+#[non_exhaustive]
 pub struct KeyRecorderResponse {
     /// Named recording button; changed() reflects accepted host-value edits.
     pub response: Response,

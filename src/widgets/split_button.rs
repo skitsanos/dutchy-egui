@@ -8,6 +8,7 @@ use egui::{IdSalt, Response, Ui};
 use std::borrow::Cow;
 
 /// Independent primary and alternative requests from a split action.
+#[non_exhaustive]
 pub struct SplitButtonResponse<T> {
     /// Primary native button, retaining its own focus and accessible name.
     pub primary: Response,

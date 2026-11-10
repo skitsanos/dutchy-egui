@@ -132,6 +132,7 @@ pub mod control {
 
 /// Shared sizes for buttons and future input/select controls.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ControlSize {
     /// Compact 32-point control.
     Small,

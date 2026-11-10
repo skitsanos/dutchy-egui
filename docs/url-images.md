@@ -45,8 +45,9 @@ with host byte/codec loaders. PNG/JPEG are accepted as still images; animated-fo
 ## Configuration and cache
 
 `dutchy_egui::install` registers default limits once. To change them, call
-`image_loaders::install_with_options(ctx, UrlImageOptions { ... })` **before**
-`install`. First registration wins. Applications using theme/fonts separately
+`image_loaders::install_with_options(ctx, UrlImageOptions::default().max_pixels(2_000_000))`
+**before** `install`; each limit has a chainable setter of the same name. First
+registration wins. Applications using theme/fonts separately
 can call `image_loaders::install(ctx)` directly. Registration performs no fetch.
 Install custom matching loaders afterward when they should take priority.
 

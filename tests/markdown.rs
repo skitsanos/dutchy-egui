@@ -66,12 +66,15 @@ fn opened_urls(harness: &Harness<'_, State>) -> Vec<String> {
         .collect()
 }
 
-fn docs_link() -> MarkdownLink {
-    MarkdownLink {
-        href: "https://example.com/docs".into(),
-        title: "Docs".into(),
-        text: "docs".into(),
-    }
+/// The sample document's docs link as (href, title, text).
+const DOCS: (&str, &str, &str) = ("https://example.com/docs", "Docs", "docs");
+
+/// Reported links as (href, title, text); `MarkdownLink` may gain fields.
+fn link_fields(links: &[MarkdownLink]) -> Vec<(&str, &str, &str)> {
+    links
+        .iter()
+        .map(|link| (link.href.as_str(), link.title.as_str(), link.text.as_str()))
+        .collect()
 }
 
 #[test]
@@ -122,7 +125,7 @@ fn external_links_open_natively_and_are_reported_once() {
     h.step();
     assert_eq!(opened_urls(&h), ["https://example.com/docs"]);
     h.run();
-    assert_eq!(h.state().links, [docs_link()]);
+    assert_eq!(link_fields(&h.state().links), [DOCS]);
 }
 
 #[test]
@@ -152,7 +155,7 @@ fn keyboard_focus_reaches_links_and_enter_or_space_activate_them() {
     h.run();
     h.key_press(Key::Space);
     h.run();
-    assert_eq!(h.state().links, [docs_link(), docs_link()]);
+    assert_eq!(link_fields(&h.state().links), [DOCS, DOCS]);
     h.key_press(Key::Tab);
     h.run();
     assert!(

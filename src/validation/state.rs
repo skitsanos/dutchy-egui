@@ -6,6 +6,7 @@ static NEXT_OWNER: AtomicU64 = AtomicU64::new(1);
 
 /// Presentation of a field's current validation result.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ValidationState {
     /// No current result, including after an edit/reset.
     #[default]
@@ -20,6 +21,7 @@ pub enum ValidationState {
 
 /// When the field should execute synchronous rules.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ValidationTrigger {
     /// Validate after any edit.
     OnChange,

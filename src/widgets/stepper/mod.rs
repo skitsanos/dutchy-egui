@@ -12,6 +12,7 @@ pub use state::StepperState;
 use std::borrow::Cow;
 /// Workflow progress presentation.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum StepperVariant {
     /// Equal columns with filled indicators; automatically vertical in narrow columns.
     #[default]
@@ -24,6 +25,7 @@ pub enum StepperVariant {
     Progress,
 }
 /// Geometry, resolved view position, and an optional host navigation request.
+#[non_exhaustive]
 pub struct StepperResponse<T> {
     /// Named workflow region.
     pub response: Response,

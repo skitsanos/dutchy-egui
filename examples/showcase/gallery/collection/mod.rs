@@ -184,10 +184,7 @@ impl CollectionState {
                     .caption(DESCRIPTIONS[i])
             })
             .collect();
-        let options = OverlayOptions {
-            return_focus: self.opener,
-            ..Default::default()
-        };
+        let options = OverlayOptions::default().return_focus(self.opener);
         Lightbox::new("artwork-preview", &items, &mut self.selected)
             .accessible_name("Artwork preview")
             .options(options)

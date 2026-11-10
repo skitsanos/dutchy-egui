@@ -2,6 +2,7 @@
 use super::space;
 /// Centered dialog width, constrained by the viewport.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ModalWidth {
     /// 448-point reference confirmation dialog.
     #[default]
@@ -23,6 +24,7 @@ impl ModalWidth {
 }
 /// Overlay drawer width, constrained by the viewport.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum DrawerWidth {
     /// 320-point reference drawer.
     #[default]

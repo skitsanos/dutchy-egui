@@ -16,12 +16,23 @@ use egui::{
 use std::{borrow::Cow, ops::Range, time::Duration};
 
 /// Host-supplied color for a byte range of the code.
+///
+/// Build with [`CodeSpan::new`]. New styling fields may be added in minor
+/// releases.
 #[derive(Clone, Debug, PartialEq)]
+#[non_exhaustive]
 pub struct CodeSpan {
     /// Byte range into the code, on character boundaries.
     pub range: Range<usize>,
     /// Text color of the range.
     pub color: Color32,
+}
+
+impl CodeSpan {
+    /// Color the code bytes in `range`, which must lie on character boundaries.
+    pub const fn new(range: Range<usize>, color: Color32) -> Self {
+        Self { range, color }
+    }
 }
 
 /// Host syntax highlighter: `(language, code)` to spans in byte order.

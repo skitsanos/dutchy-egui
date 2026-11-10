@@ -10,6 +10,7 @@ pub use group::SkeletonGroup;
 
 /// Placeholder shapes matching the web component.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum SkeletonVariant {
     /// Full-width 16-point line.
     #[default]

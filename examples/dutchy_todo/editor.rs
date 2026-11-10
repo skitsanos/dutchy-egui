@@ -112,10 +112,7 @@ pub fn drawer(app: &mut App, ctx: &Context) {
     let title = if existing { "Edit task" } else { "New task" };
     let result = Drawer::new("task-editor", open, title)
         .width(DrawerWidth::Medium)
-        .options(OverlayOptions {
-            return_focus: *return_focus,
-            ..Default::default()
-        })
+        .options(OverlayOptions::default().return_focus(*return_focus))
         .show_with_footer(
             ctx,
             |ui| {
@@ -272,10 +269,7 @@ pub fn confirm(app: &mut App, ctx: &Context) {
     );
     let result = Modal::new("delete-project", &mut app.confirm.open, "Delete project?")
         .width(ModalWidth::Medium)
-        .options(OverlayOptions {
-            return_focus: app.confirm.return_focus,
-            ..Default::default()
-        })
+        .options(OverlayOptions::default().return_focus(app.confirm.return_focus))
         .show_with_footer(
             ctx,
             |ui| {

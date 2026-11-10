@@ -5,6 +5,7 @@ use egui::{IdSalt, Response, Ui, UiBuilder, WidgetInfo};
 use std::borrow::Cow;
 /// Pagination presentation.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum PaginationVariant {
     /// Bordered page numbers, decorative ellipses, and previous/next arrows.
     #[default]
@@ -13,6 +14,7 @@ pub enum PaginationVariant {
     Compact,
 }
 /// Effective range and a host-owned navigation request.
+#[non_exhaustive]
 pub struct PaginationResponse {
     /// Named native navigation region.
     pub response: Response,

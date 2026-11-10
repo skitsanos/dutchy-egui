@@ -12,7 +12,7 @@ pub fn show(ui: &mut egui::Ui, state: &mut ActionsState) {
         "Original vector icons / no icon dependency",
         |ui| {
             ui.horizontal_wrapped(|ui| {
-                for icon in Icon::ALL {
+                for &icon in Icon::ALL {
                     if ui
                         .add(IconButton::new(
                             icon.name(),
@@ -52,7 +52,7 @@ pub fn show(ui: &mut egui::Ui, state: &mut ActionsState) {
         },
     );
     section(ui, "02", "Shared variants and control sizes", |ui| {
-        for variant in ButtonVariant::ALL {
+        for &variant in ButtonVariant::ALL {
             ui.horizontal_wrapped(|ui| {
                 for (index, size) in [ControlSize::Small, ControlSize::Medium, ControlSize::Large]
                     .into_iter()

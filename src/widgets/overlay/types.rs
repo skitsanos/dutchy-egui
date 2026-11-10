@@ -1,6 +1,7 @@
 use egui::{Id, Response};
 /// Overlay drawer attachment edge.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum DrawerSide {
     /// Full-height panel at the left edge.
     Left,
@@ -10,6 +11,7 @@ pub enum DrawerSide {
 }
 /// Explicit dismissal source. Business actions remain in the host closure result.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum OverlayDismissal {
     /// Header close button activation.
     CloseButton,
@@ -21,7 +23,11 @@ pub enum OverlayDismissal {
     Content,
 }
 /// Common modal behavior. Visibility and durable content values remain host-owned.
+///
+/// Start from [`OverlayOptions::default`] and chain the setters; fields can
+/// also be read or assigned. New options may be added in minor releases.
 #[derive(Clone, Debug)]
+#[non_exhaustive]
 pub struct OverlayOptions {
     /// Allow Escape dismissal. Defaults to true.
     pub dismiss_on_escape: bool,
@@ -47,7 +53,40 @@ impl Default for OverlayOptions {
         }
     }
 }
+impl OverlayOptions {
+    /// Allow or prevent Escape dismissal.
+    pub fn dismiss_on_escape(mut self, dismiss: bool) -> Self {
+        self.dismiss_on_escape = dismiss;
+        self
+    }
+
+    /// Allow or prevent backdrop dismissal.
+    pub fn dismiss_on_backdrop(mut self, dismiss: bool) -> Self {
+        self.dismiss_on_backdrop = dismiss;
+        self
+    }
+
+    /// Show or hide the accessible header close button.
+    pub fn show_close_button(mut self, show: bool) -> Self {
+        self.show_close_button = show;
+        self
+    }
+
+    /// Focus this actual egui control ID on entry; `None` restores the default.
+    pub fn initial_focus(mut self, id: impl Into<Option<Id>>) -> Self {
+        self.initial_focus = id.into();
+        self
+    }
+
+    /// Focus this control after closing; `None` returns to the previously
+    /// focused control.
+    pub fn return_focus(mut self, id: impl Into<Option<Id>>) -> Self {
+        self.return_focus = id.into();
+        self
+    }
+}
 /// Native overlay geometry and the host's content result.
+#[non_exhaustive]
 pub struct OverlayResponse<R> {
     /// Surface response; the backdrop is a separate response.
     pub response: Response,

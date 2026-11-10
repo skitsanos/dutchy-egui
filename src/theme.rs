@@ -10,6 +10,7 @@ use crate::{
 
 /// A complete Dutchy theme. Apply only at setup or when settings change.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct Theme {
     /// Semantic colors; callers can override individual tokens.
     pub palette: Palette,

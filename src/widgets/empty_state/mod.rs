@@ -11,6 +11,7 @@ use std::borrow::Cow;
 
 /// Empty-state layout, with no application behavior attached.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum EmptyStateVariant {
     /// Standard centered invitation.
     #[default]
@@ -25,6 +26,7 @@ pub enum EmptyStateVariant {
 
 /// Built-in decorative square iconography.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum EmptyStateIcon {
     /// No icon.
     #[default]
@@ -38,6 +40,7 @@ pub enum EmptyStateIcon {
 }
 
 /// Independent action results. The host controls content, navigation, and focus.
+#[non_exhaustive]
 pub struct EmptyStateResponse {
     /// Non-focusable container response.
     pub response: Response,

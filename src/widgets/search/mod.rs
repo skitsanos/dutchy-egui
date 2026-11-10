@@ -8,6 +8,7 @@ pub(crate) use results::Results;
 
 /// Host-owned open state and editable query for searchable selection/commands.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct SearchState {
     /// Whether results/dialog are open.
     pub open: bool,

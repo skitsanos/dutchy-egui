@@ -1,5 +1,6 @@
 /// Typeface role.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Family {
     /// Space Grotesk-derived display face.
     Display,
@@ -12,6 +13,7 @@ pub enum Family {
 
 /// Explicit static font weight.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Weight {
     /// 400.
     #[default]
@@ -26,6 +28,7 @@ pub enum Weight {
 
 /// The complete 12–96-point type scale.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum TextSize {
     /// 12 points.
     Xs,
@@ -90,6 +93,7 @@ impl TextSize {
 
 /// Letter spacing relative to font size.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Tracking {
     /// -0.05 em.
     Tighter,
@@ -122,6 +126,7 @@ impl Tracking {
 
 /// Named line-height multipliers.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Leading {
     /// 0.85, matching the live hero.
     Hero,

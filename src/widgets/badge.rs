@@ -11,6 +11,7 @@ use std::borrow::Cow;
 
 /// Status and category badge treatment.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum BadgeVariant {
     /// Foreground block.
     #[default]
@@ -33,7 +34,7 @@ pub enum BadgeVariant {
 
 impl BadgeVariant {
     /// All supported variants in display order.
-    pub const ALL: [Self; 8] = [
+    pub const ALL: &[Self] = &[
         Self::Default,
         Self::Primary,
         Self::Success,

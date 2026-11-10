@@ -11,6 +11,7 @@ use std::borrow::Cow;
 /// History/export request. Applications execute these in order against their
 /// drawing or snapshot; the widget never opens files or writes exported data.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ScribbleAction {
     /// Undo one completed host-model operation.
     Undo,
@@ -27,6 +28,7 @@ pub enum ScribbleAction {
     ExportPng,
 }
 /// Canvas editing and independently executable history/export requests.
+#[non_exhaustive]
 pub struct ScribbleResponse {
     /// Named composite, including label, drawing surface and optional controls.
     pub response: Response,

@@ -80,10 +80,7 @@ fn failures_are_cached_and_retry_is_explicit() {
 #[test]
 fn byte_pixel_and_timeout_limits_fail_cleanly() {
     let server = http::Server::new();
-    let tiny = ctx(UrlImageOptions {
-        max_download_bytes: 64,
-        ..Default::default()
-    });
+    let tiny = ctx(UrlImageOptions::default().max_download_bytes(64));
     for path in ["/large-header", "/large-stream"] {
         assert!(
             finish(&tiny, &server.url(path))
@@ -91,10 +88,7 @@ fn byte_pixel_and_timeout_limits_fail_cleanly() {
                 .contains("byte limit")
         );
     }
-    let pixels = ctx(UrlImageOptions {
-        max_pixels: 100,
-        ..Default::default()
-    });
+    let pixels = ctx(UrlImageOptions::default().max_pixels(100));
     assert!(
         finish(&pixels, &server.url("/png"))
             .unwrap_err()
@@ -102,10 +96,7 @@ fn byte_pixel_and_timeout_limits_fail_cleanly() {
     );
     let dimensions = ctx(Default::default());
     assert!(finish(&dimensions, &server.url("/wide")).is_err());
-    let timeout = ctx(UrlImageOptions {
-        response_body_timeout: Duration::from_millis(40),
-        ..Default::default()
-    });
+    let timeout = ctx(UrlImageOptions::default().response_body_timeout(Duration::from_millis(40)));
     assert!(finish(&timeout, &server.url("/timeout")).is_err());
 }
 #[test]
@@ -133,10 +124,7 @@ fn pending_is_nonblocking_deduplicated_and_completion_requests_repaint() {
 #[test]
 fn forgetting_pending_work_does_not_resurrect_old_textures_or_exceed_concurrency() {
     let server = http::Server::new();
-    let ctx = ctx(UrlImageOptions {
-        max_concurrent: 1,
-        ..Default::default()
-    });
+    let ctx = ctx(UrlImageOptions::default().max_concurrent(1));
     let uri = server.url("/slow");
     load(&ctx, &uri).unwrap();
     server.wait_for("/slow", 1);
@@ -154,10 +142,7 @@ fn forgetting_pending_work_does_not_resurrect_old_textures_or_exceed_concurrency
 #[test]
 fn queued_requests_resume_after_a_concurrency_slot_is_released() {
     let server = http::Server::new();
-    let ctx = ctx(UrlImageOptions {
-        max_concurrent: 1,
-        ..Default::default()
-    });
+    let ctx = ctx(UrlImageOptions::default().max_concurrent(1));
     let slow = server.url("/slow");
     load(&ctx, &slow).unwrap();
     server.wait_for("/slow", 1);
@@ -174,10 +159,7 @@ fn queued_requests_resume_after_a_concurrency_slot_is_released() {
 #[test]
 fn bounded_cache_retains_visible_textures_and_evicts_inactive_entries() {
     let server = http::Server::new();
-    let ctx = ctx(UrlImageOptions {
-        max_entries: 1,
-        ..Default::default()
-    });
+    let ctx = ctx(UrlImageOptions::default().max_entries(1));
     let a = server.url("/png");
     let b = server.url("/jpeg");
     let old = finish(&ctx, &a).unwrap();
@@ -191,10 +173,7 @@ fn bounded_cache_retains_visible_textures_and_evicts_inactive_entries() {
 }
 #[test]
 fn installation_is_idempotent_and_does_not_handle_unrelated_schemes() {
-    let ctx = ctx(UrlImageOptions {
-        max_pixels: 1,
-        ..Default::default()
-    });
+    let ctx = ctx(UrlImageOptions::default().max_pixels(1));
     image_loaders::install(&ctx);
     image_loaders::install(&ctx);
     let server = http::Server::new();

@@ -13,10 +13,7 @@ pub(crate) fn show(app: &mut App, ctx: &Context) {
     let mut open = app.settings_open;
     Drawer::new("agent-settings", &mut open, "Chat settings")
         .width(DrawerWidth::Large)
-        .options(OverlayOptions {
-            return_focus: app.settings_return,
-            ..Default::default()
-        })
+        .options(OverlayOptions::default().return_focus(app.settings_return))
         .show(ctx, |ui| {
             let mut provider = Some(app.config.provider);
             let providers = [

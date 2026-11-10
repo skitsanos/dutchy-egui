@@ -10,6 +10,7 @@ use std::borrow::Cow;
 
 /// Fill treatment. Give the operation a meaningful label as well as a color.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ProgressVariant {
     /// Brand accent.
     #[default]
@@ -24,7 +25,7 @@ pub enum ProgressVariant {
 
 impl ProgressVariant {
     /// All supported fills.
-    pub const ALL: [Self; 4] = [
+    pub const ALL: &[Self] = &[
         Self::Primary,
         Self::Success,
         Self::Destructive,

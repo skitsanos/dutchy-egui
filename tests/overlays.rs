@@ -274,12 +274,12 @@ fn read_only_dialog_without_close_button_can_use_content_dismissal() {
         .build_ui_state(
             |ui, open: &mut bool| {
                 Modal::new("read-only", open, "Read-only details")
-                    .options(OverlayOptions {
-                        show_close_button: false,
-                        dismiss_on_escape: false,
-                        dismiss_on_backdrop: false,
-                        ..Default::default()
-                    })
+                    .options(
+                        OverlayOptions::default()
+                            .show_close_button(false)
+                            .dismiss_on_escape(false)
+                            .dismiss_on_backdrop(false),
+                    )
                     .show(ui.ctx(), |ui| {
                         if ui.button("Done reading").clicked() {
                             ui.close();

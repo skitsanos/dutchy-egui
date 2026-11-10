@@ -8,6 +8,7 @@ use std::borrow::Cow;
 
 /// Statistic arrangement. Both preserve tile surfaces, trends, and context.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum StatsLayout {
     /// Tiles separated by two-point dividers.
     #[default]

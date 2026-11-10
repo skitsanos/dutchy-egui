@@ -132,7 +132,7 @@ fn severity_metadata_preserves_focus_and_static_messages_can_disable_announcemen
         .with_context_setup(|ctx| common::install(ctx, Theme::default()))
         .build_ui(|ui| {
             let before = ui.style().clone();
-            for variant in AlertVariant::ALL {
+            for &variant in AlertVariant::ALL {
                 Alert::new(variant.name(), "Status details")
                     .variant(variant)
                     .show(ui);
@@ -146,7 +146,7 @@ fn severity_metadata_preserves_focus_and_static_messages_can_disable_announcemen
         });
     h.get_by_label("Keep focus").focus();
     h.run();
-    for variant in AlertVariant::ALL {
+    for &variant in AlertVariant::ALL {
         let urgent = matches!(variant, AlertVariant::Warning | AlertVariant::Error);
         let node = h.get_by_role_and_label(
             if urgent { Role::Alert } else { Role::Status },

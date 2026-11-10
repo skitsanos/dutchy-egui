@@ -8,6 +8,7 @@ use egui::{Context, Id, IdSalt, LayerId, Order, Response};
 use std::borrow::Cow;
 
 /// Rendered viewer state; the host owns the bound selected key and loader policy.
+#[non_exhaustive]
 pub struct LightboxResponse<K> {
     /// Dialog surface.
     pub response: Response,

@@ -110,7 +110,7 @@ fn variants_do_not_leak_style_to_following_controls() {
         .with_context_setup(|ctx| common::install(ctx, Theme::default()))
         .build_ui(|ui| {
             let before = ui.style().clone();
-            for variant in ButtonVariant::ALL {
+            for &variant in ButtonVariant::ALL {
                 ui.add(Button::new("Variant").variant(variant));
             }
             assert_eq!(before.as_ref(), ui.style().as_ref());
@@ -128,7 +128,7 @@ fn wrapped_buttons_keep_natural_width_and_stay_in_the_column() {
             let bounds = ui.max_rect();
             let mut rows = Vec::new();
             ui.horizontal_wrapped(|ui| {
-                for variant in ButtonVariant::ALL {
+                for &variant in ButtonVariant::ALL {
                     let response = ui.add(
                         Button::new(variant.name())
                             .variant(variant)

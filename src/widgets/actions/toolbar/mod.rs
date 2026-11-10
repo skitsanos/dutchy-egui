@@ -26,6 +26,7 @@ pub enum ToolbarOrientation {
     Vertical,
 }
 /// Toolbar geometry and a single independent host event.
+#[non_exhaustive]
 pub struct ToolbarResponse<T> {
     /// Named Toolbar container.
     pub response: Response,

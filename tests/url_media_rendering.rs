@@ -62,10 +62,7 @@ fn harness(base: String, theme: Theme, scale: f32, path: &'static str) -> Harnes
                         .and_then(|(_, image)| image.expand.as_ref().map(|r| r.id));
                 }
                 Lightbox::new("remote-viewer", &items, &mut state.selected)
-                    .options(OverlayOptions {
-                        return_focus: state.opener,
-                        ..Default::default()
-                    })
+                    .options(OverlayOptions::default().return_focus(state.opener))
                     .show(ui.ctx());
             },
             State::default(),

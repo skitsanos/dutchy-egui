@@ -125,6 +125,7 @@ let drawing = ScribbleDrawing::default();
 let snapshot = drawing.snapshot();
 let options = ScribbleExportOptions::default(); // 1x, transparent
 let svg: String = snapshot.to_svg(options).unwrap();
+let print = ScribbleExportOptions::new(2.0).background(egui::Color32::WHITE);
 let preview: egui::ColorImage = snapshot.rasterize(options).unwrap();
 // With `png-export`: let png: Vec<u8> = snapshot.to_png(options).unwrap();
 ```

@@ -7,6 +7,7 @@ use egui::{Color32, Pos2, Response, Sense, Stroke, Ui, Widget, WidgetInfo, vec2}
 
 /// Square-spinner side length before rotation.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum SpinnerSize {
     /// 12-point square.
     Small,

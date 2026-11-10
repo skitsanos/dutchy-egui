@@ -2,6 +2,7 @@ use std::path::Path;
 
 /// Host-supplied file metadata. Contents and native/browser handles stay in the host.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct FileInfo {
     /// Display name, normally the basename rather than an absolute local path.
     pub name: String,
@@ -36,6 +37,7 @@ impl FileInfo {
 }
 /// Metadata rejection; hosts still validate content before processing/transferring.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum FileRejectionReason {
     /// Name has no non-whitespace characters.
     MissingName,
@@ -69,6 +71,7 @@ impl std::fmt::Display for FileRejectionReason {
 }
 /// Rejected index in the submitted batch and its reason.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct FileRejection {
     /// Index in the candidate slice, not the retained file list.
     pub index: usize,
@@ -77,6 +80,7 @@ pub struct FileRejection {
 }
 /// Ordered metadata-validation result; the host chooses what to retain.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct FileValidation {
     /// Accepted candidate indices in original order.
     pub accepted: Vec<usize>,

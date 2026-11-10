@@ -3,6 +3,7 @@ use std::borrow::Cow;
 
 /// Sharp file selection presentation.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum FileUploadVariant {
     /// Spacious dashed drop zone with a decorative upload glyph.
     #[default]
@@ -11,6 +12,7 @@ pub enum FileUploadVariant {
     Compact,
 }
 /// Host requests from a file selection surface. No file contents are read.
+#[non_exhaustive]
 pub struct FileUploadResponse {
     /// Native clickable/focusable selection control.
     pub response: Response,

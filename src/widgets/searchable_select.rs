@@ -10,6 +10,7 @@ use egui::{IdSalt, Response, Ui, UiBuilder};
 use std::borrow::Cow;
 
 /// Native input, popup geometry, and explicit committed-selection feedback.
+#[non_exhaustive]
 pub struct SearchableSelectResponse {
     /// Editable query response; changed includes query editing.
     pub response: Response,

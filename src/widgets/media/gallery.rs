@@ -5,6 +5,7 @@ use std::borrow::Cow;
 
 /// One stable gallery item, shared with the lightbox. Keys must remain immutable.
 #[derive(Clone)]
+#[non_exhaustive]
 pub struct GalleryItem<'a, K> {
     /// Host key, unique within this gallery.
     pub key: K,
@@ -59,6 +60,7 @@ impl<'a, K> GalleryItem<'a, K> {
     }
 }
 /// Gallery geometry, thumbnails and a host-owned expansion request.
+#[non_exhaustive]
 pub struct GalleryResponse<K> {
     /// Named gallery region.
     pub response: Response,

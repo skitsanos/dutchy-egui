@@ -10,6 +10,7 @@ use std::borrow::Cow;
 
 /// Tab-strip appearance.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum TabsVariant {
     /// Content navigation with a four-point active underline.
     #[default]
@@ -19,6 +20,7 @@ pub enum TabsVariant {
 }
 
 /// Selection, close requests, and the active panel's callback result.
+#[non_exhaustive]
 pub struct TabsResponse<T, R> {
     /// Whole group; changed when selection changes or is normalized.
     pub response: Response,

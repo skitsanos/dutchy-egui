@@ -10,6 +10,7 @@ use std::borrow::Cow;
 
 /// Notification intent, expressed through a symbol, name, and color.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum AlertVariant {
     /// Brand-accent information; polite announcement.
     #[default]
@@ -24,7 +25,7 @@ pub enum AlertVariant {
 
 impl AlertVariant {
     /// All supported intents.
-    pub const ALL: [Self; 4] = [Self::Info, Self::Success, Self::Warning, Self::Error];
+    pub const ALL: &[Self] = &[Self::Info, Self::Success, Self::Warning, Self::Error];
     /// Human-readable severity.
     pub const fn name(self) -> &'static str {
         match self {
@@ -46,6 +47,7 @@ impl AlertVariant {
 }
 
 /// Separate action results; the application owns removal and action execution.
+#[non_exhaustive]
 pub struct AlertResponse {
     /// Container response; clicking the message does not activate its controls.
     pub response: Response,

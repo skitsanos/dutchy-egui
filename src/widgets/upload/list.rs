@@ -4,6 +4,7 @@ use std::borrow::Cow;
 
 /// Application-supplied transfer state. These widgets never execute transfers.
 #[derive(Clone, Debug, Default, PartialEq)]
+#[non_exhaustive]
 pub enum FileStatus {
     /// Selected and awaiting a host action.
     #[default]
@@ -16,6 +17,7 @@ pub enum FileStatus {
     Failed(String),
 }
 /// File-row presentation; keys must be stable and unique in a list.
+#[non_exhaustive]
 pub struct FileItem<'a, K> {
     /// Immutable host identity, independent of name, status, or order.
     pub key: K,
@@ -64,6 +66,7 @@ impl<'a, K> FileItem<'a, K> {
     }
 }
 /// Keyed, independent host actions from the list.
+#[non_exhaustive]
 pub struct FileListResponse<K> {
     /// Accessible List surface.
     pub response: Response,

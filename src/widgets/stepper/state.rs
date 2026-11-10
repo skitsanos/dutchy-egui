@@ -1,6 +1,7 @@
 use super::Step;
 /// Host-owned linear workflow position, separate from its field values or work.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum StepperState<T> {
     /// No step has started.
     #[default]

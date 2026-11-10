@@ -17,7 +17,7 @@ fn matrix(ui: &mut egui::Ui) {
         Theme::from_context(ui.ctx()).palette.background,
     );
     ui.add(Text::heading("Loading with clarity.").size(TextSize::Xl3));
-    for variant in ProgressVariant::ALL {
+    for &variant in ProgressVariant::ALL {
         ui.add(
             Progress::new(64.0)
                 .label(variant.name())

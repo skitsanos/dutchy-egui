@@ -13,11 +13,11 @@ fn fixture(ui: &mut egui::Ui) {
     ui.painter().rect_filled(ui.max_rect(), 0, p.background);
     ui.add(Text::heading("Tools with purpose.").size(TextSize::Xl3));
     ui.horizontal_wrapped(|ui| {
-        for icon in Icon::ALL {
+        for &icon in Icon::ALL {
             ui.add(IconButton::new(icon.name(), icon.name(), icon).tooltip(""));
         }
     });
-    for variant in ButtonVariant::ALL {
+    for &variant in ButtonVariant::ALL {
         ui.horizontal(|ui| {
             ui.add(
                 IconButton::new((variant.name(), "idle"), variant.name(), Icon::Plus)

@@ -3,6 +3,7 @@ use egui::{Id, KeyboardShortcut};
 
 /// Where a binding is eligible. Focused bindings take precedence over application bindings.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum CommandScope {
     /// Any host focus, subject to editing and modal policy.
     #[default]
@@ -13,6 +14,7 @@ pub enum CommandScope {
 
 /// Application-owned command description. No callback or application data is retained.
 #[derive(Clone, Debug)]
+#[non_exhaustive]
 pub struct Command<T> {
     /// Stable host action key.
     pub value: T,
@@ -87,6 +89,7 @@ impl<T> Command<T> {
 
 /// An activation request. The host decides whether to execute or accept it.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct CommandRequest<T> {
     /// Stable host action key.
     pub value: T,
@@ -96,6 +99,7 @@ pub struct CommandRequest<T> {
 
 /// Two enabled commands with the same chord and equally specific focus scope.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct ShortcutConflict<T> {
     /// First conflicting command key.
     pub first: T,

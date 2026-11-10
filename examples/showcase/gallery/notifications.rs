@@ -232,6 +232,7 @@ impl NotificationState {
                     reason: ToastDismissal::Expired,
                     ..
                 } => self.expired += 1,
+                _ => {}
             }
         }
     }

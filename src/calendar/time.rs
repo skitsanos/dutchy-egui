@@ -5,6 +5,7 @@ use std::fmt;
 
 /// Segment of a clock time, for caret-based stepping.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum TimeSegment {
     /// `HH`.
     Hour,

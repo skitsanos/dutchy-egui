@@ -110,7 +110,7 @@ fn gallery_ui(
             .and_then(|(_, image)| image.expand.as_ref().map(|button| button.id));
     }
     Lightbox::new("project-viewer", items, selected)
-        .options(OverlayOptions { return_focus: *opener, ..Default::default() })
+        .options(OverlayOptions::default().return_focus(*opener))
         .show(ui.ctx());
 }
 ```

@@ -7,6 +7,7 @@ pub type IconPainter = fn(&Painter, Rect, Color32);
 
 /// Original geometric icons plus a host painter, without an icon/font dependency.
 #[derive(Clone, Copy, Debug)]
+#[non_exhaustive]
 pub enum Icon {
     /// Add/create.
     Plus,
@@ -58,7 +59,7 @@ pub enum Icon {
 
 impl Icon {
     /// All built-in glyphs; custom painters are application-owned.
-    pub const ALL: [Self; 22] = [
+    pub const ALL: &[Self] = &[
         Self::Plus,
         Self::Minus,
         Self::Close,

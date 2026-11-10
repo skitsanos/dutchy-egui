@@ -16,6 +16,7 @@ pub enum FlexDirection {
 
 /// Native cross-axis alignment.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum CrossAlign {
     /// Leading edge.
     Start,

@@ -43,6 +43,7 @@ impl ThemeSettings {
             Accent::Crimson => "Crimson",
             Accent::Blue => "Blue",
             Accent::Green => "Green",
+            _ => accent.name(),
         }
     }
 
@@ -51,7 +52,7 @@ impl ThemeSettings {
     pub fn controls(&mut self, ui: &mut Ui) -> bool {
         let before = *self;
         Flex::row("theme-controls").wrap(true).show(ui, |ui| {
-            for accent in Accent::ALL {
+            for &accent in Accent::ALL {
                 let variant = if accent == self.accent {
                     ButtonVariant::Primary
                 } else {

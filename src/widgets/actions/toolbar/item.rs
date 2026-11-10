@@ -110,6 +110,7 @@ impl<'a, T> ToolbarItem<'a, T> {
 
 /// Explicit host request; navigation alone never produces one.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ToolbarEvent<T> {
     /// Run the named application action.
     Activated(T),

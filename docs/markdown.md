@@ -100,7 +100,7 @@ Inline images render as their alt text; only image-only paragraphs (including
 linked badges, whose link is dropped) become figures. Images need host-installed
 loaders; `url-images` covers HTTP(S) PNG/JPEG. Tables have no column spans or
 row headers. Code blocks keep host highlighting optional: pass a
-`CodeHighlighter` that returns colored byte spans. Text selection spans one
+`CodeHighlighter` that returns colored byte spans built with `CodeSpan::new`. Text selection spans one
 block at a time. Percent-encoded fragments must match the anchor text exactly.
 Nested tables inside lists wrap at the item width. See
 [DS-071](issues/DS-071.md) and the

@@ -15,6 +15,7 @@ const SIMPLIFY_CHUNK: usize = 256;
 /// Smoothing is applied once, when a gesture is committed, so stored strokes,
 /// history and exports remain ordinary polylines.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ScribbleSmoothing {
     /// Store pointer samples as captured.
     #[default]

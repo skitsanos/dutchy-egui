@@ -13,6 +13,7 @@ pub use trend::{Trend, TrendDirection, TrendSentiment};
 
 /// Statistic tile surface, matching the web StatsGrid component.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum StatVariant {
     /// Background surface.
     #[default]
@@ -27,7 +28,7 @@ pub enum StatVariant {
 
 impl StatVariant {
     /// Supported tile surfaces.
-    pub const ALL: [Self; 4] = [Self::Light, Self::Muted, Self::Dark, Self::Primary];
+    pub const ALL: &[Self] = &[Self::Light, Self::Muted, Self::Dark, Self::Primary];
     /// Human-readable surface name.
     pub const fn name(self) -> &'static str {
         match self {
@@ -41,6 +42,7 @@ impl StatVariant {
 
 /// Statistic type scale.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum StatSize {
     /// Responsive 36/48-point value.
     #[default]

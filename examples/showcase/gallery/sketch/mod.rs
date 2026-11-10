@@ -255,14 +255,12 @@ impl SketchState {
                 ScribbleAction::ExportSvg => self.save(ui, &response, jobs::Format::Svg),
                 #[cfg(feature = "png-export")]
                 ScribbleAction::ExportPng => self.save(ui, &response, jobs::Format::Png),
+                _ => {}
             }
         }
     }
     fn options(&self, scale: f32) -> ScribbleExportOptions {
-        ScribbleExportOptions {
-            scale,
-            background: self.paper.then_some(tokens::PAPER),
-        }
+        ScribbleExportOptions::new(scale).background(self.paper.then_some(tokens::PAPER))
     }
     fn save(&mut self, ui: &Ui, response: &ScribbleResponse, format: jobs::Format) {
         let task = jobs::choose_path(format).map(|path| {

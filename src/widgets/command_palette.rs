@@ -10,6 +10,7 @@ use egui::{Context, Id, IdSalt, Key, KeyboardShortcut, Modifiers, Response, UiBu
 use std::borrow::Cow;
 
 /// Dialog response and a command for the host to execute.
+#[non_exhaustive]
 pub struct CommandPaletteResponse<T> {
     /// Native modal response/geometry.
     pub response: Response,

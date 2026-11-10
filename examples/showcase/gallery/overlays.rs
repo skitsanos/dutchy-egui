@@ -123,10 +123,7 @@ impl OverlayState {
             "Archive project?",
         )
         .width(ModalWidth::Medium)
-        .options(OverlayOptions {
-            return_focus: self.modal_opener,
-            ..Default::default()
-        })
+        .options(OverlayOptions::default().return_focus(self.modal_opener))
         .show_with_footer(
             ctx,
             |ui| {
@@ -157,7 +154,7 @@ impl OverlayState {
         let rules = [Rule::required("Enter a profile name before saving.")];
         let result=Modal::new("edit-profile",&mut self.edit_open,"Edit profile")
             .width(ModalWidth::Medium)
-            .options(OverlayOptions {return_focus:self.modal_opener,..Default::default()})
+            .options(OverlayOptions::default().return_focus(self.modal_opener))
             .show_with_footer(ctx,|ui| {
                 let response=Field::new("Profile name").required(true).validation(self.name_check.state())
                     .show(ui,|ui|ui.add(Input::new("profile-name",&mut self.draft_name)));
@@ -188,11 +185,11 @@ impl OverlayState {
         )
         .side(self.side)
         .width(DrawerWidth::Medium)
-        .options(OverlayOptions {
-            dismiss_on_backdrop: self.backdrop_dismissal,
-            return_focus: self.drawer_opener,
-            ..Default::default()
-        })
+        .options(
+            OverlayOptions::default()
+                .dismiss_on_backdrop(self.backdrop_dismissal)
+                .return_focus(self.drawer_opener),
+        )
         .show_with_footer(
             ctx,
             |ui| {

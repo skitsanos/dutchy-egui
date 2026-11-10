@@ -8,6 +8,7 @@ use std::borrow::Cow;
 
 /// Preferred horizontal alignment; placement may flip at viewport edges.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum DropdownAlign {
     /// Align the popup's leading edge with its trigger.
     #[default]
@@ -17,6 +18,7 @@ pub enum DropdownAlign {
 }
 
 /// Trigger, popup geometry, and host-owned action result.
+#[non_exhaustive]
 pub struct DropdownResponse<T> {
     /// Original trigger, retaining its native role and accessible name.
     pub trigger: Response,

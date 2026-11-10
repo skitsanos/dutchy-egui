@@ -82,12 +82,15 @@ fn alpha(ui: &mut Ui, state: &mut ColorsState) {
 }
 
 fn brand(ui: &mut Ui, state: &mut ColorsState) {
-    let presets = Accent::ALL.map(|accent| {
-        ColorPreset::new(
-            accent.name(),
-            Theme::new(accent, Mode::Light).palette.primary,
-        )
-    });
+    let presets: Vec<_> = Accent::ALL
+        .iter()
+        .map(|&accent| {
+            ColorPreset::new(
+                accent.name(),
+                Theme::new(accent, Mode::Light).palette.primary,
+            )
+        })
+        .collect();
     let response = Field::new("Brand color").show(ui, |ui| {
         ui.add(
             ColorPicker::new("brand", &mut state.brand)

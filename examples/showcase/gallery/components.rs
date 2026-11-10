@@ -24,7 +24,7 @@ pub(super) fn overview(ui: &mut Ui, app: &mut Showcase) {
     ui.add(Text::new("Sharp geometry, warm color, and a clear visual hierarchy.\nA composable design system for Rust applications.").color(TextColor::Muted));
     section(ui, "01", "Actions", |ui| {
         ui.horizontal_wrapped(|ui| {
-            for variant in ButtonVariant::ALL {
+            for &variant in ButtonVariant::ALL {
                 if ui
                     .add(
                         Button::new(variant.name())
@@ -82,7 +82,7 @@ pub(super) fn buttons(ui: &mut Ui, app: &mut Showcase) {
     ui.add(Text::new(
         "Five variants. Three shared control sizes. Pointer and keyboard activation.",
     ));
-    for variant in ButtonVariant::ALL {
+    for &variant in ButtonVariant::ALL {
         section(ui, "01", variant.name(), |ui| {
             ui.horizontal_wrapped(|ui| {
                 for size in [ControlSize::Small, ControlSize::Medium, ControlSize::Large] {
@@ -143,7 +143,7 @@ pub(super) fn badges(ui: &mut Ui, app: &mut Showcase) {
 
 fn badge_row(ui: &mut Ui) {
     ui.horizontal_wrapped(|ui| {
-        for variant in BadgeVariant::ALL {
+        for &variant in BadgeVariant::ALL {
             ui.add(Badge::new(variant.name()).variant(variant));
         }
     });

@@ -6,6 +6,7 @@ use std::borrow::Cow;
 
 /// Preferred side of the anchor. Native egui placement may flip at screen edges.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum TooltipPosition {
     /// Above the anchor.
     #[default]

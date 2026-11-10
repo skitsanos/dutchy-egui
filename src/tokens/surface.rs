@@ -4,6 +4,7 @@ use super::space;
 
 /// Insets around card content, matching the web padding tiers.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum CardPadding {
     /// Edge-to-edge content.
     None,

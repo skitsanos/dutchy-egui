@@ -92,7 +92,7 @@ pub fn progress(ui: &mut Ui, state: &mut LoadingState) {
         }
     });
     section(ui, "03", "Intent", |ui| {
-        for variant in ProgressVariant::ALL {
+        for &variant in ProgressVariant::ALL {
             ui.add(
                 Progress::new(64.0)
                     .variant(variant)

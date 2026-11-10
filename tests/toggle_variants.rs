@@ -23,7 +23,7 @@ struct State {
 #[test]
 fn all_variants_distinguish_on_and_off_in_buttons_and_toolbars() {
     for (accent, mode, scale) in configurations() {
-        for variant in ButtonVariant::ALL {
+        for &variant in ButtonVariant::ALL {
             for toolbar in [false, true] {
                 check_states(
                     Theme::new(accent, mode).with_reduced_motion(true),
@@ -123,7 +123,7 @@ fn matrix(ui: &mut egui::Ui) {
     ui.painter().rect_filled(ui.max_rect(), 0, p.background);
     ui.add(Text::heading("State you can see."));
     ui.add(Text::new("Off / On · Standalone and toolbar toggles").color(TextColor::Muted));
-    for variant in ButtonVariant::ALL {
+    for &variant in ButtonVariant::ALL {
         ui.push_id(variant.name(), |ui| {
             ui.add(Text::label(variant.name()));
             ui.horizontal(|ui| {

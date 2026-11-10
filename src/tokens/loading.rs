@@ -4,6 +4,7 @@ use super::space;
 
 /// Progress track height, independent of input/button heights.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ProgressSize {
     /// Four-point track.
     Small,

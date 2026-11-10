@@ -166,6 +166,7 @@ fn placement_follows_each_preferred_side_and_flips_inside_viewport_edges() {
             TooltipPosition::Bottom => rect.top() >= anchor.bottom(),
             TooltipPosition::Left => rect.right() <= anchor.left(),
             TooltipPosition::Right => rect.left() >= anchor.right(),
+            _ => unreachable!("only the four sides are tested"),
         };
         assert!(expected, "{side:?}: {rect:?} / {anchor:?}");
     }

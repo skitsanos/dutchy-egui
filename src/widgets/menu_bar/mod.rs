@@ -13,6 +13,7 @@ pub use item::{MenuBarItem, MenuBarState};
 use std::borrow::Cow;
 
 /// In-window application menu geometry and a single host command request.
+#[non_exhaustive]
 pub struct MenuBarResponse<T> {
     /// Named MenuBar container.
     pub response: Response,

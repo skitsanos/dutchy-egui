@@ -286,10 +286,7 @@ impl MediaState {
         let items = self.items();
         let response = Lightbox::new("artwork-viewer", &items, &mut self.selected)
             .wrap_navigation(self.wrap)
-            .options(OverlayOptions {
-                return_focus: self.opener,
-                ..Default::default()
-            })
+            .options(OverlayOptions::default().return_focus(self.opener))
             .show(ctx);
         if let Some(response) = response
             && let Some(image) = &response.image

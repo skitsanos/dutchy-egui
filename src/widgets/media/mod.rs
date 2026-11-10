@@ -17,6 +17,7 @@ use std::borrow::Cow;
 
 /// Aspect of the reserved image box.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ImageAspect {
     /// Intrinsic aspect, with a 16:9 fallback while dimensions are unknown.
     #[default]
@@ -32,6 +33,7 @@ pub enum ImageAspect {
 }
 /// Image placement without distorting its aspect.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ImageFit {
     /// Show the whole image with flat letterboxing when necessary.
     #[default]
@@ -41,6 +43,7 @@ pub enum ImageFit {
 }
 /// Current native loader outcome, with diagnostic errors returned to the host.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ImageStatus {
     /// Texture is available.
     Ready,
@@ -50,6 +53,7 @@ pub enum ImageStatus {
     Failed(String),
 }
 /// Image geometry and independent host action requests.
+#[non_exhaustive]
 pub struct ImageResponse {
     /// Figure including its caption.
     pub response: Response,

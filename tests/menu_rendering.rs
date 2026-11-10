@@ -177,10 +177,7 @@ fn command_dialog_fits_a_small_viewport() {
         .build_ui_state(
             matrix,
             State {
-                palette: SearchState {
-                    open: true,
-                    query: String::new(),
-                },
+                palette: open_search(),
                 ..Default::default()
             },
         );
@@ -193,4 +190,11 @@ fn command_dialog_fits_a_small_viewport() {
         "{rect:?}"
     );
     h.check_accessibility();
+}
+
+/// An open palette with an empty query; hosts assign `SearchState` fields.
+fn open_search() -> SearchState {
+    let mut search = SearchState::default();
+    search.open = true;
+    search
 }

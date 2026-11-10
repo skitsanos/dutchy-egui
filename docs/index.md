@@ -31,6 +31,8 @@ and the [independent review](verification-review-1.0.28.md).
 
 [Development and verification](development.md), [implementation plan](plan.md),
 [example applications](example-applications.md), [reference decisions](reference.md),
+the [versioning policy](versioning.md) with its
+[API extensibility plan](plan-api-extensibility.md),
 [Foliopress reference](references/foliopress-showcase.md) and the
 [Issues Ledger](issues/). The
 [menu interaction decisions](menu-interaction-decisions.md) explain cascade

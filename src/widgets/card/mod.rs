@@ -9,6 +9,7 @@ use egui::{InnerResponse, Response, Sense, Ui, UiBuilder, WidgetInfo};
 
 /// Card surface treatments from the Dutchy reference.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum CardVariant {
     /// Plain background.
     #[default]
@@ -27,7 +28,7 @@ pub enum CardVariant {
 
 impl CardVariant {
     /// All supported surfaces.
-    pub const ALL: [Self; 6] = [
+    pub const ALL: &[Self] = &[
         Self::Default,
         Self::Accent,
         Self::Bordered,

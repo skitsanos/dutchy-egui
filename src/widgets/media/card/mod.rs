@@ -6,6 +6,7 @@ use egui::{IdSalt, ImageSource, Response, Ui};
 use std::borrow::Cow;
 
 /// Geometry, loader status and independent application-owned action requests.
+#[non_exhaustive]
 pub struct MediaCardResponse {
     /// Named noninteractive card group.
     pub response: Response,

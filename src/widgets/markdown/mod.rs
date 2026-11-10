@@ -28,6 +28,7 @@ use std::{
 
 /// What activating a link does besides being reported to the host.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum LinkPolicy {
     /// Open `http(s)`/`mailto` destinations natively and scroll to `#fragment`
     /// headings of this document; relative destinations are only reported.
@@ -39,6 +40,7 @@ pub enum LinkPolicy {
 
 /// A link activated by pointer or keyboard this pass.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct MarkdownLink {
     /// Destination as written, after reference resolution.
     pub href: String,
@@ -76,6 +78,7 @@ fn uri_scheme(href: &str) -> Option<&str> {
 }
 
 /// Document region and the links activated during this pass.
+#[non_exhaustive]
 pub struct MarkdownResponse {
     /// Named document region.
     pub response: Response,

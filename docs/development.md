@@ -52,6 +52,10 @@ receipts. Registry publication is separate from a main push.
 Run `bash scripts/check.sh` after installing stable rustfmt/Clippy, the
 `wasm32-unknown-unknown` target and Rust 1.95.0. It runs the required gates,
 partial-feature profiles, native example build and actual crate inspection.
+`python3 scripts/check_api.py` fails when a public enum, or a struct with only
+public fields, is neither `#[non_exhaustive]` nor on the keep list of the
+[API extensibility plan](plan-api-extensibility.md); see the
+[versioning policy](versioning.md).
 `python3 scripts/check_package.py [archive.crate]` also audits an existing
 archive for approved paths, matching source bytes, licences, packaged links
 and the crates.io upload limit. Tests and examples run from a repository

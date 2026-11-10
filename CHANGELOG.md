@@ -1,5 +1,39 @@
 # Changelog
 
+## Unreleased
+
+Planned as 1.1.0, the first crates.io release. From here on Dutchy follows the
+[versioning policy](docs/versioning.md): it stays on 1.x, and egui upgrades
+are major releases.
+
+### Breaking changes
+
+Public types that are expected to grow are now `#[non_exhaustive]`: 66 enums
+and 43 structs with only public fields, listed in the
+[API extensibility plan](docs/plan-api-extensibility.md). New variants and
+fields on them are minor releases from now on (DS-105). Code written against
+the `v1.0.29` and `v1.0.30` tags migrates as follows:
+
+- Build `OverlayOptions` and `UrlImageOptions` from `default()` with the new
+  chainable setters. `OverlayOptions { return_focus, ..Default::default() }`
+  becomes `OverlayOptions::default().return_focus(return_focus)`.
+- Build `ScribbleExportOptions` with `ScribbleExportOptions::new(scale)` and
+  `.background(color)`, and highlighter spans with `CodeSpan::new(range, color)`.
+- Start a `SearchState` from `default()` and assign `open` and `query`.
+- Add a wildcard arm to a `match` on a marked enum, such as `Accent`,
+  `ToastPosition` or `ToolbarEvent`.
+- `Icon::ALL`, `Accent::ALL` and the `ALL` lists of `AlertVariant`,
+  `BadgeVariant`, `ButtonVariant`, `CardVariant`, `ProgressVariant` and
+  `StatVariant` are slices: loop with `for &item in Icon::ALL`.
+- Response and report structs such as `ToastsResponse` and `MarkdownLink` can
+  no longer be built, or destructured without `..`. Reading fields is unchanged.
+
+### Other changes
+
+- Add `scripts/check_api.py` to the quality gate. It fails when a public enum,
+  or a struct with only public fields, is neither non-exhaustive nor on the
+  keep list (DS-105).
+
 ## 1.0.30 — 2026-11-09
 
 - Add DutchyAgent: an offline scripted chat example with streaming, Stop/Retry,

@@ -97,13 +97,7 @@ fn svg_preserves_vector_geometry_dots_colors_and_optional_background() {
         )
         .unwrap();
     drawing.push(dot(12.5, 12.5)).unwrap();
-    let svg = drawing
-        .snapshot()
-        .to_svg(Options {
-            scale: 2.0,
-            ..Default::default()
-        })
-        .unwrap();
+    let svg = drawing.snapshot().to_svg(Options::new(2.0)).unwrap();
     assert!(svg.contains("width=\"128\" height=\"64\" viewBox=\"0 0 128 64\""));
     assert!(svg.contains("5.000,9.000 81.000,9.000"));
     assert!(svg.contains("stroke=\"#285078\""));
@@ -112,10 +106,7 @@ fn svg_preserves_vector_geometry_dots_colors_and_optional_background() {
     assert!(!svg.contains("<rect"));
     let paper = drawing
         .snapshot()
-        .to_svg(Options {
-            background: Some(Color32::WHITE),
-            ..Default::default()
-        })
+        .to_svg(Options::default().background(Color32::WHITE))
         .unwrap();
     assert!(paper.contains("<rect"));
     assert!(!paper.contains("<script"));
@@ -141,10 +132,7 @@ fn raster_contains_ink_only_and_composites_connected_alpha_once_per_stroke() {
     assert_eq!(image.pixels[4 * 32 + 20].a(), 128);
     assert_eq!(image.pixels[4 * 32 + 10].a(), 128);
     let paper = snapshot
-        .rasterize(Options {
-            background: Some(Color32::WHITE),
-            ..Default::default()
-        })
+        .rasterize(Options::default().background(Color32::WHITE))
         .unwrap();
     assert_eq!(paper.pixels[0], Color32::WHITE);
     assert_eq!(paper.pixels[4 * 32 + 10].a(), 255);
@@ -155,33 +143,16 @@ fn export_size_pixel_and_work_limits_reject_before_unbounded_allocations() {
     let snapshot = Drawing::default().snapshot();
     for scale in [0.0, -1.0, f32::NAN, f32::INFINITY, 1000.0] {
         assert_eq!(
-            snapshot.to_svg(Options {
-                scale,
-                ..Default::default()
-            }),
+            snapshot.to_svg(Options::new(scale)),
             Err(Error::InvalidExportSize)
         );
     }
     let mut large = Drawing::new(4096, 4096).unwrap();
     assert_eq!(
-        large
-            .snapshot()
-            .rasterize(Options {
-                scale: 2.0,
-                ..Default::default()
-            })
-            .unwrap_err(),
+        large.snapshot().rasterize(Options::new(2.0)).unwrap_err(),
         Error::RasterTooLarge
     );
-    assert!(
-        large
-            .snapshot()
-            .to_svg(Options {
-                scale: 2.0,
-                ..Default::default()
-            })
-            .is_ok()
-    );
+    assert!(large.snapshot().to_svg(Options::new(2.0)).is_ok());
     for _ in 0..4 {
         large
             .push(Stroke::new(vec![pos2(0.0, 0.0), pos2(4096.0, 4096.0)], Brush::new()).unwrap())
@@ -198,10 +169,7 @@ fn png_decodes_to_the_same_rgba_pixels_and_dimensions_as_the_public_raster() {
     let mut drawing = Drawing::new(40, 20).unwrap();
     drawing.push(dot(10.5, 10.5)).unwrap();
     let snapshot = drawing.snapshot();
-    let options = Options {
-        scale: 2.0,
-        ..Default::default()
-    };
+    let options = Options::new(2.0);
     let rgba = snapshot.rasterize(options).unwrap();
     let png = snapshot.to_png(options).unwrap();
     let decoded = image::load_from_memory(&png).unwrap().into_rgba8();
@@ -218,10 +186,7 @@ fn png_decodes_to_the_same_rgba_pixels_and_dimensions_as_the_public_raster() {
 fn fractional_export_rounding_uses_uniform_scale_and_background_covers_every_pixel() {
     let mut drawing = Drawing::new(3, 2).unwrap();
     drawing.push(dot(1.5, 1.0)).unwrap();
-    let options = Options {
-        scale: 1.5,
-        background: Some(Color32::WHITE),
-    };
+    let options = Options::new(1.5).background(Color32::WHITE);
     let snapshot = drawing.snapshot();
     let svg = snapshot.to_svg(options).unwrap();
     assert!(svg.contains("viewBox=\"0 0 5 3\""));

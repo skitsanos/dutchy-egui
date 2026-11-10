@@ -24,7 +24,7 @@ fn state_matrix(ui: &mut egui::Ui) {
     egui::Grid::new("button-states")
         .spacing([12.0, 12.0])
         .show(ui, |ui| {
-            for variant in ButtonVariant::ALL {
+            for &variant in ButtonVariant::ALL {
                 ui.add(
                     Button::new(variant.name())
                         .variant(variant)
@@ -47,7 +47,7 @@ fn state_matrix(ui: &mut egui::Ui) {
         });
     ui.add_space(16.0);
     ui.horizontal_wrapped(|ui| {
-        for variant in BadgeVariant::ALL {
+        for &variant in BadgeVariant::ALL {
             ui.add(Badge::new(variant.name()).variant(variant));
         }
     });

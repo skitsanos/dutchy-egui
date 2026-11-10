@@ -87,17 +87,13 @@ pub fn show(ui: &mut Ui, state: &mut CommandState) {
                 .menu(tree.exports),
             tool(Action::Palette),
         ];
-        if let Some(event) = Toolbar::new("studio-tools", &tools)
-            .accessible_name("Canal Studio tools")
-            .show(ui)
-            .event
+        if let Some(ToolbarEvent::Activated(value) | ToolbarEvent::Toggled { value, .. }) =
+            Toolbar::new("studio-tools", &tools)
+                .accessible_name("Canal Studio tools")
+                .show(ui)
+                .event
         {
-            activate(
-                state,
-                match event {
-                    ToolbarEvent::Activated(value) | ToolbarEvent::Toggled { value, .. } => value,
-                },
-            );
+            activate(state, value);
         }
         ui.add_space(space::MD);
         ui.horizontal_wrapped(|ui| {

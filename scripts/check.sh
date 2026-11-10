@@ -2,6 +2,7 @@
 # Install stable rustfmt/clippy, wasm32 and Rust 1.95.0 before running this gate.
 set -euo pipefail
 cargo fmt --all --check
+python3 scripts/check_api.py
 cargo test --locked --all-features
 cargo test --locked --no-default-features
 cargo clippy --locked --all-targets -- -D warnings

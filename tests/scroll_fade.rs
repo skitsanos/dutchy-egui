@@ -9,7 +9,7 @@ use egui_kittest::Harness;
 
 #[test]
 fn every_theme_style_disables_the_scroll_fade() {
-    for accent in Accent::ALL {
+    for &accent in Accent::ALL {
         for mode in [Mode::Light, Mode::Dark] {
             for reduced in [false, true] {
                 let style = Theme::new(accent, mode)

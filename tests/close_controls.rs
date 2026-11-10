@@ -108,7 +108,7 @@ mod rendering {
             state.actions += usize::from(result.close_requested.is_some());
             ui.add_space(24.0);
             ui.horizontal_wrapped(|ui| {
-                for variant in BadgeVariant::ALL {
+                for &variant in BadgeVariant::ALL {
                     state.actions += usize::from(
                         ui.add(
                             Badge::new(format!("{} tag", variant.name()))

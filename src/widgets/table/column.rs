@@ -3,6 +3,7 @@ use egui::IdSalt;
 use std::borrow::Cow;
 /// Content alignment within a table column.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum TableAlign {
     /// Leading edge.
     #[default]
@@ -23,6 +24,7 @@ impl TableAlign {
 }
 /// Preferred width; flexible columns share extra viewport space equally.
 #[derive(Clone, Copy, Debug, PartialEq)]
+#[non_exhaustive]
 pub enum TableColumnWidth {
     /// Fixed logical-point width, with horizontal overflow when needed.
     Fixed(f32),

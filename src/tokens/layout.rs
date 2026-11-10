@@ -4,6 +4,7 @@ use super::space;
 
 /// Typed gaps and padding in logical points.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Spacing {
     /// No gap.
     None,
@@ -57,6 +58,7 @@ impl Spacing {
 
 /// Maximum outer container widths, including horizontal gutters.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ContainerWidth {
     /// 384 points.
     Sm,
@@ -98,6 +100,7 @@ impl ContainerWidth {
 
 /// Minimum responsive column widths before collapsing to fewer columns.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ColumnWidth {
     /// Compact 160-point tiles.
     Compact,

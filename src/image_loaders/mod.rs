@@ -17,7 +17,11 @@ use std::{sync::Arc, time::Duration};
 /// These are per context. Cache entries include pending requests and distinct
 /// texture-option variants. CPU decode runs on the HTTP worker on native and
 /// on the browser callback on WASM. Animated images are treated as still images.
+///
+/// Start from [`UrlImageOptions::default`] and chain the setters; fields can
+/// also be read or assigned. New limits may be added in minor releases.
 #[derive(Clone, Copy, Debug)]
+#[non_exhaustive]
 pub struct UrlImageOptions {
     /// Maximum encoded response body retained per request (default 16 MiB).
     pub max_download_bytes: usize,
@@ -43,6 +47,38 @@ impl Default for UrlImageOptions {
             max_concurrent: 4,
             response_body_timeout: Duration::from_secs(30),
         }
+    }
+}
+
+impl UrlImageOptions {
+    /// Maximum encoded response body retained per request.
+    pub fn max_download_bytes(mut self, bytes: usize) -> Self {
+        self.max_download_bytes = bytes;
+        self
+    }
+
+    /// Maximum decoded width times height.
+    pub fn max_pixels(mut self, pixels: u64) -> Self {
+        self.max_pixels = pixels;
+        self
+    }
+
+    /// Maximum cached entries; values below one become one.
+    pub fn max_entries(mut self, entries: usize) -> Self {
+        self.max_entries = entries;
+        self
+    }
+
+    /// Maximum simultaneous fetch/decode operations; values below one become one.
+    pub fn max_concurrent(mut self, operations: usize) -> Self {
+        self.max_concurrent = operations;
+        self
+    }
+
+    /// Native response-body read timeout.
+    pub fn response_body_timeout(mut self, timeout: Duration) -> Self {
+        self.response_body_timeout = timeout;
+        self
     }
 }
 

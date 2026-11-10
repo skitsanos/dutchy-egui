@@ -4,6 +4,7 @@ use std::sync::Arc;
 
 /// Tokenized pen widths, expressed in drawing coordinates rather than screen pixels.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ScribbleWidth {
     /// One drawing unit.
     Fine,
@@ -98,7 +99,12 @@ impl ScribbleStroke {
     }
 }
 /// File/export geometry. Exports contain ink/background only, never UI chrome.
+///
+/// Build with [`ScribbleExportOptions::new`] or `default()` and the
+/// [`background`](Self::background) setter. New options may be added in minor
+/// releases.
 #[derive(Clone, Copy, Debug, PartialEq)]
+#[non_exhaustive]
 pub struct ScribbleExportOptions {
     /// Output resolution multiplier; dimensions are rounded to whole pixels.
     pub scale: f32,
@@ -107,14 +113,27 @@ pub struct ScribbleExportOptions {
 }
 impl Default for ScribbleExportOptions {
     fn default() -> Self {
+        Self::new(1.0)
+    }
+}
+impl ScribbleExportOptions {
+    /// Transparent export at this resolution multiplier.
+    pub const fn new(scale: f32) -> Self {
         Self {
-            scale: 1.0,
+            scale,
             background: None,
         }
+    }
+
+    /// Composite this background, or keep transparent paper with `None`.
+    pub fn background(mut self, background: impl Into<Option<Color32>>) -> Self {
+        self.background = background.into();
+        self
     }
 }
 /// Invalid model input or an explicitly bounded export failure.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ScribbleError {
     /// Drawing dimensions must be 1..=4096.
     InvalidDimensions,

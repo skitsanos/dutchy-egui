@@ -18,6 +18,7 @@ pub struct TableSort<C> {
 }
 /// Header surface.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum TableHeader {
     /// Documented muted header.
     #[default]
@@ -29,6 +30,7 @@ pub enum TableHeader {
 }
 /// Shared table padding density.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum TableDensity {
     /// 24x16 body and 24x12 header padding.
     #[default]
@@ -60,6 +62,7 @@ pub struct TableSelection<K> {
     pub selected: bool,
 }
 /// Rendered keyed row and its native cell/selection responses.
+#[non_exhaustive]
 pub struct TableRowResponse<K> {
     /// Host row key.
     pub key: K,
@@ -71,6 +74,7 @@ pub struct TableRowResponse<K> {
     pub selection: Option<Response>,
 }
 /// Table output. No record sorting, filtering, selection or actions are applied.
+#[non_exhaustive]
 pub struct DataTableResponse<C, K> {
     /// Named viewport region.
     pub response: Response,

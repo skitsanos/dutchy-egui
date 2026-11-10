@@ -3,6 +3,7 @@ use super::space;
 
 /// Shared menu widths.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum MenuWidth {
     /// 200-point dropdown.
     Compact,

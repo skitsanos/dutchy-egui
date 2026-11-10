@@ -41,6 +41,7 @@ impl<'a, T: egui::AsIdSalt> AccordionItem<'a, T> {
 
 /// Accordion surface treatment.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum AccordionVariant {
     /// Separate items with a four-point accent edge on hover.
     #[default]
@@ -50,6 +51,7 @@ pub enum AccordionVariant {
 }
 
 /// Responses and callback results, in item order.
+#[non_exhaustive]
 pub struct AccordionResponse<R> {
     /// Whole container; changed when a header toggles expansion.
     pub response: Response,
