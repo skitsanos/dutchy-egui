@@ -1,8 +1,7 @@
 # Richer menus and application command surfaces
 
-Shipped in 1.0.26 (DS-073). The implementation extends Menu,
-Dropdown and Toolbar without a new dependency. Flat command lists and their
-`.action` handlers remain supported.
+The implementation extends Menu, Dropdown and Toolbar without a new
+dependency. Flat command lists and their `.action` handlers remain supported.
 
 ```rust
 use dutchy_egui::{MenuBar, MenuBarItem, MenuBarState, MenuEvent, MenuItem};
@@ -42,9 +41,11 @@ fn menus(ui: &mut egui::Ui, visibility: &mut MenuBarState, grid: &mut bool) {
 
 Menus use Up/Down/Home/End, skip disabled entries, and activate with
 pointer/Enter/Space. Right enters a submenu; Left or Escape returns one level.
-Escape at the root dismisses to its trigger. Tab/Shift+Tab exits the whole
-popup tree without trapping focus. Pointer hover supports moving between a
-branch and its child; clicks outside all popup levels preserve outside focus.
+Escape at the root dismisses to its trigger; on a closed MenuBar entry or
+Toolbar menu button it releases focus like other egui widgets. Tab/Shift+Tab
+exits the whole popup tree without trapping focus. Pointer hover supports
+moving between a branch and its child; clicks outside all popup levels
+preserve outside focus.
 Tab direction comes from the individual key event's modifier snapshot, even
 when Shift is released in the same native frame. Ctrl/Cmd/Alt+Tab chords remain
 available to the host. Immediate Escape after entering a child returns one
@@ -85,13 +86,13 @@ The [WAI menu/menubar](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)
 and [toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) patterns inform
 the navigation. This native egui implementation skips disabled entries rather
 than making them arrow-focusable. Alt/F10 system-menu activation, mnemonic
-letters, type-ahead, radio/mixed checks and operating-system menu integration
-are outside this milestone. Shortcut hints remain descriptive unless supplied through a host
-CommandRegistry. The 1.0.28 [command integration](commands-shortcuts.md)
-adds shared bindings and recursive leaf search in CommandPalette, with ancestor
-breadcrumbs; branches never execute.
+letters, type-ahead, radio/mixed checks, arbitrary embedded widgets and
+operating-system menu integration are out of scope. Shortcut hints remain
+descriptive unless supplied through a host CommandRegistry; see
+[shared commands](commands-shortcuts.md) for bindings and recursive
+CommandPalette search with ancestor breadcrumbs. Branches never execute.
 
-## Acceptance plan and evidence
+## Layout and showcase
 
 Application menus share the menu bar's bottom border. Cascades share their
 side border and align the first child row with the parent row when viewport
@@ -102,33 +103,8 @@ very narrow viewports may overlap the parent to keep commands reachable.
 See the [menu interaction decisions](menu-interaction-decisions.md) for the
 design rationale and a possible future drill-down presentation.
 
-Add focused interaction tests for controlled/rejected checked requests,
-multi-level navigation, pointer transitions, disabled/empty branches, focus
-return/Tab exit, outside clicks, dynamic entries and stable IDs. Check Menu,
-MenuItemCheckBox, expanded/controlled metadata, MenuBar and Toolbar roles.
-Review light/dark and multiple display-scale snapshots, narrow viewport
-placement, inverse surfaces and a working command-surface showcase.
-
-Run formatting, all-feature/minimal tests, all three required Clippy profiles,
-strict rustdoc, feature-profile/WASM/MSRV checks, native showcase verification
-and the actual crate archive inspection. Record supported scope and remaining
-limits before marking DS-073 resolved. The work shipped in 1.0.26; see the
-[release record](verification-release-1.0.26.md).
-
 The Menus and Toolbars showcase pages both include Canal Studio: File/Edit/View
 menus, a three-level export tree, connected grid/ruler settings and a toolbar
 export button. “Apply view changes” demonstrates rejecting requests without
 changing checked values. Export/copy choices report requests in the demo; they
 do not write files or the system clipboard.
-
-See [DS-073](issues/DS-073.md) and
-[verification evidence](verification-richer-menus.md) for results and limits.
-The subsequent [focus and cascade review](verification-menu-polish.md)
-records DS-074/075 and supersedes the initial native Tab limitation.
-The [layout review](verification-menu-layout.md) records DS-076, the subsequent
-fix for an empty attachment scope moving following content. An independent
-review found three further defects, fixed as [DS-081](issues/DS-081.md)
-(Tab from a `show_for` menu), [DS-082](issues/DS-082.md) (focused row under
-pointer ownership) and [DS-083](issues/DS-083.md) (a menu bar with one
-enabled entry). [DS-084](issues/DS-084.md) aligns Escape on closed triggers with
-other egui widgets and adds the remaining coverage.

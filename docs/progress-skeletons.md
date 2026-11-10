@@ -107,6 +107,4 @@ visible. Clipped, empty, zero-size, paused, and reduced-motion indicators do not
 run a continuous repaint loop. The application must request repaint when its
 background work updates values or replaces content.
 
-Platform and assistive-technology limits are recorded in
-[verification](verification-loading.md); source-palette contrast limitations
-remain in [DS-003](issues/DS-003.md).
+Source-palette contrast limitations remain in [DS-003](issues/DS-003.md).

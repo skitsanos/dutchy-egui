@@ -3,7 +3,7 @@
 
 docs/versioning.md keeps Dutchy on 1.x. A new variant on an exhaustive enum,
 or a new field on a struct whose fields are all public, breaks host code, so
-such types carry #[non_exhaustive] unless docs/plan-api-extensibility.md keeps
+such types carry #[non_exhaustive] unless docs/versioning.md keeps
 them exhaustive. Structs with a private field are already extensible.
 """
 from pathlib import Path
@@ -11,7 +11,7 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-# Keep these lists equal to the keep lists in docs/plan-api-extensibility.md.
+# Keep these lists equal to the table in docs/versioning.md ("Extensibility").
 KEEP_ENUMS = {
     "AccordionState", "DateSegment", "FlexDirection", "Mode", "TableSortDirection",
     "ToolbarOrientation", "TrendDirection", "TrendSentiment", "Weekday",
@@ -109,7 +109,7 @@ def main():
         errors += [f"keep list: no public {kind} {name}" for name in sorted(names) if (kind, name) not in seen]
     if errors:
         print("\n".join(errors))
-        print("See docs/versioning.md and docs/plan-api-extensibility.md.")
+        print("See the Extensibility section of docs/versioning.md.")
         return 1
     for kind in ("enum", "struct"):
         total = sum(1 for item in items if item[2] == kind)

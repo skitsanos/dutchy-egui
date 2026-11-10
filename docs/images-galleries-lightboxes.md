@@ -173,6 +173,5 @@ contract. Image cards/hero compositions can use the existing layout/Card APIs.
 Collections are not virtualized. Bound large datasets and own texture/cache
 lifetimes. Zoom/pan, slideshow timers, swipe gestures, masonry, drag reorder,
 downloads/export, additional codecs/file loaders and animated-format acceptance
-are outside this step. Browser/OS/screen-reader acceptance remains separate from
-metadata and rendered tests. See [DS-021](issues/DS-021.md) and
-[verification](verification-media.md).
+are out of scope. Browser/OS/screen-reader acceptance remains separate from
+metadata and rendered tests.

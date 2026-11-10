@@ -123,5 +123,4 @@ The square icons are small original painters, with no icon/helper dependency.
 All data and actions in the showcase are deterministic local examples. Production
 applications supply real work and content. Source-palette contrast limitations
 remain in [DS-003](issues/DS-003.md), including small semantic trend text and some
-on-primary text. Platform and assistive-technology evidence is in
-[verification](verification-insights.md).
+on-primary text.

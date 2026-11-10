@@ -39,13 +39,13 @@ show their name on hover/focus; override with `.tooltip("Help")` or opt out with
 resting actions inherit inverse card ink. Keyboard focus uses the shared cue;
 pointer focus does not add a separate outline.
 
-A toggle's two surfaces stay distinguishable while hovered (DS-064): an unpressed
+A toggle's two surfaces stay distinguishable while hovered: an unpressed
 Outline toggle hovers with the muted fill and keeps its stroke, an unpressed Ghost
 toggle with the muted fill alone, and a pressed toggle keeps the inverse Secondary
 fill, tinted, instead of switching to the accent. Held pointers darken the current
 fill. Plain IconButtons keep the ordinary button hover, including the inverted
-Outline hover. Secondary toggles add a token-sized accent edge while pressed
-(DS-068), so their on/off states remain visible even though both use the inverse
+Outline hover. Secondary toggles add a token-sized accent edge while pressed,
+so their on/off states remain visible even though both use the inverse
 surface. This applies to standalone and toolbar toggles.
 
 ## Typed toolbars
@@ -122,6 +122,3 @@ wrapping and vertical toolbars. The connected command-surface section also
 demonstrates menu buttons. Commands, persistence, shortcuts, arbitrary
 child inputs and a rich-text editor remain application concerns. No mixed-state
 toggle, drag reorder or customizable overflow menu is included.
-
-See [verification evidence](verification-actions-toolbars.md) and
-[DS-062](issues/DS-062.md). This work shipped in release 1.0.24.

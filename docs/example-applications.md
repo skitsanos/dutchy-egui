@@ -23,7 +23,7 @@ to read in one sitting and complete enough to feel like a product.
 - **Data.** Fictional and generated deterministically in code from a fixed
   seed: invented people and subjects, reserved domains (`example.com`,
   `example.org`), no real products, companies or people, and no bundled images
-  or text corpora, because `examples/**` ships in the crate archive.
+  or text corpora: the examples are public.
 - **Secrets and network.** API keys come from process configuration or the
   gitignored local `.env`, are never saved by the application or logged, and
   are shown masked. DutchyAgent retains a redacted in-memory credential for
@@ -37,13 +37,12 @@ to read in one sitting and complete enough to feel like a product.
   asynchronous completion, light and dark modes at 1x, 1.5x and 2x, kittest
   interaction tests inside the example and a native inspection before release.
   Each application gets an Issues Ledger ticket recording what it proves and
-  the gaps it surfaced, a `verification-*.md` record, and one README line with
-  its run command.
+  the gaps it surfaced, and one README line with its run command.
 
 ## DutchyTodo
 
 The smallest complete application and the tutorial companion to
-[getting started](getting-started.md). Shipped in 1.0.26, with import/Undo hardening in 1.0.27.
+[getting started](getting-started.md).
 
 - **Scope.** Projects in a sidebar with task counts (Badge); a task list with
   Checkbox completion, title and notes editing in a Drawer (InlineEdit when it
@@ -52,9 +51,9 @@ The smallest complete application and the tutorial companion to
   filter, Toast with undo for delete and complete, Kbd hints, and a Modal
   confirmation when deleting a project (Dialog preset when it lands).
 - **Keyboard.** N creates by default, Enter edits, Space toggles, Delete removes,
-  Escape closes editors; focus returns to the list row. The 1.0.28
-  integration adds Command/Control+F search, Command/Control+K discovery and a
-  Shortcuts drawer for rebinding application commands.
+  Escape closes editors; focus returns to the list row. Command/Control+F
+  searches, Command/Control+K opens command discovery and a Shortcuts drawer
+  rebinds application commands.
 - **State.** An in-memory keyed store owned by the application, with optional
   import and export through the existing `rfd` dialog.
 - **Limits.** No synchronisation, recurring tasks, reminders or notifications.
@@ -67,23 +66,19 @@ The smallest complete application and the tutorial companion to
   editors bound to the old records. Project and task IDs range from zero to
   `u64::MAX - 1`; the maximum value is reserved for exhaustion. Import errors
   leave the current list intact, and exhausted creation preserves drafts with
-  an error message. See the [import safety verification](verification-todo-import-safety.md).
-  Kbd hints sit in the status strip. The 1.0.28 command integration
-  shares live hints, availability and bindings across the header, palette,
-  sidebar and New task split action; file operations keep their busy gate.
-  See [command workflow verification](verification-command-workflow.md).
-  The support module ships a theme switcher, header, sidebar and status-strip
+  an error message. Kbd hints sit in the status strip. Commands share live
+  hints, availability and bindings across the header, palette, sidebar and New
+  task split action; file operations keep their busy gate. The support module ships a theme switcher, header, sidebar and status-strip
   frames, a seeded generator with fictional people, and capture hooks
   (`DUTCHY_EXAMPLE_ZOOM`, `DUTCHY_EXAMPLE_MODE`, `DUTCHY_EXAMPLE_CAPTURE`) that
-  render a native frame at a chosen scale and mode for verification records;
+  render a native frame at a chosen scale and mode for inspection;
   the showcase keeps its own header until a later release adopts the shared
   one.
 
 ## DutchyAgent
 
-[DutchyAgent](dutchy-agent.md) shipped in 1.0.30, following
-the 1.0.28 command integration and 1.0.29 CI release. It connects OpenAI Responses
-and an explicit offline mock to the Markdown and CodeBlock composition.
+[DutchyAgent](dutchy-agent.md) connects OpenAI Responses and an explicit
+offline mock to the Markdown and CodeBlock composition.
 
 - **Scope.** Conversation list in the sidebar; a transcript of user and
   assistant turns where assistant Markdown renders with CodeBlock copy;
@@ -97,23 +92,11 @@ and an explicit offline mock to the Markdown and CodeBlock composition.
   completion, failure and cancellation messages between OpenAI and Scripted.
   OpenAI uses Responses SSE or buffered JSON over `ehttp`; Scripted uses a
   deterministic clock and simulated errors. No public provider trait is added
-  to the library. Defaults are `gpt-6-luna` and `low`, verified against current
-  API/model documentation. Live errors never trigger a scripted fallback.
+  to the library. Model settings load from process values over the ignored
+  `.env`: `MODEL_NAME` (default `gpt-6-luna`) and `MODEL_EFFORT` (default
+  `low`). Live errors never trigger a scripted fallback.
 - **Limits.** No tool calling, attachments, image input, conversation
   persistence, temperature control, custom endpoints or multiple provider accounts.
-- **Offline milestone** ([DS-099](issues/DS-099.md), 1.0.30): independent
-  conversations/drafts, deterministic streaming, Stop/Retry, Markdown/code copy,
-  simulated error scenarios, first-token Skeleton and estimated usage. Model
-  settings load from process values over ignored `.env`: `MODEL_NAME` defaults
-  to `gpt-6-luna`, `MODEL_EFFORT` to `low`. The initial implementation retained
-  key presence only. [Offline verification](verification-dutchy-agent.md)
-  records that stage.
-- **Live extension** ([DS-100](issues/DS-100.md), 1.0.30): configured
-  credentials select OpenAI at startup; explicit Mock selection remains offline.
-  Bounded transport/SSE parsing, cooperative cancellation, source labels and
-  API-reported usage are implemented. A real native "Hi" turn verified the
-  configured model. See the [milestone plan](plan-dutchy-agent.md) and
-  [live verification](verification-dutchy-agent-live.md) for checks and limits.
 
 ## DutchyMail
 
@@ -154,17 +137,10 @@ Preferences live inside each application as a settings Drawer, adopting
 ThemePicker, KeyRecorder and PathInput as they land, rather than as a separate
 application.
 
-## Sequence
+## Order
 
-1. Shipped: example scaffolding and DutchyTodo (1.0.26), hardened in 1.0.27.
-2. Shipped in 1.0.28: shared commands,
-   shortcut editing and nested search in Todo and Canal Studio; see the
-   [implementation plan](plan-1.0.28.md). Hosted CI runs after the approved push.
-3. Shipped in 1.0.30: DutchyAgent with OpenAI Responses and an explicit offline
-   mock, with its review fixes (DS-103) and wrapping-row Text alignment (DS-104).
-4. Workbench releases: List/selection first, then TreeView/SplitPane and editing
-   helpers; DutchyMail composes those controls once available.
-5. DutchyDash together with the dashboards milestone.
+1. Workbench releases: List and selection first, then TreeView, SplitPane and
+   editing helpers; DutchyMail composes them once available.
+2. DutchyDash together with the dashboards milestone.
 
-Each lands in its own release with its ticket, verification record and
-README line, and never pushes without authorization.
+Each lands in its own release with its ledger ticket and README line.

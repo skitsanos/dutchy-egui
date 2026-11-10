@@ -73,8 +73,7 @@ the stored points: history, snapshots and SVG/raster/PNG exports remain ordinary
 polylines, and changing the level never alters existing ink. Keyboard strokes
 always keep their exact positions, and clicks still make dots.
 `ScribbleSmoothing::smooth` applies the identical pipeline to host-supplied
-samples. Variable-width or tapered ends are not implemented. See
-[DS-046](issues/DS-046.md).
+samples. Variable-width or tapered ends are not implemented.
 
 The named, focusable Canvas exposes stroke/point counts and keyboard help.
 Editable canvases retain arrow focus; Tab leaves the canvas normally:
@@ -91,7 +90,7 @@ Focus reveals a canvas once; handled keyboard drawing commands reveal it again
 when needed. Keeping focus does not override manual scrolling. Toolbar controls
 reveal on focus changes/activation, allowing wheel/scrollbar navigation to later
 views. Empty read-only views say “No drawing”; `.placeholder(...)` overrides either
-mode's default hint. See [DS-026](issues/DS-026.md).
+mode's default hint.
 
 The toolbar returns Undo, Redo, Clear, Preview, ExportSvg and optional ExportPng
 requests; the host executes them in order. Completed pointer/keyboard strokes
@@ -148,10 +147,7 @@ edge rasterization; pixel-identical screenshot/export parity is not promised.
 `png-export` adds the existing optional image 0.25.10 codec with PNG only. It does
 not enable HTTP/JPEG or bundled fonts. SVG and CPU previews need no extra runtime
 crate; the default dependency remains egui. `url-images` still enables HTTP(S)
-PNG/JPEG independently. egui 0.37.0 and image 0.25.10 were confirmed as current
-stable releases through crates.io on 2026-11-06. Development-only rfd was
-upgraded to 0.18.0, verified as current stable on 2026-11-07; see
-[the upgrade verification](verification-rfd-1.0.21.md).
+PNG/JPEG independently.
 
 ## Showcase and reference
 
@@ -171,5 +167,4 @@ clear, a sharp paper surface and PNG output, while adding vector export, bounded
 host history and keyboard drawing. Controls sit below the canvas to avoid hiding
 ink. No third-party widget/helper code was copied. Pressure/tilt, multitouch,
 eraser, undo persistence, tapered/variable-width ends and arbitrary shape tools
-are outside scope; pointer smoothing was added in 1.0.19.
-See [DS-025](issues/DS-025.md) and [verification](verification-scribble.md).
+are outside scope.

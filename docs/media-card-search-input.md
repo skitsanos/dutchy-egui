@@ -1,8 +1,7 @@
 # MediaCard and SearchInput
 
-The implementation composes native egui interaction with the
-[Foliopress reference](references/foliopress-showcase.md), using repository-owned
-modules, shared tokens and a combined artwork-browser showcase. No dependencies
+Both components use native egui interaction, repository-owned modules and
+shared tokens; the showcase combines them in an artwork browser. No dependencies
 are added. The host owns queries, filtering, sorting, saved state,
 navigation, retries and any keyboard shortcuts.
 
@@ -66,16 +65,9 @@ The response includes the existing ImageResponse: inspect its status or
 the same loader contract as Image; URI support is not installed by MediaCard.
 The primary image action is keyboard-visible. Other card parts do not capture
 bookmark or retry clicks, and retained focus does not pull manual scrolling back.
+MediaCard has no custom metadata slots or masonry layout.
 
-## Verification and delivery
-
-Exercise edits, clear/focus, limits, disabled/read-only states, independence of
-card actions, stable IDs/reordering, image status, clipping, narrow widths and
-manual scrolling. Review light/dark and multiple accent/scale renders, then run
-the required Rust matrix, no-default tests, rustdoc and WASM checks. Verify native
-showcase interactions. These components are included in repository release
-1.0.23; registry publication and subsequent main pushes are separate authorized
-steps.
+## Showcase
 
 The showcase's **Media cards** page demonstrates host filtering, category and
 saved-only filters, sorting, explicit counts and Lightbox focus return. Its

@@ -84,8 +84,7 @@ The header pairs the title with a provider badge. **New chat** and the named
 settings icon sit on the right; narrow windows use a named plus icon for New chat.
 Sidebar conversation names share a left inset, with long names truncated inside
 their full-width targets. Each row reports whether it is selected, and a row with
-a reply running is described as such to assistive technology. The [shell verification](verification-dutchy-agent-shell.md)
-records the layout and focus checks.
+a reply running is described as such to assistive technology.
 
 Write a message or use **Try the Rust example** with the selected provider; the
 example is sent on its own and leaves any typed draft in place.
@@ -113,6 +112,4 @@ retrying an intentional error. Disabling streaming delivers the whole scripted r
 after its initial delay. Mock token counts are explicitly labelled estimates.
 
 Tools, attachments, image input, persistence, multiple accounts and other providers
-remain future work. See the [application plan](example-applications.md),
-[milestone plan](plan-dutchy-agent.md), [live verification](verification-dutchy-agent-live.md),
-and the original [offline verification](verification-dutchy-agent.md).
+remain future work. See the [application plan](example-applications.md).

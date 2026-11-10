@@ -133,6 +133,3 @@ interaction guidance. Pause/queue/focus policies avoid losing unread or focused
 messages. CSS slide/exit effects and soft shadows are intentionally absent.
 This is an original repository-owned implementation using egui only; no widget
 crate or third-party implementation was copied.
-
-See [DS-018](issues/DS-018.md) and the [verification record](verification-toasts.md)
-for executed evidence and platform limits.

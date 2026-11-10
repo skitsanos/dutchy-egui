@@ -120,8 +120,9 @@ scrolling away from it is never undone.
 
 ## Showcase and scope
 
-The File Uploads page opens the current stable [rfd 0.18.0](https://docs.rs/rfd/0.18.0/rfd/) picker on the native
-UI thread. This is a development-only integration, not a runtime library helper.
+The File Uploads page opens the [rfd 0.18.0](https://docs.rs/rfd/0.18.0/rfd/)
+picker on the native UI thread. This is a development-only integration, not a
+runtime library helper.
 File metadata inspection runs on a worker and wakes egui on completion. Picker
 and dropped native paths share rules for PDF/PNG/JPEG/TXT, ten MB and five files.
 Directories and inspection failures stay explicit; duplicate paths are reported.
@@ -139,4 +140,3 @@ revision `104e4dab59fd94130b44fb276736c6be731e1ebf`. Repository-owned implementa
 adapt the source's flat dashed zone, compact input and removable progress rows.
 No third-party widget/helper code was copied. Transport, folder traversal,
 chunk/resume protocols, previews and content verification remain host concerns.
-See [DS-024](issues/DS-024.md) and [verification](verification-file-uploads.md).

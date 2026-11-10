@@ -1,9 +1,8 @@
 # Shared commands and shortcuts
 
-Shipped in 1.0.28, tracked in DS-087–DS-091 and DS-093–DS-095; see
-[verification](verification-command-workflow.md). CommandRegistry keeps application
-metadata together; it never executes an action or owns application records.
-The existing Menu, MenuBar, Toolbar and CommandPalette APIs remain available.
+CommandRegistry keeps application metadata together; it never executes an
+action or owns application records. The existing Menu, MenuBar, Toolbar and
+CommandPalette APIs remain available.
 
 ```rust
 use dutchy_egui::{Command, CommandRegistry};
@@ -95,7 +94,7 @@ also the recorder's accessible name.
 
 ## Nested discovery
 
-CommandPalette now recursively searches submenu leaves. Breadcrumb group
+CommandPalette recursively searches submenu leaves. Breadcrumb group
 headings retain ancestor context, and every query word must occur in the
 combined path/label. Disabled ancestors disable descendants; empty branches
 produce no commands and branch identity values never execute. Full keyed

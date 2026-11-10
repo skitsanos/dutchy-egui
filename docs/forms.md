@@ -37,7 +37,7 @@ rule and explicitly validate every required field at submission.
 
 - Input: single-line, placeholder, password mask, shared sizes, disabled/read-only,
   width, and character limit. Password clipboard/accessibility behavior uses egui.
-  The text row is vertically centered in the frame (DS-047).
+  The text row is vertically centered in the frame.
 - Textarea: native multiline editing, rows, 120-point minimum height, count/limit,
   and read-only/disabled states. Interactive resize handles remain planned.
 - Checkbox: square indicator, wrapped clickable label, keyboard activation.

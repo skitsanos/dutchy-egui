@@ -9,9 +9,9 @@ are major releases.
 ### Breaking changes
 
 Public types that are expected to grow are now `#[non_exhaustive]`: 66 enums
-and 43 structs with only public fields, listed in the
-[API extensibility plan](docs/plan-api-extensibility.md). New variants and
-fields on them are minor releases from now on (DS-105). Code written against
+and 43 structs with only public fields. The
+[versioning policy](docs/versioning.md) lists the types that stay exhaustive.
+New variants and fields on the others are minor releases from now on (DS-105). Code written against
 the `v1.0.29` and `v1.0.30` tags migrates as follows:
 
 - Build `OverlayOptions` and `UrlImageOptions` from `default()` with the new
@@ -33,6 +33,9 @@ the `v1.0.29` and `v1.0.30` tags migrates as follows:
 - Add `scripts/check_api.py` to the quality gate. It fails when a public enum,
   or a struct with only public fields, is neither non-exhaustive nor on the
   keep list (DS-105).
+- Keep the documentation lean: remove the per-change verification reports and
+  finished plans. Guides state their limits, ledger entries state their
+  evidence briefly, and the coverage matrix and roadmap drop release history.
 
 ## 1.0.30 — 2026-11-09
 
@@ -154,7 +157,7 @@ the `v1.0.29` and `v1.0.30` tags migrates as follows:
 
 ## 1.0.23 — 2026-11-08
 
-- Add Foliopress-inspired MediaCard and SearchInput compositions with host-owned
+- Add MediaCard and SearchInput compositions with host-owned
   state, independent native actions and an artwork-browser showcase (DS-059/060).
 - Root-anchor the package allowlist so nested video files sharing names such as
   AGENTS.md are excluded from crate archives (DS-058).
@@ -169,7 +172,7 @@ the `v1.0.29` and `v1.0.30` tags migrates as follows:
 - Add a color-picker showcase and a Rust-focused component roadmap beyond the
   web inventory (DS-056).
 - Increase the color-picker arrow's trailing inset to 16 points and reserve its
-  text gap; record the Foliopress card, dropdown and search references (DS-057).
+  text gap; record the card, dropdown and search references (DS-057).
 
 ## 1.0.21 — 2026-11-07
 

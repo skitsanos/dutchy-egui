@@ -108,8 +108,7 @@ recorded difference.
 
 Source-palette contrast limitations remain in [DS-003](issues/DS-003.md), including
 white text on some brand/status fills. Native testing currently covers macOS
-accessibility and interaction, not a running screen reader. See the
-[verification record](verification-surfaces.md).
+accessibility and interaction, not a running screen reader.
 
 ## Close-control geometry
 
@@ -117,4 +116,4 @@ Dismissible alerts and banners use a 32x32-point close target, inset 16 points
 from both the top and right edges. Its centered glyph has equal visual spacing.
 Hover and press use shared flat close-control feedback; disabled controls do not
 highlight. Names, Enter/Space activation, host-owned visibility, and explicit
-focus-return targets are preserved. See [DS-013](issues/DS-013.md).
+focus-return targets are preserved.

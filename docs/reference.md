@@ -1,6 +1,12 @@
 # Reference decisions
 
-The source revision and overall plan are in [plan.md](plan.md).
+The visual reference is the Dutchy web design system
+(`skitsanos/dutchy-design-system`, revision `e91ca1d`). Appearance follows its
+stylesheet, component implementations and a locally rendered build; intended
+behavior follows its design-system documentation and component demos. Its 27
+registry groups are a baseline, not a ceiling: native additions extend the
+library for Rust applications, and the [roadmap](component-roadmap.md) sets
+priorities. The library builds without the web source.
 
 ## Colors
 
@@ -35,7 +41,7 @@ least 3.8:1 against each neutral background, and white text reaches 5.2:1 on
 Blue and 4.0:1 on Green. `Accent::ALL` lists every preset in documented order
 for theme pickers.
 
-Light colors match the measured localhost reference. Dark neutrals use the
+Light colors match the locally rendered reference. Dark neutrals use the
 documented #0A0A0A background, #FAFAFA foreground, #262626 muted surface, #A3A3A3
 muted text, and #333333 border. Secondary dark surfaces map to muted; status
 colors and accents retain their source values. This completes a documented

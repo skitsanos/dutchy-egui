@@ -1,9 +1,9 @@
 # Form primitives
 
-Version 1.0.20 adds the controls the web registry never listed and a native
-form needs: Switch, Kbd, Segmented, Slider, NumberInput, DatePicker and
-TimePicker. They follow the existing form conventions: values stay in
-application state, IDs are stable salts within the parent UI, `Field` supplies
+Switch, Kbd, Segmented, Slider, NumberInput, DatePicker and TimePicker are
+controls a native form needs but the web registry never listed. They follow
+the existing form conventions: values stay in application state, IDs are
+stable salts within the parent UI, `Field` supplies
 the visible label and validation decoration, and every control returns the
 Response that carries its change, focus and blur events. The web stylesheet
 defines none of these controls, so their geometry is a decision of this port,
@@ -114,5 +114,4 @@ own instants; no date crate is added.
 No range slider, vertical slider, week numbers, date ranges, locale-specific
 formats, 12-hour clocks or time zones. Pickers have no read-only mode yet;
 disable them instead. The showcase derives `today` from the system clock on
-native targets only. Evidence is recorded in
-[verification-form-primitives.md](verification-form-primitives.md).
+native targets only.

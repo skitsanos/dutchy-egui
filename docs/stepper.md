@@ -86,6 +86,3 @@ retain numbers. This port adds explicit safe boundary/completion states and
 opt-in native navigation while preserving the source's host-owned progression.
 It uses shared tokens and existing Progress/Tooltip primitives, with no copied
 third-party implementation or additional dependencies.
-
-See [verification](verification-stepper.md) and [DS-015](issues/DS-015.md) for
-executed evidence and platform limits.

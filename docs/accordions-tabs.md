@@ -1,9 +1,8 @@
 # Accordions and tabs
 
-Version 1.0.6 begins the interaction-components milestone. References:
-`docs/01-design-system/components/{accordion,tabs}.md` and
+References: `docs/01-design-system/components/{accordion,tabs}.md` and
 `src/components/{Accordion,Tabs}/index.tsx` in the web revision recorded in
-[plan](plan.md), rechecked 2026-11-06. Geometry follows the component source
+[reference decisions](reference.md). Geometry follows the component source
 where older prose examples differ.
 
 ## Controlled accordions
@@ -152,10 +151,9 @@ flag behind the focus-visible policy and each strip's previous-focus record.
 
 The web overflow dropdown/arrows are represented by native horizontal scrolling
 and keyboard reveal. An overflow menu, icon slots, docking, reorder dragging,
-vertical tabs, and panel-height animation are outside
-this step. This does not complete the entire interaction-components milestone.
-See [coverage](coverage.md) and [verification](verification-disclosures.md).
+vertical tabs, and panel-height animation are out of scope.
+See [coverage](coverage.md).
 
 Tab close controls use the shared flat hover/pressed surface and pointing cursor,
 with their own keyboard focus cue. Hovering close does not select its tab;
-activation still returns a host-owned close request. See [DS-013](issues/DS-013.md).
+activation still returns a host-owned close request.

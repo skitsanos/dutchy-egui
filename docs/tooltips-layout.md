@@ -1,8 +1,8 @@
 # Tooltips and layout
 
-Version 1.0.5. The reference is the same web revision recorded in [plan](plan.md),
-reviewed against `components/tooltip.md`, `components/flex.md`,
-`components/layout.md`, and the Tooltip/Flex implementations on 2026-11-06.
+The reference is the web revision recorded in [reference decisions](reference.md):
+`components/tooltip.md`, `components/flex.md`, `components/layout.md`, and the
+Tooltip/Flex implementations.
 
 ## Tooltip
 
@@ -68,7 +68,7 @@ Compose native egui controls/spacers when those patterns are needed.
 
 In a wrapping row, `Text` follows egui's label flow: it continues after the
 previous item and wraps its remainder onto the next row, centered on the row
-like egui's own labels (DS-104). Items placed earlier do not move when a taller
+like egui's own labels. Items placed earlier do not move when a taller
 item later grows the row. To keep short copy whole, call `Ui::end_row` first
 when it does not fit, as the DutchyAgent composer hint does.
 
@@ -99,7 +99,7 @@ empty slice calls no renderers. A partial final row keeps the preceding column
 widths. Row height follows its tallest child; painted tiles need not be equal
 height. Cells lay out top-down and left-aligned: egui's column justification is
 not applied, so wrapped copy stays ragged and children fill a cell through their
-own width options (DS-063). There is no virtualization or two-pass child
+own width options. There is no virtualization or two-pass child
 measurement.
 
 Layout helpers preserve normal control roles, keyboard behavior, and host state.
@@ -110,4 +110,4 @@ owns values, validation, saving, navigation, and egui Panels. The web `Layout`
 component's HTML/head/assets/SSR shell has no native equivalent in this library.
 
 All implementations are maintained in this repository; no helper crates or
-third-party widget source were added. See [verification](verification-layout.md).
+third-party widget source were added.

@@ -108,6 +108,4 @@ semantic source token. There are no copied third-party implementations or new
 runtime dependencies. Existing font/third-party notices remain distributed.
 
 Top/bottom or resizable/docked drawers, draggable dialogs, exit transitions, and
-full web/browser parity are outside this step. Platform and screen-reader limits
-are recorded in [verification](verification-overlays.md) and
-[DS-016](issues/DS-016.md).
+full web/browser parity are out of scope.

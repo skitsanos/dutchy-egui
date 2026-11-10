@@ -4,7 +4,7 @@ Enable the optional integration:
 
 ```toml
 [dependencies]
-dutchy-egui = { version = "1.0.20", features = ["url-images"] }
+dutchy-egui = { path = "../dutchy-egui", features = ["url-images"] }
 ```
 
 ```rust
@@ -33,9 +33,9 @@ transport's policy. Non-2xx responses and invalid/unsupported content become
 `ImageStatus::Failed`; the product UI presents its existing retry affordance.
 
 The integration is original repository-owned code over ehttp **0.7.3** and image
-**0.25.10**, current stable releases verified on 2026-11-06. No widget/helper crate
-is added. This feature adds only the HTTP transport and image codec dependencies;
-the independent default `markdown` feature adds its parser. Disable all default
+**0.25.10**. No widget/helper crate is added. This feature adds only the HTTP
+transport and image codec dependencies; the independent default `markdown`
+feature adds its parser. Disable all default
 and optional features for an egui-only direct runtime dependency set.
 The integration handles HTTP(S) textures only; file paths, SVG, byte sources,
 authenticated request configuration and additional formats need host loaders.
@@ -115,5 +115,4 @@ with photographer credits and links to the originals. IDs and sizes are stable,
 so revisiting a component does not pick an unrelated image. No API key is needed,
 and no remote photographs are distributed in the crate. Public service uptime
 is outside this library's control. Automated HTTP tests use a local fixture,
-without calling Picsum. See [verification](verification-url-images.md) and
-[DS-022](issues/DS-022.md).
+without calling Picsum.
