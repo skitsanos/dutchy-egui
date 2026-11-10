@@ -46,34 +46,37 @@ impl<'a> Kbd<'a> {
 
 impl Widget for Kbd<'_> {
     fn ui(self, ui: &mut Ui) -> Response {
-        let theme = Theme::from_context(ui.ctx());
-        let p = theme.palette;
-        let galley = self.galley(ui);
-        let desired = vec2(
-            galley.size().x + 2.0 * control::KBD_PADDING_X,
-            control::INDICATOR,
-        );
-        let (rect, response) = ui.allocate_exact_size(desired, Sense::hover());
+        let (rect, response) = ui.allocate_exact_size(self.desired_size(ui), Sense::hover());
         response
             .widget_info(|| WidgetInfo::labeled(Role::Label, ui.is_enabled(), self.text.as_ref()));
         crate::text::name_as_written(&response, self.text.as_ref());
-        if ui.is_rect_visible(rect) {
-            ui.painter().rect(
-                rect,
-                0,
-                p.muted,
-                Stroke::new(border::THIN, p.border),
-                StrokeKind::Inside,
-            );
-            ui.painter().galley(
-                pos2(
-                    rect.center().x - galley.size().x / 2.0,
-                    rect.center().y - galley.size().y / 2.0,
-                ),
-                galley,
-                p.foreground,
-            );
-        }
+        self.paint(ui, rect);
         response
+    }
+}
+
+impl Kbd<'_> {
+    /// Paint the chip into `rect` with `ui`'s painter, without a response.
+    pub(crate) fn paint(&self, ui: &Ui, rect: egui::Rect) {
+        if !ui.is_rect_visible(rect) {
+            return;
+        }
+        let p = Theme::from_context(ui.ctx()).palette;
+        let galley = self.galley(ui);
+        ui.painter().rect(
+            rect,
+            0,
+            p.muted,
+            Stroke::new(border::THIN, p.border),
+            StrokeKind::Inside,
+        );
+        ui.painter().galley(
+            pos2(
+                rect.center().x - galley.size().x / 2.0,
+                rect.center().y - galley.size().y / 2.0,
+            ),
+            galley,
+            p.foreground,
+        );
     }
 }

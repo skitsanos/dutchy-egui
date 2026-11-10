@@ -18,10 +18,12 @@ mod navigation;
 mod notifications;
 mod overlays;
 mod pages;
+mod people;
 mod primitives;
 mod renaming;
 pub(crate) mod sketch;
 mod splits;
+mod status;
 mod stepping;
 mod surfaces;
 mod tabbed;
@@ -63,6 +65,8 @@ pub struct Showcase {
     pub trees: trees::TreesState,
     pub splits: splits::SplitsState,
     pub renaming: renaming::RenamingState,
+    pub status: status::StatusState,
+    pub people: people::PeopleState,
     pub insights: InsightsState,
     pub help: help::HelpState,
     pub layout: layout::LayoutState,
@@ -103,6 +107,8 @@ impl Default for Showcase {
             trees: trees::TreesState::default(),
             splits: splits::SplitsState::default(),
             renaming: renaming::RenamingState::default(),
+            status: status::StatusState::default(),
+            people: people::PeopleState::default(),
             insights: InsightsState::default(),
             help: help::HelpState::default(),
             layout: layout::LayoutState::default(),
@@ -173,6 +179,8 @@ impl Showcase {
                             Page::TreeView => trees::show(ui, &mut self.trees),
                             Page::SplitPanes => splits::show(ui, &mut self.splits),
                             Page::InlineEdit => renaming::show(ui, &mut self.renaming),
+                            Page::StatusBars => status::show(ui, &mut self.status),
+                            Page::Avatars => people::show(ui, &mut self.people),
                             Page::Lists => lists::show(ui, &mut self.lists),
                             Page::Layout => layout::show(ui, &mut self.layout),
                             Page::Accordions => disclosures::show(ui, &mut self.disclosures),

@@ -9,12 +9,10 @@ Issues Ledger ticket before work starts.
 ## Recommended next milestones
 
 1. **Workbench building blocks.** **PathInput** pairs a text field with a browse
-   button that returns a typed file, folder or save request. **StatusBar** is a bottom
-   strip of keyed segments (text, icon, progress, clickable) with overflow
-   priority and status semantics. The DutchyMail example demonstrates the set;
-   see [example applications](example-applications.md).
-   [InlineEdit](inline-edit.md) provides in-place rename requests with explicit
-   commit and cancel.
+   button that returns a typed file, folder or save request.
+   [InlineEdit](inline-edit.md), [StatusBar](status-bar.md) and
+   [Avatar](avatar.md) already ship for this milestone. The DutchyMail example
+   demonstrates the set; see [example applications](example-applications.md).
 2. **Powerful filtering.** A square **Chip** primitive with optional remove and
    toggle states is the shared base for **FilterChipGroup**, **TagInput** and
    **MultiSelect**; **RangeSlider** edits two endpoints on the existing rail;
@@ -61,7 +59,7 @@ dashboards milestone; see [example applications](example-applications.md).
 | LogViewer | Filter, pause and follow logs with List virtualization and bounded host buffers |
 | NotificationCenter | Browse dismissed toasts from a host-owned history in a Drawer; Toasts stay the live channel |
 | TreeTable | Tree rows with DataTable columns for outlines and nested records |
-| Avatar / AvatarGroup | Identity, fallback initials and presence; compose existing image loading |
+| AvatarGroup | Stacked avatars with an overflow count and one accessible summary; compose Avatar |
 | Reorderable lists / richer drag and drop | Arrange application-owned records with keyboard alternatives |
 | PinInput / MaskedInput | Fixed-length code boxes and formatted entry for sign-in and identifier forms |
 | Popover | Anchored rich content beyond menus, reusing the overlay foundations |

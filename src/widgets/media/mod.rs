@@ -2,7 +2,7 @@ mod caption;
 mod card;
 mod control;
 mod gallery;
-mod geometry;
+pub(in crate::widgets) mod geometry;
 mod lightbox;
 mod loading;
 mod render;

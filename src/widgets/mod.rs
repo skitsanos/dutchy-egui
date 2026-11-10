@@ -3,6 +3,7 @@
 mod accordion;
 mod actions;
 mod alert;
+mod avatar;
 mod badge;
 mod breadcrumbs;
 mod button;
@@ -35,6 +36,7 @@ mod skeleton;
 mod spinner;
 mod split_button;
 mod stats;
+mod status_bar;
 mod stepper;
 mod table;
 mod tabs;
@@ -51,6 +53,7 @@ pub use actions::{
     ToolbarResponse,
 };
 pub use alert::{Alert, AlertResponse, AlertVariant};
+pub use avatar::{Avatar, AvatarVariant, Presence};
 pub use badge::{Badge, BadgeVariant};
 pub use breadcrumbs::{
     BreadcrumbIconPainter, BreadcrumbItem, BreadcrumbSeparator, Breadcrumbs, BreadcrumbsResponse,
@@ -77,6 +80,7 @@ pub use split_button::{SplitButton, SplitButtonResponse};
 pub use stats::{
     Stat, StatSize, StatVariant, StatsGrid, StatsLayout, Trend, TrendDirection, TrendSentiment,
 };
+pub use status_bar::{StatusAlign, StatusBar, StatusBarResponse, StatusItem, StatusTone};
 pub use stepper::{Step, Stepper, StepperResponse, StepperState, StepperVariant};
 pub use tabs::{Tab, Tabs, TabsResponse, TabsVariant};
 pub use tooltip::{Tooltip, TooltipPosition};

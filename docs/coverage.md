@@ -57,6 +57,8 @@ come next, and each component guide states its limits.
 | [List](lists.md) | Port addition | Keyed host state; none/single/multiple selection; modifier ranges, type-ahead, roving focus and fixed-height virtualization; elided labels and host empty text. Passive row composition; no variable-height or embedded interactive controls. |
 | [TreeView](tree-view.md) | Port addition | List row engine; host-owned keyed expansion, Left/Right navigation, disclosure clicks, retained hidden selection and virtualized tree/group semantics. Passive fixed-height rows; no lazy loading or drag/reorder. |
 | [SplitPane](split-pane.md) | Port addition | Host-owned logical-point sizes; left/right or top/bottom panes, nested compositions, proportional minimum constraints, clipped children, keyboard and assistive resizing. No docking, ratio storage or collapse/restore. |
+| [StatusBar](status-bar.md) | Port addition | Keyed host-formatted text, label/value and Kbd hint segments; icons, tone markers and inline progress; start/end groups; priority overflow with hidden keys and lone-segment elision; clickable, disabled and polite live segments in a named group. No overflow menu or multi-line segments. |
+| [Avatar](avatar.md) | Port addition | Four square sizes and fills; Unicode-aware initials with an override; cover-cropped images with initials while loading or after failure; described presence marker; passive inside clickable rows. No groups, overflow counts or name-derived colors. |
 
 Foundation: ten accent and mode combinations, a custom semantic palette,
 standard egui styling, shared 32/48/56-point control heights, a four-point

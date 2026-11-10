@@ -1,4 +1,4 @@
-mod paint;
+pub(super) mod paint;
 
 use crate::{
     Family, ProgressSize, Text, TextColor, TextSize, Theme, Tracking, Weight,

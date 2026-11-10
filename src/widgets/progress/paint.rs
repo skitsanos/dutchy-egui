@@ -5,7 +5,7 @@ use crate::{
 };
 use egui::{Rect, Ui, pos2};
 
-pub(super) fn track(
+pub(in crate::widgets) fn track(
     ui: &Ui,
     rect: Rect,
     fraction: Option<f32>,

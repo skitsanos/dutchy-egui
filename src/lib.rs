@@ -32,8 +32,8 @@ pub use scribble::{
 pub use text::{Text, TextColor};
 pub use theme::Theme;
 pub use tokens::{
-    Accent, CardPadding, ColumnWidth, ContainerWidth, ControlSize, DrawerWidth, Family, Leading,
-    MenuWidth, ModalWidth, Mode, ProgressSize, Spacing, TextSize, Tracking, Weight,
+    Accent, AvatarSize, CardPadding, ColumnWidth, ContainerWidth, ControlSize, DrawerWidth, Family,
+    Leading, MenuWidth, ModalWidth, Mode, ProgressSize, Spacing, TextSize, Tracking, Weight,
 };
 pub use widgets::forms::{
     Checkbox, ColorPicker, ColorPreset, DatePicker, Field, InlineEdit, InlineEditEvent,
@@ -101,3 +101,6 @@ pub use widgets::{
 };
 
 pub use widgets::{TreeNode, TreeRow, TreeState, TreeView, TreeViewResponse};
+
+pub use widgets::{Avatar, AvatarVariant, Presence};
+pub use widgets::{StatusAlign, StatusBar, StatusBarResponse, StatusItem, StatusTone};

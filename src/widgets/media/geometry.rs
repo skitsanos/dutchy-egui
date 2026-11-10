@@ -29,7 +29,7 @@ pub(super) fn aspect(aspect: ImageAspect, intrinsic: Option<Vec2>) -> f32 {
             .map_or(tokens::FALLBACK_ASPECT, |size| size.x / size.y),
     }
 }
-pub(super) fn valid(size: Vec2) -> bool {
+pub(in crate::widgets) fn valid(size: Vec2) -> bool {
     size.is_finite() && size.x > 0.0 && size.y > 0.0
 }
 pub(super) fn bounds(response: &egui::Response) {
@@ -44,7 +44,7 @@ pub(super) fn bounds(response: &egui::Response) {
     });
 }
 /// Return a destination rectangle and normalized source UVs.
-pub(super) fn placement(bounds: Rect, size: Vec2, fit: ImageFit) -> (Rect, Rect) {
+pub(in crate::widgets) fn placement(bounds: Rect, size: Vec2, fit: ImageFit) -> (Rect, Rect) {
     let unit = Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0));
     if !valid(size) || bounds.width() <= 0.0 || bounds.height() <= 0.0 {
         return (bounds, unit);

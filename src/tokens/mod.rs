@@ -1,6 +1,7 @@
 //! Shared design tokens, expressed in egui logical points.
 
 pub mod actions;
+pub mod avatar;
 pub mod close;
 pub mod code;
 mod color;
@@ -20,6 +21,7 @@ pub mod overlay;
 pub mod scribble;
 pub mod search_input;
 pub mod split_pane;
+pub mod status_bar;
 pub mod stepper;
 pub mod surface;
 pub mod table;
@@ -29,6 +31,7 @@ pub mod tree;
 mod typography;
 pub mod upload;
 
+pub use avatar::AvatarSize;
 pub use color::{Accent, Mode, Palette};
 pub use layout::{ColumnWidth, ContainerWidth, Spacing};
 pub use loading::ProgressSize;

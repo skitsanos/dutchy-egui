@@ -17,7 +17,7 @@ Start with [setup, themes and fonts](getting-started.md) and the
 - [Shared commands, shortcut editing and split actions](commands-shortcuts.md)
 - [Modals and drawers](modals-drawers.md), [toasts](toasts.md),
   [tooltips and layout](tooltips-layout.md), [SplitPane](split-pane.md),
-  [InlineEdit](inline-edit.md)
+  [InlineEdit](inline-edit.md), [StatusBar](status-bar.md), [Avatar](avatar.md)
 - [Lists](lists.md), [TreeView](tree-view.md), [data tables](data-tables.md),
   [images, galleries and lightboxes](images-galleries-lightboxes.md),
   [URL images](url-images.md), [file uploads](file-uploads.md), [Scribble and export](scribble-export.md)

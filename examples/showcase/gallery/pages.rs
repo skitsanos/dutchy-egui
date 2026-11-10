@@ -18,6 +18,8 @@ pub enum Page {
     TreeView,
     SplitPanes,
     InlineEdit,
+    StatusBars,
+    Avatars,
     Layout,
     Accordions,
     Tabs,
@@ -52,9 +54,10 @@ impl Page {
     pub(crate) const FOUNDATION: [Self; 3] = [Self::Overview, Self::Typography, Self::Tokens];
 
     /// Component pages follow, sorted by display name.
-    pub(crate) const COMPONENTS: [Self; 39 + cfg!(feature = "markdown") as usize] = [
+    pub(crate) const COMPONENTS: [Self; 41 + cfg!(feature = "markdown") as usize] = [
         Self::Accordions,
         Self::Alerts,
+        Self::Avatars,
         Self::Badges,
         Self::Breadcrumbs,
         Self::Buttons,
@@ -87,6 +90,7 @@ impl Page {
         Self::Skeletons,
         Self::SplitPanes,
         Self::Stats,
+        Self::StatusBars,
         Self::Stepper,
         Self::Tabs,
         Self::Toasts,
@@ -120,6 +124,8 @@ impl Page {
             Self::TreeView => "Tree view",
             Self::SplitPanes => "Split panes",
             Self::InlineEdit => "Inline edit",
+            Self::StatusBars => "Status bars",
+            Self::Avatars => "Avatars",
             Self::Layout => "Layout",
             Self::Accordions => "Accordions",
             Self::Tabs => "Tabs",
