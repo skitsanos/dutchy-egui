@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 — 2026-11-10
+
+- Add an all-features SemVer gate against published 1.1.0, shared by local
+  qualification and CI using pinned cargo-semver-checks 0.51.0 (DS-106).
+- Refresh the DutchyTodo header baselines for the package version.
+
 ## 1.1.0 — 2026-11-10
 
 Prepared as the first crates.io release; registry publication is separate.

@@ -107,8 +107,11 @@ Within a major:
 - Every release is tagged `vX.Y.Z` on its commit on main.
 - A release with breaking changes starts its changelog section with "Breaking
   changes" and a short migration note.
-- After the first crates.io release, CI runs `cargo-semver-checks` with all
-  features against the newest published version. It catches accidental breaks
-  in Dutchy's own API, not egui upgrades, which remain a manual call.
+- CI runs `cargo-semver-checks` with all features against the published
+  crates.io 1.1.0 baseline. The baseline is explicit, not a floating latest
+  version; advance it deliberately when adopting a newer compatibility floor.
+  The check catches accidental breaks in Dutchy's own API, not egui upgrades,
+  which remain a manual call. The local command is part of `scripts/check.sh`;
+  see [development](development.md) for the tool installation.
 - Publishing to crates.io is a separate, authorized step after the quality
   gate.

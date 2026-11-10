@@ -79,10 +79,24 @@ separate from a main push.
 
 ## Automated qualification
 
-Run `bash scripts/check.sh` after installing stable rustfmt and Clippy, the
-`wasm32-unknown-unknown` target and Rust 1.95.0. It runs the required gates,
+Install stable rustfmt and Clippy, the `wasm32-unknown-unknown` target,
+Rust 1.95.0 and the pinned SemVer checker:
+
+```sh
+cargo install cargo-semver-checks --version 0.51.0 --locked
+```
+
+Then run `bash scripts/check.sh`. It runs the required gates,
 partial-feature profiles, the native example build and the actual crate
-inspection. `python3 scripts/check_api.py` fails when a public enum, or a
+inspection. The SemVer gate runs
+`cargo semver-checks check-release --baseline-version 1.1.0 --all-features`
+against the published crates.io baseline, enabling all features on both versions.
+It fails the script on SemVer violations or comparison/build errors; it
+does not use a Git tag or silently select a newer registry release. Update the
+baseline deliberately when adopting a later published compatibility floor.
+Keep the tool pin in CI and this install command aligned when upgrading it.
+
+`python3 scripts/check_api.py` fails when a public enum, or a
 struct with only public fields, is neither `#[non_exhaustive]` nor kept
 exhaustive by the [versioning policy](versioning.md).
 `python3 scripts/check_package.py [archive.crate]` also audits an existing

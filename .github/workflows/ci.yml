@@ -48,6 +48,8 @@ jobs:
           rustup component add rustfmt clippy
           rustup target add wasm32-unknown-unknown
           rustup toolchain install 1.95.0 --profile minimal
+      - name: Install SemVer checker
+        run: cargo install cargo-semver-checks --version 0.51.0 --locked
       - name: Tests, linters, feature matrix and crate archive
         run: bash scripts/check.sh
 
