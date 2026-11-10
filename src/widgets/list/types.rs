@@ -100,3 +100,10 @@ pub struct ListResponse<K> {
     /// Enter or double-click request. The host performs the action.
     pub activated: Option<K>,
 }
+
+impl<K> ListState<K> {
+    pub(in crate::widgets) fn clear_typeahead(&mut self) {
+        self.query.clear();
+        self.typed_at = f64::NEG_INFINITY;
+    }
+}

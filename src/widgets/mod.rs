@@ -40,6 +40,7 @@ mod table;
 mod tabs;
 mod toast;
 mod tooltip;
+mod tree_view;
 mod upload;
 
 pub use accordion::{
@@ -106,3 +107,5 @@ pub use scribble::{Scribble, ScribbleAction, ScribbleResponse};
 pub use list::{
     List, ListItem, ListResponse, ListRow, ListRowResponse, ListSelectionMode, ListState,
 };
+
+pub use tree_view::{TreeNode, TreeRow, TreeState, TreeView, TreeViewResponse};

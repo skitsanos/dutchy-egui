@@ -23,6 +23,7 @@ pub mod surface;
 pub mod table;
 pub mod toast;
 pub mod tooltip;
+pub mod tree;
 mod typography;
 pub mod upload;
 

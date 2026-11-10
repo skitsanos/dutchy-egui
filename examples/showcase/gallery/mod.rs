@@ -24,6 +24,7 @@ mod stepping;
 mod surfaces;
 mod tabbed;
 mod tabular;
+mod trees;
 mod typography;
 mod uploads;
 
@@ -57,6 +58,7 @@ pub struct Showcase {
     pub surfaces: SurfacesState,
     pub loading: LoadingState,
     pub lists: lists::ListsState,
+    pub trees: trees::TreesState,
     pub insights: InsightsState,
     pub help: help::HelpState,
     pub layout: layout::LayoutState,
@@ -94,6 +96,7 @@ impl Default for Showcase {
             surfaces: SurfacesState::default(),
             loading: LoadingState::default(),
             lists: lists::ListsState::default(),
+            trees: trees::TreesState::default(),
             insights: InsightsState::default(),
             help: help::HelpState::default(),
             layout: layout::LayoutState::default(),
@@ -161,6 +164,7 @@ impl Showcase {
                             Page::Stats => insights::stats(ui, &mut self.insights),
                             Page::EmptyStates => insights::empty_states(ui, &mut self.insights),
                             Page::Tooltips => help::show(ui, &mut self.help),
+                            Page::TreeView => trees::show(ui, &mut self.trees),
                             Page::Lists => lists::show(ui, &mut self.lists),
                             Page::Layout => layout::show(ui, &mut self.layout),
                             Page::Accordions => disclosures::show(ui, &mut self.disclosures),

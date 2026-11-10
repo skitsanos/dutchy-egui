@@ -19,9 +19,7 @@ impl<'a, K: Eq + Hash> Model<'a, K> {
             .iter()
             .enumerate()
             .map(|(index, item)| {
-                let mut hash = DefaultHasher::new();
-                item.key.hash(&mut hash);
-                let id = root.with(("row", hash.finish()));
+                let id = row_id(root, &item.key);
                 if indices.contains_key(&item.key) {
                     return id.with(("duplicate", index));
                 }
@@ -50,28 +48,16 @@ impl<'a, K: Eq + Hash> Model<'a, K> {
 impl<K: Clone + Eq + Hash> Model<'_, K> {
     /// Prune stale keys and repair focus; report whether the selection changed.
     pub fn normalize(&self, state: &mut ListState<K>, mode: ListSelectionMode) -> bool {
-        let before = state.selected.len();
-        state.selected.retain(|key| self.index(Some(key)).is_some());
-        let mut changed = state.selected.len() != before;
-        match mode {
-            ListSelectionMode::None => {
-                changed |= !state.selected.is_empty();
-                state.selected.clear();
-            }
-            ListSelectionMode::Single if state.selected.len() > 1 => {
-                changed = true;
-                let first = self
-                    .enabled
-                    .iter()
-                    .find(|&&i| state.selected.contains(&self.items[i].key))
-                    .copied();
-                state.selected.clear();
-                if let Some(index) = first {
-                    state.selected.insert(self.items[index].key.clone());
-                }
-            }
-            _ => {}
-        }
+        let changed = normalize_selection(
+            state,
+            mode,
+            |key| self.index(Some(key)).is_some(),
+            self.enabled.iter().map(|&i| &self.items[i].key),
+        );
+        self.normalize_focus(state);
+        changed
+    }
+    pub(in crate::widgets) fn normalize_focus(&self, state: &mut ListState<K>) {
         if self.index(state.focused.as_ref()).is_none() {
             state.focused = self
                 .enabled
@@ -83,6 +69,37 @@ impl<K: Clone + Eq + Hash> Model<'_, K> {
         if self.index(state.anchor.as_ref()).is_none() {
             state.anchor = None;
         }
-        changed
     }
+}
+
+pub(in crate::widgets) fn row_id<K: Hash>(root: Id, key: &K) -> Id {
+    let mut hash = DefaultHasher::new();
+    key.hash(&mut hash);
+    root.with(("row", hash.finish()))
+}
+pub(in crate::widgets) fn normalize_selection<'a, K: Clone + Eq + Hash + 'a>(
+    state: &mut ListState<K>,
+    mode: ListSelectionMode,
+    valid: impl Fn(&K) -> bool,
+    mut ordered: impl Iterator<Item = &'a K>,
+) -> bool {
+    let before = state.selected.len();
+    state.selected.retain(|key| valid(key));
+    let mut changed = state.selected.len() != before;
+    match mode {
+        ListSelectionMode::None => {
+            changed |= !state.selected.is_empty();
+            state.selected.clear();
+        }
+        ListSelectionMode::Single if state.selected.len() > 1 => {
+            changed = true;
+            let first = ordered.find(|key| state.selected.contains(*key)).cloned();
+            state.selected.clear();
+            if let Some(key) = first {
+                state.selected.insert(key);
+            }
+        }
+        _ => {}
+    }
+    changed
 }

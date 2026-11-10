@@ -229,7 +229,7 @@ fn showcase_page_groups_cover_every_page_once_in_sorted_order() {
     // Markdown contributes one page only when its parser feature is enabled.
     assert_eq!(
         Page::all().count(),
-        39 + usize::from(cfg!(feature = "markdown"))
+        40 + usize::from(cfg!(feature = "markdown"))
     );
     for page in Page::all() {
         assert_eq!(Page::all().filter(|other| *other == page).count(), 1);

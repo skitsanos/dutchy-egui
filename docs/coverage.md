@@ -54,6 +54,7 @@ come next, and each component guide states its limits.
 | Markdown | Port addition | CommonMark plus tables, tasks, strikethrough, heading anchors and callouts; token typography, named focusable links, native/report policies, fragment scrolling, lists, quotes, figures and cached parsing. No footnotes, math, raw HTML rendering, inline image widgets or column spans. |
 | CodeBlock | Port addition | Selectable code, language label, copy feedback, line numbers, host highlight spans, wrapping/horizontal scrolling and height cap. No bundled highlighter or diff view. |
 | [List](lists.md) | Port addition | Keyed host state; none/single/multiple selection; modifier ranges, type-ahead, roving focus and fixed-height virtualization; elided labels and host empty text. Passive row composition; no variable-height or embedded interactive controls. |
+| [TreeView](tree-view.md) | Port addition | List row engine; host-owned keyed expansion, Left/Right navigation, disclosure clicks, retained hidden selection and virtualized tree/group semantics. Passive fixed-height rows; no lazy loading or drag/reorder. |
 
 Foundation: ten accent and mode combinations, a custom semantic palette,
 standard egui styling, shared 32/48/56-point control heights, a four-point

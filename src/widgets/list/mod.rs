@@ -1,9 +1,10 @@
-mod accessibility;
+pub(super) mod accessibility;
+pub(super) mod hierarchy;
 mod keys;
-mod model;
-mod paint;
+pub(super) mod model;
+pub(super) mod paint;
 mod render;
-mod selection;
+pub(super) mod selection;
 mod types;
 
 use crate::{Text, TextSize, tokens::list as geometry};
@@ -26,6 +27,7 @@ pub struct List<'a, K> {
     height: f32,
     enabled: bool,
     read_only: bool,
+    hierarchy: Option<&'a [hierarchy::HierarchyRow]>,
 }
 impl<'a, K: Clone + Eq + Hash> List<'a, K> {
     /// Bind a stable list ID, application-owned state and current-view rows.
@@ -46,7 +48,12 @@ impl<'a, K: Clone + Eq + Hash> List<'a, K> {
             height: geometry::HEIGHT,
             enabled: true,
             read_only: false,
+            hierarchy: None,
         }
+    }
+    pub(in crate::widgets) fn hierarchy(mut self, rows: &'a [hierarchy::HierarchyRow]) -> Self {
+        self.hierarchy = Some(rows);
+        self
     }
     /// Accessible collection name.
     pub fn accessible_name(mut self, name: impl Into<Cow<'a, str>>) -> Self {

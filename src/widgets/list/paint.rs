@@ -1,4 +1,7 @@
-use super::{ListRow, ListSelectionMode, accessibility};
+use super::{
+    ListRow, ListSelectionMode, accessibility,
+    hierarchy::{self, HierarchyRow},
+};
 use crate::{
     Theme,
     interaction::paint_focus_inside,
@@ -6,22 +9,40 @@ use crate::{
 };
 use egui::{Id, Rect, Response, Sense, Stroke, Ui, pos2, vec2};
 
-pub(super) struct Style {
+pub(in crate::widgets) struct Style {
     pub mode: ListSelectionMode,
     pub read_only: bool,
 }
 
-pub(super) fn interact(ui: &mut Ui, id: Id, rect: Rect, tab_stop: bool, enabled: bool) -> Response {
+pub(in crate::widgets) fn interact(
+    ui: &mut Ui,
+    id: Id,
+    rect: Rect,
+    tab_stop: bool,
+    enabled: bool,
+) -> Response {
+    interact_parent(ui, id, rect, tab_stop, enabled, None)
+}
+pub(in crate::widgets) fn interact_parent(
+    ui: &mut Ui,
+    id: Id,
+    rect: Rect,
+    tab_stop: bool,
+    enabled: bool,
+    parent: Option<Id>,
+) -> Response {
     let sense = if tab_stop {
         Sense::click()
     } else {
         Sense::CLICK
     };
-    let mut child = ui.new_child(
-        egui::UiBuilder::new()
-            .id_salt(id.with("surface"))
-            .max_rect(rect),
-    );
+    let mut builder = egui::UiBuilder::new()
+        .id_salt(id.with("surface"))
+        .max_rect(rect);
+    if let Some(parent) = parent {
+        builder = builder.accessibility_parent(parent);
+    }
+    let mut child = ui.new_child(builder);
     if !enabled {
         child.disable();
     }
@@ -32,6 +53,7 @@ pub(super) fn content(
     ui: &mut Ui,
     response: &Response,
     row: ListRow,
+    hierarchy: Option<HierarchyRow>,
     content: impl FnOnce(&mut Ui),
 ) {
     let rect = response.rect;
@@ -54,7 +76,7 @@ pub(super) fn content(
         let edge = Rect::from_min_size(rect.min, vec2(border::ACCENT, rect.height()));
         ui.painter().rect_filled(edge, 0, p.primary);
     }
-    let inner = Rect::from_min_max(
+    let mut inner = Rect::from_min_max(
         pos2(
             (rect.left() + geometry::PADDING).min(rect.right()),
             rect.top(),
@@ -66,22 +88,33 @@ pub(super) fn content(
             rect.bottom(),
         ),
     );
-    ui.scope_builder(
-        egui::UiBuilder::new()
-            .max_rect(inner)
-            .layout(egui::Layout::left_to_right(egui::Align::Center)),
-        |ui| {
-            ui.set_clip_rect(ui.clip_rect().intersect(inner));
-            // Row text belongs to the row: selectable labels would sense clicks
-            // and drags on top of it and take the row's hover, click and focus.
-            ui.style_mut().interaction.selectable_labels = false;
-            content(ui);
-        },
-    );
+    let mut builder =
+        egui::UiBuilder::new().layout(egui::Layout::left_to_right(egui::Align::Center));
+    if let Some(meta) = hierarchy {
+        hierarchy::paint(ui, rect, meta);
+        inner.min.x = hierarchy::disclosure(rect, meta.depth)
+            .right()
+            .min(inner.right());
+        builder = builder.accessibility_parent(response.id);
+    }
+    ui.scope_builder(builder.max_rect(inner), |ui| {
+        ui.set_clip_rect(ui.clip_rect().intersect(inner));
+        // Row text belongs to the row: selectable labels would sense clicks
+        // and drags on top of it and take the row's hover, click and focus.
+        ui.style_mut().interaction.selectable_labels = false;
+        content(ui);
+    });
     paint_focus_inside(ui, response, p.primary);
 }
 
-pub(super) fn metadata(ui: &Ui, response: &Response, label: &str, row: ListRow, style: &Style) {
+pub(in crate::widgets) fn metadata(
+    ui: &Ui,
+    response: &Response,
+    label: &str,
+    row: ListRow,
+    style: &Style,
+    tree: Option<HierarchyRow>,
+) {
     accessibility::row(
         response,
         label,
@@ -90,12 +123,16 @@ pub(super) fn metadata(ui: &Ui, response: &Response, label: &str, row: ListRow, 
         row.selected,
         style.read_only,
     );
+    if let Some(meta) = tree {
+        hierarchy::metadata(response, meta, style.read_only);
+    }
     if response.has_focus() {
         ui.memory_mut(|memory| {
             memory.set_focus_lock_filter(
                 response.id,
                 egui::EventFilter {
                     vertical_arrows: true,
+                    horizontal_arrows: tree.is_some(),
                     ..Default::default()
                 },
             )

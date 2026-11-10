@@ -8,6 +8,9 @@
   showcase (DS-107).
 - Make text composed into List rows leave clicks to the row, and check every
   showcase page for selectable text over a clickable control (DS-108).
+- Add TreeView over the List row engine with keyed expansion, hierarchical
+  accessibility and Left/Right navigation, plus a 10,000-document showcase
+  (DS-109).
 
 ## 1.1.1 — 2026-11-10
 
