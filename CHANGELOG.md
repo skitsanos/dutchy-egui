@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.2.0 — 2026-11-10
+
 - Add keyed List with host-owned selection and focus, modifier ranges, type-ahead,
   list box accessibility, fixed-height virtualization, elided labels and host
   empty text; replace the separate VirtualList plan and add a 10,000-row
@@ -11,6 +13,7 @@
 - Add TreeView over the List row engine with keyed expansion, hierarchical
   accessibility and Left/Right navigation, plus a 10,000-document showcase
   (DS-109).
+- Refresh the DutchyTodo header baselines for the package version.
 
 ## 1.1.1 — 2026-11-10
 
