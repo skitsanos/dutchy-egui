@@ -2,8 +2,13 @@
 
 ## Unreleased
 
+## 1.3.0 — 2026-11-10
+
 - Add host-owned SplitPane sizes, bounded nested panes, minimum constraints and
   keyboard/assistive resizing, with a notebook and live-preview showcase (DS-110).
+- Keep requested pane heights on scrolling pages and divider focus when using
+  cross-axis arrows; cover rest, hover and focus across themes and scales.
+- Refresh the DutchyTodo header baselines for the package version.
 
 ## 1.2.0 — 2026-11-10
 
