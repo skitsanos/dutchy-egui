@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Add keyed List with host-owned selection and focus, modifier ranges, type-ahead,
+  list box accessibility, fixed-height virtualization, elided labels and host
+  empty text; replace the separate VirtualList plan and add a 10,000-row
+  showcase (DS-107).
+
 ## 1.1.1 — 2026-11-10
 
 - Add an all-features SemVer gate against published 1.1.0, shared by local

@@ -139,8 +139,8 @@ application.
 
 ## Order
 
-1. Workbench releases: List and selection first, then TreeView, SplitPane and
-   editing helpers; DutchyMail composes them once available.
+1. Workbench releases: TreeView, SplitPane and editing helpers on the
+   [List](lists.md) row engine; DutchyMail composes them once available.
 2. DutchyDash together with the dashboards milestone.
 
 Each lands in its own release with its ledger ticket and README line.

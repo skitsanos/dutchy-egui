@@ -8,6 +8,7 @@ pub mod color_picker;
 pub mod disclosure;
 pub mod image;
 pub mod layout;
+pub mod list;
 pub mod loading;
 pub mod markdown;
 pub mod media_card;

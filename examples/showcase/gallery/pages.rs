@@ -33,6 +33,7 @@ pub enum Page {
     Toolbars,
     Galleries,
     Lightboxes,
+    Lists,
     #[cfg(feature = "markdown")]
     Markdown,
     FileUploads,
@@ -48,7 +49,7 @@ impl Page {
     pub(crate) const FOUNDATION: [Self; 3] = [Self::Overview, Self::Typography, Self::Tokens];
 
     /// Component pages follow, sorted by display name.
-    pub(crate) const COMPONENTS: [Self; 35 + cfg!(feature = "markdown") as usize] = [
+    pub(crate) const COMPONENTS: [Self; 36 + cfg!(feature = "markdown") as usize] = [
         Self::Accordions,
         Self::Alerts,
         Self::Badges,
@@ -68,6 +69,7 @@ impl Page {
         Self::Images,
         Self::Layout,
         Self::Lightboxes,
+        Self::Lists,
         #[cfg(feature = "markdown")]
         Self::Markdown,
         Self::MediaCards,
@@ -127,6 +129,7 @@ impl Page {
             Self::Toolbars => "Toolbars",
             Self::Galleries => "Galleries",
             Self::Lightboxes => "Lightboxes",
+            Self::Lists => "Lists",
             #[cfg(feature = "markdown")]
             Self::Markdown => "Markdown",
             Self::Buttons => "Buttons",

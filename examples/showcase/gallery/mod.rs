@@ -8,6 +8,7 @@ mod forms;
 mod help;
 mod insights;
 mod layout;
+mod lists;
 mod loading;
 #[cfg(feature = "markdown")]
 mod markdown;
@@ -55,6 +56,7 @@ pub struct Showcase {
     pub actions: actions::ActionsState,
     pub surfaces: SurfacesState,
     pub loading: LoadingState,
+    pub lists: lists::ListsState,
     pub insights: InsightsState,
     pub help: help::HelpState,
     pub layout: layout::LayoutState,
@@ -91,6 +93,7 @@ impl Default for Showcase {
             actions: actions::ActionsState::default(),
             surfaces: SurfacesState::default(),
             loading: LoadingState::default(),
+            lists: lists::ListsState::default(),
             insights: InsightsState::default(),
             help: help::HelpState::default(),
             layout: layout::LayoutState::default(),
@@ -158,6 +161,7 @@ impl Showcase {
                             Page::Stats => insights::stats(ui, &mut self.insights),
                             Page::EmptyStates => insights::empty_states(ui, &mut self.insights),
                             Page::Tooltips => help::show(ui, &mut self.help),
+                            Page::Lists => lists::show(ui, &mut self.lists),
                             Page::Layout => layout::show(ui, &mut self.layout),
                             Page::Accordions => disclosures::show(ui, &mut self.disclosures),
                             Page::Tabs => tabbed::show(ui, &mut self.tabbed),

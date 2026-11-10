@@ -53,6 +53,7 @@ come next, and each component guide states its limits.
 | MenuBar | Port addition | Host-controlled in-window menus, one remembered Tab stop, switching, checked/nested commands, popup metadata and dynamic focus repair. No operating-system menu integration or mnemonics. |
 | Markdown | Port addition | CommonMark plus tables, tasks, strikethrough, heading anchors and callouts; token typography, named focusable links, native/report policies, fragment scrolling, lists, quotes, figures and cached parsing. No footnotes, math, raw HTML rendering, inline image widgets or column spans. |
 | CodeBlock | Port addition | Selectable code, language label, copy feedback, line numbers, host highlight spans, wrapping/horizontal scrolling and height cap. No bundled highlighter or diff view. |
+| [List](lists.md) | Port addition | Keyed host state; none/single/multiple selection; modifier ranges, type-ahead, roving focus and fixed-height virtualization; elided labels and host empty text. Passive row composition; no variable-height or embedded interactive controls. |
 
 Foundation: ten accent and mode combinations, a custom semantic palette,
 standard egui styling, shared 32/48/56-point control heights, a four-point

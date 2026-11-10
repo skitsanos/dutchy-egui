@@ -8,11 +8,8 @@ Issues Ledger ticket before work starts.
 
 ## Recommended next milestones
 
-1. **Workbench building blocks.** **List** provides keyed rows, none/single/
-   multiple selection with Shift and Control ranges, type-ahead, roving focus,
-   list box semantics and fixed-height virtualization over egui's row-range
-   scrolling; it replaces the separate VirtualList idea. **TreeView** reuses the
-   same row engine with keyed expansion, Left/Right expand and collapse and tree
+1. **Workbench building blocks.** **TreeView** reuses the [List](lists.md) row
+   engine with keyed expansion, Left/Right expand and collapse and tree
    semantics. **SplitPane** keeps pane sizes in the host, supports keyboard
    resizing and minimum sizes. **InlineEdit** renames a label in place with
    commit and cancel. **PathInput** pairs a text field with a browse button that
