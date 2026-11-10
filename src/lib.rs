@@ -22,7 +22,9 @@ pub mod widgets;
 
 pub use commands::{Command, CommandRegistry, CommandRequest, CommandScope, ShortcutConflict};
 pub use icons::{Icon, IconPainter};
-pub use layout::{Container, CrossAlign, Flex, FlexDirection, ResponsiveGrid};
+pub use layout::{
+    Container, CrossAlign, Flex, FlexDirection, ResponsiveGrid, SplitPane, SplitPaneResponse,
+};
 pub use scribble::{
     ScribbleBrush, ScribbleDrawing, ScribbleError, ScribbleExportOptions, ScribbleSmoothing,
     ScribbleSnapshot, ScribbleStroke, ScribbleWidth,

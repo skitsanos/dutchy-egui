@@ -18,6 +18,7 @@ pub mod navigation;
 pub mod overlay;
 pub mod scribble;
 pub mod search_input;
+pub mod split_pane;
 pub mod stepper;
 pub mod surface;
 pub mod table;

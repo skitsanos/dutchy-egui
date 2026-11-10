@@ -8,8 +8,7 @@ Issues Ledger ticket before work starts.
 
 ## Recommended next milestones
 
-1. **Workbench building blocks.** **SplitPane** keeps pane sizes in the host,
-   supports keyboard resizing and minimum sizes. **InlineEdit** renames a label
+1. **Workbench building blocks.** **InlineEdit** renames a label
    in place with commit and cancel. **PathInput** pairs a text field with a
    browse button that returns a typed file, folder or save request.
    **StatusBar** is a bottom strip of keyed segments (text, icon, progress,

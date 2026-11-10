@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add host-owned SplitPane sizes, bounded nested panes, minimum constraints and
+  keyboard/assistive resizing, with a notebook and live-preview showcase (DS-110).
+
 ## 1.2.0 — 2026-11-10
 
 - Add keyed List with host-owned selection and focus, modifier ranges, type-ahead,

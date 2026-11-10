@@ -5,10 +5,12 @@
 mod container;
 mod flex;
 mod grid;
+mod split_pane;
 
 pub use container::Container;
 pub use flex::{CrossAlign, Flex, FlexDirection};
 pub use grid::ResponsiveGrid;
+pub use split_pane::{SplitPane, SplitPaneResponse};
 
 /// Advance so the next widget sits `total` points below the previous one,
 /// absorbing the item spacing egui already adds after a widget.
