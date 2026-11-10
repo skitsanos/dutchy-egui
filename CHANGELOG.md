@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## 1.1.0 — 2026-11-10
 
-Planned as 1.1.0, the first crates.io release. From here on Dutchy follows the
+Prepared as the first crates.io release; registry publication is separate.
+From here on Dutchy follows the
 [versioning policy](docs/versioning.md): it stays on 1.x, and egui upgrades
 are major releases.
 
@@ -36,6 +37,7 @@ the `v1.0.29` and `v1.0.30` tags migrates as follows:
 - Keep the documentation lean: remove the per-change verification reports and
   finished plans. Guides state their limits, ledger entries state their
   evidence briefly, and the coverage matrix and roadmap drop release history.
+- Refresh the DutchyTodo header baselines for the package version.
 
 ## 1.0.30 — 2026-11-09
 
