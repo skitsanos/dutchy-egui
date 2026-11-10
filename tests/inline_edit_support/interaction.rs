@@ -124,6 +124,71 @@ fn double_clicking_to_rename_keeps_the_whole_name_selected() {
 }
 
 #[test]
+fn opening_double_click_cannot_activate_new_save_or_cancel_buttons() {
+    let mut opened = harness(Page::default());
+    start(&mut opened);
+    for name in ["Save Document name", "Cancel Document name"] {
+        let pos = opened
+            .get_by_role_and_label(Role::Button, name)
+            .rect()
+            .center();
+        let mut h = harness_stepped(Page::default(), 1.0 / 60.0);
+        assert!(h.get_by_label("Rename Document name").rect().contains(pos));
+        pointer_click(&mut h, pos);
+        h.run_steps(4);
+        pointer_click(&mut h, pos);
+        h.run_steps(4);
+        assert_eq!(h.state().events, [InlineEditEvent::Started], "{name}");
+        assert!(h.get_by_label(NAME).is_focused(), "{name}");
+        h.event(egui::Event::Text("Replacement".into()));
+        h.run_steps(2);
+        assert_eq!(h.state().edit.draft(), Some("Replacement"));
+    }
+}
+
+#[test]
+fn a_rapid_click_at_a_different_position_can_save() {
+    let mut h = harness_stepped(Page::default(), 1.0 / 60.0);
+    let start = h.get_by_label("Rename Document name").rect().center();
+    pointer_click(&mut h, start);
+    h.run_steps(4);
+    let save = h
+        .get_by_role_and_label(Role::Button, "Save Document name")
+        .rect()
+        .center();
+    pointer_click(&mut h, save);
+    h.run_steps(4);
+    assert_eq!(
+        h.state().events,
+        [
+            InlineEditEvent::Started,
+            InlineEditEvent::Commit("Design notes.md".into())
+        ]
+    );
+}
+
+#[test]
+fn a_pointer_move_after_the_opening_click_release_keeps_the_same_gesture() {
+    let mut h = harness_stepped(Page::default(), 1.0 / 60.0);
+    let label = h.get_by_label("Rename Document name").rect();
+    let pos = label.right_center() - egui::vec2(16.0, 0.0);
+    pointer_click(&mut h, pos);
+    h.run_steps(4);
+    let button = |pressed| egui::Event::PointerButton {
+        pos,
+        button: egui::PointerButton::Primary,
+        pressed,
+        modifiers: Modifiers::NONE,
+    };
+    h.input_mut().events = vec![button(true)];
+    h.run_steps(1);
+    h.input_mut().events = vec![button(false), egui::Event::PointerMoved(label.center())];
+    h.run_steps(3);
+    assert_eq!(h.state().events, [InlineEditEvent::Started]);
+    assert!(h.get_by_label(NAME).is_focused());
+}
+
+#[test]
 fn focus_returns_after_a_held_save_only_if_nothing_else_took_it() {
     for moved in [false, true] {
         let mut h = harness(Page {

@@ -179,10 +179,7 @@ impl App {
             Flex::row("brand").wrap(true).show(ui, |ui| {
                 ui.add(Text::heading("DutchyTodo").size(TextSize::Xl2));
                 ui.add_space(space::LG);
-                ui.add(
-                    Text::label(concat!("Example application · ", env!("CARGO_PKG_VERSION")))
-                        .color(TextColor::Muted),
-                );
+                ui.add(Text::label("Example application").color(TextColor::Muted));
                 ui.add_space(space::LG);
                 commands::controls(ui, self);
             });

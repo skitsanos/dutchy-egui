@@ -231,10 +231,7 @@ impl Showcase {
                 Flex::row("brand-heading").wrap(true).show(ui, |ui| {
                     ui.add(Text::heading("D. DUTCHY / EGUI").size(TextSize::Xl2));
                     ui.add_space(space::LG);
-                    ui.add(
-                        Text::label(concat!("Component library · ", env!("CARGO_PKG_VERSION")))
-                            .color(TextColor::Muted),
-                    );
+                    ui.add(Text::label("Component library").color(TextColor::Muted));
                 });
                 ui.add_space(space::SM);
                 Flex::row("theme-controls").wrap(true).show(ui, |ui| {

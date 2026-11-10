@@ -1,5 +1,5 @@
 use super::support::*;
-use dutchy_egui::{StatusBar, StatusItem, Theme};
+use dutchy_egui::{StatusAlign, StatusBar, StatusItem, Theme};
 use egui::{Rect, accesskit::Role, vec2};
 use egui_kittest::{
     Harness,
@@ -148,6 +148,78 @@ fn a_lone_segment_that_cannot_fit_is_elided_but_keeps_its_full_name() {
         "an elided segment's tooltip carries the full text"
     );
 }
+
+#[test]
+fn oversized_labels_and_adornments_fit_inside_the_bar() {
+    let h = bar_in(120.0, || {
+        vec![
+            StatusItem::labeled(
+                1,
+                "Detailed synchronization status for this account",
+                "Ready",
+            )
+            .align(StatusAlign::End)
+            .clickable(true),
+        ]
+    });
+    let p = h.state();
+    assert!(p.hidden.is_empty());
+    assert_eq!(p.segments.len(), 1);
+    assert!(
+        p.bar.contains_rect(p.segments[0]),
+        "bar={:?}, segment={:?}",
+        p.bar,
+        p.segments[0]
+    );
+    let node = h.get_by_role_and_label(
+        Role::Button,
+        "Detailed synchronization status for this account",
+    );
+    assert_eq!(
+        node.accesskit_node().description().as_deref(),
+        Some("Detailed synchronization status for this account: Ready")
+    );
+
+    let h = bar_in(100.0, || {
+        vec![
+            StatusItem::hint(1, "Control+Shift+Alt+F12", "Commands")
+                .progress(50.0)
+                .align(StatusAlign::End),
+        ]
+    });
+    assert!(h.state().hidden.is_empty());
+    assert!(h.state().bar.contains_rect(h.state().segments[0]));
+    let node = h.get_by_role_and_label(Role::ProgressIndicator, "Commands");
+    assert_eq!(node.accesskit_node().numeric_value(), Some(50.0));
+    assert_eq!(
+        node.accesskit_node().description().as_deref(),
+        Some("Control+Shift+Alt+F12 Commands")
+    );
+}
+
+#[test]
+fn newlines_in_status_text_and_hints_are_laid_out_on_one_line() {
+    let h = bar_in(380.0, || {
+        vec![StatusItem::labeled(
+            1,
+            "Sync\nState",
+            "Failed\r\nRetry later",
+        )]
+    });
+    let output = h.output();
+    let galleys = super::common::galleys(&output.shapes);
+    assert_eq!(galleys.len(), 2);
+    assert!(galleys.iter().all(|g| g.rows.len() == 1));
+    assert!(galleys.iter().any(|g| g.job.text == "FAILED RETRY LATER"));
+
+    let h = bar_in(380.0, || {
+        vec![StatusItem::hint(1, "Ctrl+\nK", "Open\nCommands")]
+    });
+    let output = h.output();
+    let galleys = super::common::galleys(&output.shapes);
+    assert_eq!(galleys.len(), 2);
+    assert!(galleys.iter().all(|g| g.rows.len() == 1));
+}
 #[test]
 fn unbounded_and_zero_widths_keep_geometry_finite() {
     let h = bar_in(f32::INFINITY, mail_items);
@@ -156,9 +228,12 @@ fn unbounded_and_zero_widths_keep_geometry_finite() {
     // How many segments fit depends on the host font; those shown fit inside.
     assert!(!p.segments.is_empty());
     assert!(p.segments.iter().all(|r| p.bar.contains_rect(*r)));
-    let h = bar_in(0.0, mail_items);
-    let p = h.state();
-    assert!(p.bar.is_finite() && p.bar.width() == 0.0);
-    assert_eq!(p.hidden, [2, 3, 4, 5]);
-    assert!(p.segments.iter().all(Rect::is_finite));
+    for width in [0.0, 8.0, 28.0] {
+        let h = bar_in(width, mail_items);
+        let p = h.state();
+        assert!(p.bar.is_finite() && p.bar.width() == width);
+        assert_eq!(p.hidden, [1, 2, 3, 4, 5]);
+        assert!(p.segments.is_empty());
+        assert!(h.query_by_role_and_label(Role::Button, "Sync").is_none());
+    }
 }

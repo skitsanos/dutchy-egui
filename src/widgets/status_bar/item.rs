@@ -173,8 +173,17 @@ impl<'a, K> StatusItem<'a, K> {
     pub(super) fn spoken(&self) -> String {
         match (&self.name, &self.content) {
             (Some(name), _) => name.to_string(),
-            (None, Content::Labeled(label)) => format!("{label}: {}", self.text),
+            (None, Content::Labeled(_)) => self.full_text().into_owned(),
             (None, _) => self.text.to_string(),
+        }
+    }
+
+    /// Complete visible wording, independent of an accessible-name override.
+    pub(super) fn full_text(&self) -> Cow<'_, str> {
+        match &self.content {
+            Content::Labeled(label) => format!("{label}: {}", self.text).into(),
+            Content::Hint(chord) => format!("{chord} {}", self.text).into(),
+            Content::Text => Cow::Borrowed(&self.text),
         }
     }
 

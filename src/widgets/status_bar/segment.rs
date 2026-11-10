@@ -10,7 +10,7 @@ use egui::{
     accesskit::{Live, Role},
     pos2, vec2,
 };
-use std::sync::Arc;
+use std::{borrow::Cow, sync::Arc};
 
 /// Laid-out parts of one segment, in painting order.
 pub(super) struct Parts {
@@ -18,12 +18,13 @@ pub(super) struct Parts {
     label: Option<Arc<Galley>>,
     kbd: Option<f32>,
     text: Arc<Galley>,
+    track: Option<Option<f64>>,
     elided: bool,
 }
 
 impl Parts {
-    /// Lay out an item; `budget` elides the text so the segment fits it.
-    pub fn measure<K>(ui: &Ui, item: &StatusItem<'_, K>, budget: Option<f32>) -> Self {
+    /// Lay out the complete item at its natural width.
+    pub fn measure<K>(ui: &Ui, item: &StatusItem<'_, K>) -> Self {
         let lead = if item.icon.is_some() {
             tokens::ICON + tokens::PART_GAP
         } else if item.tone != StatusTone::Default {
@@ -36,32 +37,53 @@ impl Parts {
             _ => None,
         };
         let kbd = match &item.content {
-            Content::Hint(chord) => Some(Kbd::new(chord.as_ref()).desired_size(ui).x),
+            Content::Hint(chord) => Some(Kbd::new(single_line(chord)).desired_size(ui).x),
             _ => None,
         };
-        let mut parts = Self {
+        Self {
             lead,
             label,
             kbd,
             text: galley(ui, &item.text, text_color(item), None),
+            track: item.progress,
             elided: false,
-        };
-        if let Some(budget) = budget {
-            let room = budget - (parts.width(item) - parts.text.size().x);
-            parts.text = galley(ui, &item.text, text_color(item), Some(room.max(0.0)));
-            parts.elided = true;
         }
-        parts
+    }
+
+    /// Try the value with its adornments first, then the full wording as one
+    /// compact label. Return false if even the compact label cannot fit.
+    pub fn constrain<K>(&mut self, ui: &Ui, item: &StatusItem<'_, K>, budget: f32) -> bool {
+        self.elided = true;
+        let room = budget - (self.width() - self.text.size().x);
+        if let Some(text) = fitted_galley(ui, &item.text, text_color(item), room) {
+            self.text = text;
+            if self.width() <= budget {
+                return true;
+            }
+        }
+        let room = budget - 2.0 * tokens::PADDING;
+        let Some(text) = fitted_galley(ui, &item.full_text(), TextColor::Foreground, room) else {
+            return false;
+        };
+        *self = Self {
+            lead: 0.0,
+            label: None,
+            kbd: None,
+            text,
+            track: None,
+            elided: true,
+        };
+        self.width() <= budget
     }
 
     /// Natural segment width including its padding.
-    pub fn width<K>(&self, item: &StatusItem<'_, K>) -> f32 {
+    pub fn width(&self) -> f32 {
         let label = self
             .label
             .as_ref()
             .map_or(0.0, |g| g.size().x + tokens::PART_GAP);
         let kbd = self.kbd.map_or(0.0, |w| w + tokens::PART_GAP);
-        let progress = if item.progress.is_some() {
+        let progress = if self.track.is_some() {
             tokens::PART_GAP + tokens::PROGRESS_WIDTH
         } else {
             0.0
@@ -80,16 +102,32 @@ fn text_color<K>(item: &StatusItem<'_, K>) -> TextColor {
 
 fn galley(ui: &Ui, text: &str, color: TextColor, width: Option<f32>) -> Arc<Galley> {
     let theme = Theme::from_context(ui.ctx());
-    let mut job = Text::label(text)
+    let mut job = Text::label(single_line(text))
         .color(color)
         .layout_job(&theme, f32::INFINITY);
+    job.wrap.max_rows = 1;
     if let Some(width) = width {
         job.wrap.max_width = width;
-        job.wrap.max_rows = 1;
         job.wrap.break_anywhere = true;
         job.wrap.overflow_character = Some('…');
     }
     ui.fonts_mut(|fonts| fonts.layout_job(job))
+}
+
+fn fitted_galley(ui: &Ui, text: &str, color: TextColor, room: f32) -> Option<Arc<Galley>> {
+    if room <= 0.0 {
+        return None;
+    }
+    let text = galley(ui, text, color, Some(room));
+    (text.size().x > 0.0 && text.size().x <= room).then_some(text)
+}
+
+fn single_line(text: &str) -> Cow<'_, str> {
+    if text.contains(['\r', '\n']) {
+        text.replace("\r\n", " ").replace(['\r', '\n'], " ").into()
+    } else {
+        Cow::Borrowed(text)
+    }
 }
 
 fn tone_color(tone: StatusTone, p: &Palette) -> Color32 {
@@ -112,6 +150,7 @@ pub(super) fn show<K: std::hash::Hash>(
     rect: Rect,
 ) -> Response {
     let mut segment = ui.new_child(UiBuilder::new().id_salt(id).max_rect(rect));
+    segment.set_clip_rect(ui.clip_rect().intersect(rect));
     if !item.enabled {
         segment.disable();
     }
@@ -122,10 +161,8 @@ pub(super) fn show<K: std::hash::Hash>(
     };
     let response = segment.interact(rect, id, sense);
     describe(&response, item);
-    let tooltip = item
-        .tooltip
-        .as_deref()
-        .or(parts.elided.then_some(item.text.as_ref()));
+    let full_text = parts.elided.then(|| item.full_text());
+    let tooltip = item.tooltip.as_deref().or(full_text.as_deref());
     if let Some(tooltip) = tooltip {
         Tooltip::new(tooltip).show(&response);
     }
@@ -194,7 +231,9 @@ fn paint<K>(ui: &Ui, response: &Response, item: &StatusItem<'_, K>, parts: Parts
     }
     let middle = rect.center().y;
     let mut x = rect.left() + tokens::PADDING;
-    paint_lead(ui, item, pos2(x, middle), &p);
+    if parts.lead > 0.0 {
+        paint_lead(ui, item, pos2(x, middle), &p);
+    }
     x += parts.lead;
     if let Some(label) = parts.label {
         let width = label.size().x;
@@ -206,7 +245,7 @@ fn paint<K>(ui: &Ui, response: &Response, item: &StatusItem<'_, K>, parts: Parts
         x += width + tokens::PART_GAP;
     }
     if let (Some(width), Content::Hint(chord)) = (parts.kbd, &item.content) {
-        let chip = Kbd::new(chord.as_ref());
+        let chip = Kbd::new(single_line(chord));
         let size = chip.desired_size(ui);
         chip.paint(
             ui,
@@ -221,7 +260,7 @@ fn paint<K>(ui: &Ui, response: &Response, item: &StatusItem<'_, K>, parts: Parts
         p.foreground,
     );
     x += width;
-    if let Some(progress) = item.progress {
+    if let Some(progress) = parts.track {
         let height = ProgressSize::Small.height();
         let track = Rect::from_min_size(
             pos2(x + tokens::PART_GAP, middle - height / 2.0),

@@ -147,6 +147,37 @@ fn holding_space_to_start_does_not_type_spaces_over_the_selected_name() {
 }
 
 #[test]
+fn space_release_and_new_press_in_one_frame_leave_the_new_space_intact() {
+    let space = |pressed| Event::Key {
+        key: Key::Space,
+        physical_key: Some(Key::Space),
+        pressed,
+        repeat: false,
+        modifiers: Modifiers::NONE,
+    };
+    for move_focus in [true, false] {
+        let mut h = harness(Page::default());
+        h.get_by_label("Rename Document name").focus();
+        h.run_steps(2);
+        h.input_mut().events = vec![space(true), Event::Text(" ".into())];
+        h.run_steps(2);
+        if move_focus {
+            h.get_by_label("Other field").focus();
+            h.run_steps(2);
+            assert!(h.get_by_label("Other field").is_focused());
+        }
+        h.input_mut().events = vec![space(false), space(true), Event::Text(" ".into())];
+        h.run_steps(3);
+        if move_focus {
+            assert_eq!(h.state().other, " ");
+            assert_eq!(h.state().edit.draft(), Some("Design notes.md"));
+        } else {
+            assert_eq!(h.state().edit.draft(), Some(" "));
+        }
+    }
+}
+
+#[test]
 fn cancellation_does_not_leave_old_drafts_in_the_next_session_undo_history() {
     let mut h = harness(Page::default());
     start(&mut h);

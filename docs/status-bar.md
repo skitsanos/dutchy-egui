@@ -34,7 +34,8 @@ any column. It fills the available width (640 points when unbounded) at the
 ## Segments
 
 - `text` shows a value; `labeled` a muted label and its value; `hint` a Kbd
-  chip and a muted action. Text uses the mono label style on one line.
+  chip and a muted action. Text uses the mono label style on one line, with
+  line breaks displayed as spaces.
 - `icon` adds a leading icon. `tone` colors it, or adds a square marker when
   there is no icon. Text stays in the foreground color, so the words must
   state the status; color only repeats it.
@@ -51,8 +52,11 @@ inserting items keeps focus on the same key.
 When the segments do not fit, the lowest `priority` is hidden first and, among
 equal priorities, the later item. Hidden keys are returned in item order in
 `hidden`, so the host can show them elsewhere. If even the highest-priority
-segment cannot fit alone, its text is elided with "…" and a tooltip carries
-the full text. There is no overflow menu.
+segment cannot fit alone, its value is elided with "…". If its label and
+adornments leave too little space, the segment uses a compact line containing
+its wording. A tooltip retains the full wording; accessibility keeps the
+segment's role and value. If the compact line cannot fit, the key is reported
+as hidden. There is no overflow menu.
 
 ## Interaction and accessibility
 

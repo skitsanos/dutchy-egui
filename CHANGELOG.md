@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.4.0 — 2026-11-10
 
 - Add InlineEdit with host-owned drafts, explicit rename requests and cancellation,
   native editing and a workspace/notebook rename showcase (DS-111).
@@ -10,6 +10,9 @@
 - Add Avatar: square initials or a cover-cropped image with initials as the
   fallback, four sizes and fills, and a described presence marker, with a
   people directory showcase (DS-113).
+- Keep InlineEdit opening gestures from submitting or discarding drafts, and
+  keep overflowing StatusBar segments bounded and on one line (DS-114).
+- Remove the crate version from the DutchyTodo and Showcase headers.
 
 ## 1.3.0 — 2026-11-10
 

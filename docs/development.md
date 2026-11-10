@@ -60,10 +60,6 @@ results, and CHANGELOG.md holds the history.
 ## Release and cleanup
 
 Every main push advances the version and updates Cargo.lock and CHANGELOG.md.
-The DutchyTodo header shows the crate version, so its two baselines
-(`dutchy-todo-light-1x`, `dutchy-todo-dark-2x`) change with every bump;
-regenerate them for the example's rendering test and confirm only the version
-digits differ.
 Never push without authorization. Before delivery, run checks, generate and
 inspect the actual crate, verify its sources and bundled license notices, and
 ensure tests, image baselines, examples, video work and storyboard outputs are

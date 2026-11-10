@@ -1,4 +1,5 @@
 mod geometry;
+mod gesture;
 mod input;
 mod session;
 mod state;
@@ -135,8 +136,7 @@ impl<'a> InlineEdit<'a> {
                 && (response.clicked() || input::f2(&child, trigger));
             let event = start.then(|| {
                 let space = input::consume_activation(&child);
-                let pointer = response.clicked_by(egui::PointerButton::Primary);
-                input::arm(&child, pointer, space);
+                gesture::arm(&child, &response, space);
                 self.state.begin(self.value);
                 child.ctx().request_repaint();
                 InlineEditEvent::Started

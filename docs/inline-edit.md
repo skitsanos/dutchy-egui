@@ -19,8 +19,9 @@ fn name(ui: &mut egui::Ui, value: &mut String, edit: &mut InlineEditState) {
 ```
 
 Click the label, or focus it and press Enter, Space or F2, to start. The current
-name is selected for replacement and stays selected through the rest of the
-starting gesture: a double-click or a held Space. Enter or the check action
+name is selected for replacement. A matching double-click keeps the selection
+without activating the newly shown actions. A held Space leaves the selection
+intact until release or until focus leaves InlineEdit. Enter or the check action
 submits the draft; Escape or the close action discards it. Focus then returns to
 the label, unless another control took focus while the label was hidden or
 disabled, for example while the host saves. Tab visits the editor, Save and

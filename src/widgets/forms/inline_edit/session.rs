@@ -1,4 +1,4 @@
-use super::{InlineEditEvent, InlineEditState, geometry, input, view};
+use super::{InlineEditEvent, InlineEditState, geometry, gesture, input, view};
 use egui::{
     Id, Rect, Response, TextEdit, Ui,
     text::{CCursor, CCursorRange},
@@ -14,33 +14,35 @@ pub(super) fn edit(
     // The editor's scope is explicit so identity survives compact layout.
     let editor_id = view::editor_id(ui);
     let actions = view::action_ids(ui);
-    input::swallow_held_space(ui);
     let intent = input::edit(ui, editor_id, actions);
     if state.focus_pending && ui.is_enabled() {
         select_all(ui, editor_id, state.draft().unwrap_or_default(), true);
         ui.memory_mut(|m| m.request_focus(editor_id));
         state.focus_pending = false;
     }
+    gesture::swallow_space(ui, [editor_id, actions[0], actions[1]]);
     let response = view::editor(
         ui,
         slots.editor,
         state.draft.as_mut().expect("open draft"),
         options,
     );
-    if input::continues_start_click(ui, &response) {
-        // The second click of a double-click lands on the new editor.
+    let [save, cancel] = view::actions(ui, &slots, options);
+    let opening_click = gesture::pointer_target(ui, [&response, &save, &cancel]);
+    if opening_click.is_some() {
         select_all(ui, editor_id, state.draft().unwrap_or_default(), false);
+        response.request_focus();
         ui.ctx().request_repaint();
     }
-    let [save, cancel] = view::actions(ui, &slots, options);
     input::lock_escape(ui, response.id, true);
     for action in [&save, &cancel] {
         input::lock_escape(ui, action.id, false);
     }
-    let event = if cancel.clicked() || intent == Some(input::Intent::Cancel) {
+    let clicked = |action: &Response| action.clicked() && opening_click != Some(action.id);
+    let event = if clicked(&cancel) || intent == Some(input::Intent::Cancel) {
         state.cancel();
         Some(InlineEditEvent::Cancelled)
-    } else if !options.read_only && (save.clicked() || intent == Some(input::Intent::Commit)) {
+    } else if !options.read_only && (clicked(&save) || intent == Some(input::Intent::Commit)) {
         let value = state.draft.take().expect("open draft");
         state.cancel();
         Some(InlineEditEvent::Commit(value))
@@ -49,7 +51,7 @@ pub(super) fn edit(
     };
     if event.is_some() {
         input::consume_activation(ui);
-        input::disarm(ui);
+        gesture::disarm(ui);
         state.focus_pending = true;
         ui.ctx().request_repaint();
     }

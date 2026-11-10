@@ -137,28 +137,25 @@ impl<'a, K: Clone + Eq + Hash> StatusBar<'a, K> {
         let mut parts: Vec<Parts> = self
             .items
             .iter()
-            .map(|item| Parts::measure(ui, item, None))
+            .map(|item| Parts::measure(ui, item))
             .collect();
         let slots: Vec<Slot> = self
             .items
             .iter()
             .zip(&parts)
             .map(|(item, parts)| Slot {
-                width: parts.width(item),
+                width: parts.width(),
                 priority: item.priority,
                 end: item.align == StatusAlign::End,
             })
             .collect();
-        let fit = fit::fit(&slots, bar.width());
-        if let Some((index, budget)) = fit.elide {
-            parts[index] = Parts::measure(ui, &self.items[index], Some(budget));
+        let mut fit = fit::fit(&slots, bar.width());
+        if let Some((index, budget)) = fit.elide
+            && !parts[index].constrain(ui, &self.items[index], budget)
+        {
+            fit.visible[index] = false;
         }
-        let widths: Vec<f32> = self
-            .items
-            .iter()
-            .zip(&parts)
-            .map(|(item, parts)| parts.width(item))
-            .collect();
+        let widths: Vec<f32> = parts.iter().map(Parts::width).collect();
         (place(bar, &slots, &widths, &fit.visible), parts)
     }
 }
