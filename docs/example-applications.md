@@ -140,8 +140,8 @@ application.
 ## Order
 
 1. Workbench releases: editing helpers next to [List](lists.md),
-   [TreeView](tree-view.md) and [SplitPane](split-pane.md); DutchyMail composes
-   them once available.
+   [TreeView](tree-view.md), [SplitPane](split-pane.md) and
+   [InlineEdit](inline-edit.md); DutchyMail composes them once available.
 2. DutchyDash together with the dashboards milestone.
 
 Each lands in its own release with its ledger ticket and README line.

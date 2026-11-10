@@ -20,6 +20,7 @@ pub struct Input<'a> {
     pub(super) rows: usize,
     framed: bool,
     height_override: Option<f32>,
+    return_key: bool,
 }
 
 impl<'a> Input<'a> {
@@ -40,6 +41,7 @@ impl<'a> Input<'a> {
             rows: 1,
             framed: true,
             height_override: None,
+            return_key: true,
         }
     }
     /// Hint shown when empty; not a replacement for an accessible label.
@@ -90,6 +92,12 @@ impl<'a> Input<'a> {
         self
     }
 
+    /// InlineEdit handles submission after applying this frame's text events.
+    pub(super) fn without_return_key(mut self) -> Self {
+        self.return_key = false;
+        self
+    }
+
     pub(super) fn render(self, ui: &mut Ui) -> (Response, usize) {
         let id = ui.make_persistent_id(self.id);
         let width = self
@@ -130,6 +138,11 @@ impl<'a> Input<'a> {
                         TextEdit::multiline(buffer)
                     } else {
                         TextEdit::singleline(buffer)
+                    };
+                    let editor = if self.return_key {
+                        editor
+                    } else {
+                        editor.return_key(None)
                     };
                     let align = if self.multiline {
                         egui::Align2::LEFT_TOP

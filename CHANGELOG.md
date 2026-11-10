@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add InlineEdit with host-owned drafts, explicit rename requests and cancellation,
+  native editing and a workspace/notebook rename showcase (DS-111).
+
 ## 1.3.0 — 2026-11-10
 
 - Add host-owned SplitPane sizes, bounded nested panes, minimum constraints and
