@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add square Chip controls with host-owned toggle and remove requests, and a
+  Showcase page for filtering documents and removing tags (DS-121).
+
 ## 1.5.0 — 2026-11-11
 
 - Add PathInput with typed file, folder and save requests and host-owned

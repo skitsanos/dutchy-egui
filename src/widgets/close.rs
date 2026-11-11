@@ -1,5 +1,5 @@
 use crate::{
-    interaction::{focus_is_visible, paint_focus},
+    interaction::{focus_is_visible, paint_focus, paint_focus_inside},
     tokens::{border, close as tokens},
 };
 use egui::{Color32, Rect, Response, Stroke, Ui, vec2};
@@ -11,6 +11,31 @@ pub(super) struct Colors {
 }
 
 pub(super) fn paint(ui: &Ui, response: &Response, icon_size: f32, colors: Colors) {
+    paint_control(ui, response, response.rect, icon_size, &colors);
+    paint_focus(ui, response, colors.focus);
+}
+
+pub(super) fn paint_inside(
+    ui: &Ui,
+    response: &Response,
+    inside: Rect,
+    icon_size: f32,
+    colors: Colors,
+) {
+    let extent = icon_size
+        .min(response.rect.width())
+        .min(response.rect.height());
+    paint_control(
+        ui,
+        response,
+        inside.intersect(response.rect),
+        extent,
+        &colors,
+    );
+    paint_focus_inside(ui, response, colors.focus);
+}
+
+fn paint_control(ui: &Ui, response: &Response, bounds: Rect, icon_size: f32, colors: &Colors) {
     let hovered = response.enabled() && response.hovered();
     let pressed = response.enabled() && response.is_pointer_button_down_on();
     let emphasized = hovered || pressed || focus_is_visible(response);
@@ -20,7 +45,7 @@ pub(super) fn paint(ui: &Ui, response: &Response, icon_size: f32, colors: Colors
     if ui.is_rect_visible(response.rect) {
         let painter = ui
             .painter()
-            .with_clip_rect(ui.clip_rect().intersect(response.rect));
+            .with_clip_rect(ui.clip_rect().intersect(bounds));
         if hovered || pressed {
             let tint = if pressed {
                 tokens::PRESSED_TINT
@@ -39,5 +64,4 @@ pub(super) fn paint(ui: &Ui, response: &Response, icon_size: f32, colors: Colors
         painter.line_segment([icon.left_top(), icon.right_bottom()], stroke);
         painter.line_segment([icon.right_top(), icon.left_bottom()], stroke);
     }
-    paint_focus(ui, response, colors.focus);
 }

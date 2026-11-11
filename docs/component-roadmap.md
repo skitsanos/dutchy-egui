@@ -13,9 +13,10 @@ Issues Ledger ticket before work starts.
    in Showcase. [InlineEdit](inline-edit.md), [StatusBar](status-bar.md) and
    [Avatar](avatar.md) also ship for this milestone. See
    [example applications](example-applications.md) for workbench compositions.
-2. **Powerful filtering.** A square **Chip** primitive with optional remove and
-   toggle states is the shared base for **FilterChipGroup**, **TagInput** and
-   **MultiSelect**; **RangeSlider** edits two endpoints on the existing rail;
+2. **Powerful filtering.** The square [Chip](chips.md) primitive ships with
+   independent toggle and remove actions. It is the shared base for
+   **FilterChipGroup**, **TagInput** and **MultiSelect**. **RangeSlider** edits
+   two endpoints on the existing rail;
    **Combobox** accepts free text with suggestions where SearchableSelect only
    commits an option. A small repository-owned fuzzy scorer with highlighted
    matched glyphs upgrades CommandPalette, SearchableSelect and List type-ahead.

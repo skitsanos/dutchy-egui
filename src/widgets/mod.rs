@@ -8,6 +8,7 @@ mod badge;
 mod breadcrumbs;
 mod button;
 mod card;
+mod chip;
 mod close;
 mod code_block;
 mod command_palette;
@@ -60,6 +61,7 @@ pub use breadcrumbs::{
 };
 pub use button::{Button, ButtonVariant};
 pub use card::{Card, CardVariant};
+pub use chip::{Chip, ChipResponse};
 pub use code_block::{CodeBlock, CodeHighlighter, CodeSpan};
 pub use command_palette::{CommandPalette, CommandPaletteResponse};
 pub use dropdown::{Dropdown, DropdownAlign, DropdownResponse};
