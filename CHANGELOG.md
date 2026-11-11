@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.6.0 — 2026-11-11
 
 - Add square Chip controls with host-owned toggle and remove requests, and a
   Showcase page for filtering documents and removing tags (DS-121).
