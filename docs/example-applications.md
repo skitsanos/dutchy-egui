@@ -125,10 +125,12 @@ and workbench milestones, so it follows them.
   drafts, and a StatusBar with a simulated sync. Compose, archive and search
   use Command chords so plain letters stay with List type-ahead. An empty
   search result clears selection, and Undo restores only messages for which
-  that move is still current. Panes return intents that the frame applies,
-  because nested SplitPane closures cannot share a mutable model. MenuBar,
-  context menus, the command registry, fuzzy search and Skeleton loading come
-  next.
+  that move is still current. The Mailbox and Message menus, message context
+  menus, Toolbar and shortcuts share a command registry. Right-click or press
+  Shift+F10 on a focused message for context actions. An unselected row targets
+  only that message, while a selected row targets the selected group. Panes
+  return intents that the frame applies, because nested SplitPane closures
+  cannot share a mutable model. Fuzzy search and Skeleton loading come next.
 
 ## DutchyDash
 

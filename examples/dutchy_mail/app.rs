@@ -3,6 +3,7 @@
 //! closures never need the mailbox mutably at the same time.
 
 use crate::{
+    commands::{Action, Availability, Commands, Request},
     compose::{self, Compose},
     data, folders,
     mailbox::{ARCHIVE, FolderId, INBOX, Mailbox, MessageId, Moved, TRASH},
@@ -13,18 +14,8 @@ use dutchy_egui::{
     Flex, ListState, SplitPane, Text, TextColor, TextSize, Toast, ToastEvent, ToastQueue, Toasts,
     TreeState, calendar::Date, tokens::space,
 };
-use egui::{Context, Key, KeyboardShortcut, Modifiers, Ui};
-
-/// One requested change, applied after the panes are drawn.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub enum Intent {
-    Compose,
-    Archive,
-    Delete,
-    ToggleRead,
-    Sync,
-    FocusSearch,
-}
+use egui::{Context, Ui};
+use std::collections::HashSet;
 
 /// What a notification's Undo button puts back.
 #[derive(Clone, Debug)]
@@ -36,10 +27,6 @@ pub enum Undo {
 /// Seconds a simulated sync takes.
 pub const SYNC_SECONDS: f64 = 1.5;
 
-pub const COMPOSE: KeyboardShortcut = KeyboardShortcut::new(Modifiers::COMMAND, Key::N);
-pub const ARCHIVE_KEY: KeyboardShortcut = KeyboardShortcut::new(Modifiers::COMMAND, Key::E);
-pub const SEARCH: KeyboardShortcut = KeyboardShortcut::new(Modifiers::COMMAND, Key::F);
-
 pub struct App {
     pub mailbox: Mailbox,
     pub today: Date,
@@ -48,6 +35,7 @@ pub struct App {
     pub folder: FolderId,
     pub folders: TreeState<FolderId>,
     pub list: ListState<MessageId>,
+    pub commands: Commands,
     pub query: String,
     /// Folder column width in points.
     pub folders_width: f32,
@@ -78,6 +66,7 @@ impl App {
             folder: INBOX,
             folders,
             list: ListState::default(),
+            commands: Commands::default(),
             query: String::new(),
             folders_width: 264.0,
             list_width: 420.0,
@@ -93,13 +82,22 @@ impl App {
 
     pub fn show(&mut self, ui: &mut Ui) {
         let ctx = ui.ctx().clone();
-        let mut intents = self.shortcuts(&ctx);
         self.finish_sync(&ctx);
+        self.commands
+            .update(self.availability(!self.list.selected.is_empty()));
+        let mut intents = if self.compose.open {
+            Vec::new()
+        } else {
+            self.commands.shortcuts(&ctx)
+        };
         self.header(ui);
-        intents.extend(status::show(ui, self));
+        intents.extend(status::show(ui, self).map(Request::Selection));
         egui::CentralPanel::default()
             .frame(shell::frame(ui, 0))
-            .show(ui, |ui| intents.extend(self.panes(ui)));
+            .show(ui, |ui| {
+                intents.extend(self.commands.menu_bar(ui));
+                intents.extend(self.panes(ui));
+            });
         self.follow_folder();
         self.mark_opened_read();
         for intent in intents {
@@ -110,19 +108,13 @@ impl App {
         self.capture.tick(&ctx);
     }
 
-    /// Selected messages that still exist in the current folder view.
-    pub fn selection(&self) -> Vec<MessageId> {
-        let mut ids: Vec<MessageId> = self.list.selected.iter().copied().collect();
-        ids.sort();
-        ids
-    }
-
-    fn panes(&mut self, ui: &mut Ui) -> Vec<Intent> {
+    fn panes(&mut self, ui: &mut Ui) -> Vec<Request> {
         let Self {
             mailbox,
             folder,
             folders,
             list,
+            commands,
             query,
             folders_width,
             list_width,
@@ -152,12 +144,15 @@ impl App {
                             |ui| {
                                 messages::show(
                                     ui,
-                                    mailbox,
-                                    *folder,
-                                    list,
-                                    query,
-                                    focus_search,
-                                    *today,
+                                    messages::View {
+                                        mailbox,
+                                        folder: *folder,
+                                        list,
+                                        query,
+                                        focus_search,
+                                        today: *today,
+                                    },
+                                    commands,
                                 )
                             },
                             |ui| reader::show(ui, mailbox, &reading, *today),
@@ -174,7 +169,7 @@ impl App {
             .first
             .inner
             .into_iter()
-            .chain(inner.second.inner)
+            .chain(inner.second.inner.map(Request::Selection))
             .collect()
     }
 
@@ -188,6 +183,7 @@ impl App {
             self.list.selected.clear();
             self.list.focused = None;
             self.opened = None;
+            self.commands.context.close();
         }
     }
 
@@ -204,36 +200,78 @@ impl App {
         }
     }
 
-    fn apply(&mut self, intent: Intent, ctx: &Context) {
-        match intent {
-            Intent::Compose => self.compose.open_new(),
-            Intent::Archive if self.folder != ARCHIVE => self.move_selection(ARCHIVE, "Archived"),
-            Intent::Delete if self.folder != TRASH => self.move_selection(TRASH, "Moved to Trash"),
-            Intent::ToggleRead => {
-                let ids = self.selection();
-                let unread = ids
-                    .iter()
-                    .any(|id| self.mailbox.message(*id).is_some_and(|m| !m.unread));
-                for id in ids {
-                    self.mailbox.set_unread(id, unread);
-                }
-            }
-            Intent::Sync if self.syncing.is_none() => {
-                self.syncing = Some(ctx.input(|i| i.time));
-                ctx.request_repaint();
-            }
-            Intent::FocusSearch => self.focus_search = true,
-            _ => {}
+    fn availability(&self, has_messages: bool) -> Availability {
+        Availability {
+            folder: self.folder,
+            has_messages,
+            syncing: self.syncing.is_some(),
         }
     }
 
-    fn move_selection(&mut self, to: FolderId, verb: &str) {
-        let moved = self.mailbox.move_to(&self.selection(), to);
+    fn apply(&mut self, request: Request, ctx: &Context) {
+        let (action, targets) = match request {
+            Request::Selection(action) => (action, None),
+            Request::Context {
+                action,
+                folder,
+                messages,
+            } if folder == self.folder => (action, Some(messages)),
+            Request::Context { .. } => return,
+        };
+        let ids = if action.needs_messages() {
+            self.visible_targets(
+                targets.unwrap_or_else(|| self.list.selected.iter().copied().collect()),
+            )
+        } else {
+            Vec::new()
+        };
+        self.commands.update(self.availability(!ids.is_empty()));
+        if self.commands.registry.request(&action).is_some() {
+            self.execute(action, &ids, ctx);
+        }
+    }
+
+    fn visible_targets(&self, mut ids: Vec<MessageId>) -> Vec<MessageId> {
+        if !ids.is_empty() {
+            let visible: HashSet<_> = self
+                .mailbox
+                .view(self.folder, &self.query)
+                .iter()
+                .map(|message| message.id)
+                .collect();
+            ids.retain(|id| visible.contains(id));
+        }
+        ids
+    }
+
+    fn execute(&mut self, action: Action, ids: &[MessageId], ctx: &Context) {
+        match action {
+            Action::Compose => self.compose.open_new(),
+            Action::Archive => self.move_messages(ids, ARCHIVE, "Archived"),
+            Action::Delete => self.move_messages(ids, TRASH, "Moved to Trash"),
+            Action::ToggleRead => {
+                let unread = ids
+                    .iter()
+                    .any(|id| self.mailbox.message(*id).is_some_and(|m| !m.unread));
+                for &id in ids {
+                    self.mailbox.set_unread(id, unread);
+                }
+            }
+            Action::Sync => {
+                self.syncing = Some(ctx.input(|i| i.time));
+                ctx.request_repaint();
+            }
+            Action::FocusSearch => self.focus_search = true,
+        }
+    }
+
+    fn move_messages(&mut self, ids: &[MessageId], to: FolderId, verb: &str) {
+        let moved = self.mailbox.move_to(ids, to);
         let count = moved.count();
         if count == 0 {
             return;
         }
-        self.list.selected.clear();
+        self.list.selected.retain(|id| !ids.contains(id));
         let noun = if count == 1 { "message" } else { "messages" };
         self.toasts
             .push(Toast::new(format!("{verb} {count} {noun}.")).action("Undo", Undo::Move(moved)));
@@ -252,31 +290,6 @@ impl App {
         self.mailbox.add(message);
         self.toasts
             .push(Toast::new(format!("New message: {subject}")));
-    }
-
-    /// Command chords, so plain letters stay with List type-ahead.
-    fn shortcuts(&mut self, ctx: &Context) -> Vec<Intent> {
-        if self.compose.open {
-            return Vec::new();
-        }
-        let mut intents = Vec::new();
-        ctx.input_mut(|input| {
-            for (shortcut, intent) in [
-                (COMPOSE, Intent::Compose),
-                (ARCHIVE_KEY, Intent::Archive),
-                (SEARCH, Intent::FocusSearch),
-            ] {
-                if input.consume_shortcut(&shortcut) {
-                    intents.push(intent);
-                }
-            }
-        });
-        // Delete edits text while a field has focus; otherwise it moves mail.
-        let typing = ctx.text_edit_focused();
-        if !typing && ctx.input_mut(|i| i.consume_key(Modifiers::NONE, Key::Delete)) {
-            intents.push(Intent::Delete);
-        }
-        intents
     }
 
     fn header(&mut self, ui: &mut Ui) {

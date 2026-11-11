@@ -3,6 +3,7 @@
 
 mod compose;
 mod flows;
+mod menus;
 mod rendering;
 
 use crate::app::App;

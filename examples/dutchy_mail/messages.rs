@@ -1,14 +1,13 @@
 //! The message column: actions, search and a virtualized message list.
 
 use crate::{
-    app::{Intent, SEARCH},
-    mailbox::{ARCHIVE, FolderId, Mailbox, Message, MessageId, TRASH},
+    commands::{Action, Commands, Request},
+    mailbox::{FolderId, Mailbox, Message, MessageId},
     text,
 };
 use dutchy_egui::{
-    Avatar, AvatarSize, ButtonVariant, ControlSize, EmptyState, EmptyStateIcon, EmptyStateVariant,
-    Icon, List, ListItem, ListSelectionMode, ListState, SearchInput, TextColor, TextSize, Toolbar,
-    ToolbarEvent, ToolbarItem, calendar::Date, tokens::space,
+    Avatar, AvatarSize, ControlSize, EmptyState, EmptyStateIcon, EmptyStateVariant, List, ListItem,
+    ListSelectionMode, ListState, SearchInput, TextColor, TextSize, calendar::Date, tokens::space,
 };
 use egui::{Align, Layout, Ui, vec2};
 
@@ -17,22 +16,34 @@ const ROW_HEIGHT: f32 = 64.0;
 /// Height of one small text line.
 const LINE_HEIGHT: f32 = space::XL;
 
-pub fn show(
-    ui: &mut Ui,
-    mailbox: &Mailbox,
-    folder: FolderId,
-    list: &mut ListState<MessageId>,
-    query: &mut String,
-    focus_search: &mut bool,
-    today: Date,
-) -> Vec<Intent> {
+pub struct View<'a> {
+    pub mailbox: &'a Mailbox,
+    pub folder: FolderId,
+    pub list: &'a mut ListState<MessageId>,
+    pub query: &'a mut String,
+    pub focus_search: &'a mut bool,
+    pub today: Date,
+}
+
+pub fn show(ui: &mut Ui, view: View<'_>, commands: &mut Commands) -> Vec<Request> {
+    let View {
+        mailbox,
+        folder,
+        list,
+        query,
+        focus_search,
+        today,
+    } = view;
     let mut intents = Vec::new();
     egui::Frame::NONE
         .inner_margin(egui::Margin::same(space::LG as i8))
         .show(ui, |ui| {
-            intents.extend(actions(ui, folder, !list.selected.is_empty()));
+            intents.extend(commands.toolbar(ui));
             ui.add_space(space::MD);
-            let hint = ui.ctx().format_shortcut(&SEARCH);
+            let hint = commands
+                .registry
+                .shortcut_label(ui.ctx(), &Action::FocusSearch)
+                .unwrap_or_default();
             let search = ui.add(
                 SearchInput::new("mail-search", query)
                     .accessible_name("Search messages")
@@ -48,6 +59,7 @@ pub fn show(
             if view.is_empty() {
                 // The empty state replaces List, so it must clear the row state.
                 *list = ListState::default();
+                commands.context.close();
                 empty(ui, mailbox, folder, query);
                 return;
             }
@@ -55,12 +67,17 @@ pub fn show(
                 .iter()
                 .map(|m| ListItem::new(m.id, format!("{}, {}", m.from, m.subject)))
                 .collect();
-            List::new(("messages", folder.0), list, &items)
+            let rows = List::new(("messages", folder.0), list, &items)
                 .accessible_name("Messages")
                 .selection_mode(ListSelectionMode::Multiple)
                 .row_height(ROW_HEIGHT)
                 .max_height(ui.available_height())
                 .show_with(ui, |ui, _, row| message_row(ui, view[row.index], today));
+            intents.extend(
+                commands
+                    .context
+                    .show(ui, folder, &commands.registry, list, &rows),
+            );
         });
     intents
 }
@@ -97,30 +114,6 @@ fn message_row(ui: &mut Ui, message: &Message, today: Date) {
         };
         text::line(ui, &message.subject, TextSize::Sm, false, color);
     });
-}
-
-fn actions(ui: &mut Ui, folder: FolderId, selected: bool) -> Option<Intent> {
-    let items = [
-        ToolbarItem::action(Intent::Compose, "Compose")
-            .icon(Icon::Plus)
-            .variant(ButtonVariant::Primary),
-        ToolbarItem::action(Intent::Archive, "Archive")
-            .enabled(selected && folder != ARCHIVE)
-            .separator_before(true),
-        ToolbarItem::action(Intent::Delete, "Delete")
-            .icon(Icon::Trash)
-            .enabled(selected && folder != TRASH),
-        ToolbarItem::action(Intent::ToggleRead, "Read / unread").enabled(selected),
-    ];
-    let result = Toolbar::new("mail-actions", &items)
-        .accessible_name("Message actions")
-        .size(ControlSize::Small)
-        .wrap(true)
-        .show(ui);
-    match result.event {
-        Some(ToolbarEvent::Activated(intent)) => Some(intent),
-        _ => None,
-    }
 }
 
 fn empty(ui: &mut Ui, mailbox: &Mailbox, folder: FolderId, query: &mut String) {

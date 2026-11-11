@@ -1,6 +1,6 @@
 //! The bottom StatusBar: counts, a clickable sync segment and shortcut hints.
 
-use crate::app::{ARCHIVE_KEY, App, COMPOSE, Intent, SEARCH};
+use crate::{app::App, commands::Action};
 use dutchy_egui::{Icon, StatusAlign, StatusBar, StatusItem, StatusTone};
 use egui::Ui;
 
@@ -16,7 +16,7 @@ enum Segment {
     Search,
 }
 
-pub fn show(ui: &mut Ui, app: &App) -> Option<Intent> {
+pub fn show(ui: &mut Ui, app: &App) -> Option<Action> {
     let ctx = ui.ctx().clone();
     let folder = app
         .mailbox
@@ -46,14 +46,10 @@ pub fn show(ui: &mut Ui, app: &App) -> Option<Intent> {
         )
         .priority(1),
         sync.live(true).priority(2),
-        hint(Segment::Compose, ctx.format_shortcut(&COMPOSE), "Compose"),
-        hint(
-            Segment::Archive,
-            ctx.format_shortcut(&ARCHIVE_KEY),
-            "Archive",
-        ),
-        hint(Segment::Delete, "Del".to_owned(), "Delete"),
-        hint(Segment::Search, ctx.format_shortcut(&SEARCH), "Search"),
+        hint(app, &ctx, Segment::Compose, Action::Compose),
+        hint(app, &ctx, Segment::Archive, Action::Archive),
+        hint(app, &ctx, Segment::Delete, Action::Delete),
+        hint(app, &ctx, Segment::Search, Action::FocusSearch),
     ];
     let mut intent = None;
     egui::Panel::bottom("mail-status")
@@ -63,12 +59,23 @@ pub fn show(ui: &mut Ui, app: &App) -> Option<Intent> {
                 .accessible_name("Mailbox status")
                 .show(ui);
             if result.clicked == Some(Segment::Sync) {
-                intent = Some(Intent::Sync);
+                intent = Some(Action::Sync);
             }
         });
     intent
 }
 
-fn hint(segment: Segment, chord: String, action: &'static str) -> StatusItem<'static, Segment> {
-    StatusItem::hint(segment, chord, action).align(StatusAlign::End)
+fn hint<'a>(
+    app: &'a App,
+    ctx: &egui::Context,
+    segment: Segment,
+    action: Action,
+) -> StatusItem<'a, Segment> {
+    let registry = &app.commands.registry;
+    let chord = registry.shortcut_label(ctx, &action).unwrap_or_default();
+    let label = &registry
+        .get(&action)
+        .expect("mail command is registered")
+        .label;
+    StatusItem::hint(segment, chord, label.as_str()).align(StatusAlign::End)
 }

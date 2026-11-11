@@ -1,7 +1,7 @@
 //! The reading pane: one message with its sender, or guidance otherwise.
 
 use crate::{
-    app::Intent,
+    commands::Action,
     mailbox::{Mailbox, Message, MessageId},
     text,
 };
@@ -11,7 +11,7 @@ use dutchy_egui::{
 };
 use egui::Ui;
 
-pub fn show(ui: &mut Ui, mailbox: &Mailbox, selected: &[MessageId], today: Date) -> Option<Intent> {
+pub fn show(ui: &mut Ui, mailbox: &Mailbox, selected: &[MessageId], today: Date) -> Option<Action> {
     egui::Frame::NONE
         .inner_margin(egui::Margin::same(space::XXL as i8))
         .show(ui, |ui| {
@@ -73,7 +73,7 @@ fn message_view(ui: &mut Ui, message: &Message, today: Date) {
         });
 }
 
-fn several(ui: &mut Ui, count: usize) -> Option<Intent> {
+fn several(ui: &mut Ui, count: usize) -> Option<Action> {
     let result = EmptyState::new("several", format!("{count} messages selected"))
         .icon(EmptyStateIcon::Inbox)
         .description("Archive or delete them together, or choose one to read it.")
@@ -81,9 +81,9 @@ fn several(ui: &mut Ui, count: usize) -> Option<Intent> {
         .secondary_action("Delete")
         .show(ui);
     if result.action_clicked {
-        Some(Intent::Archive)
+        Some(Action::Archive)
     } else if result.secondary_clicked {
-        Some(Intent::Delete)
+        Some(Action::Delete)
     } else {
         None
     }

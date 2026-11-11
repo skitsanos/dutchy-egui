@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add DutchyMail's MenuBar and message context menus, sharing a command
+  registry with the Toolbar and shortcuts (DS-118).
+
 ## 1.4.1 — 2026-11-11
 
 - Use a single-select List for Showcase desktop navigation and reveal the

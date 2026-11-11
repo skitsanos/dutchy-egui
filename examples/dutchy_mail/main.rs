@@ -11,9 +11,12 @@
 mod support;
 
 mod app;
+mod commands;
 mod compose;
+mod context_menu;
 mod data;
 mod folders;
+mod icons;
 mod mailbox;
 mod messages;
 mod reader;

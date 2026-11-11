@@ -115,4 +115,7 @@ application to project creation. The split action offers file operations.
 Canal Studio shares Save, export formats, Grid/Rulers and palette commands across
 its menu bar, toolbar, split action and nested palette. Rebinding Save updates
 all hints. The "Apply view changes" switch demonstrates declining requests.
+DutchyMail shares command names and shortcuts across its menu bar, message
+context menus, toolbar and status hints. The host validates availability
+against the selection or the context menu's captured message targets.
 These examples keep command execution and Undo/import state with the host.
