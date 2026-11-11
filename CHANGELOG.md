@@ -8,6 +8,9 @@
   best match first and mark matched glyphs. They used to filter substrings in
   host order; a blank query still lists the host order (DS-124).
 - DutchyMail search ranks fuzzy matches on sender and subject and marks them.
+- Dim and block the whole window behind a Modal. The backdrop stopped 16
+  points short of every window edge, and clicks in that band reached the
+  host (DS-125).
 
 ## 1.8.0 — 2026-11-11
 
