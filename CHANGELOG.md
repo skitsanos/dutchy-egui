@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.7.0 — 2026-11-11
 
 - Add FilterChipGroup with keyed selection requests and a Showcase demo that
   combines media type and collection filters (DS-122).
