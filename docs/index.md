@@ -26,7 +26,8 @@ Start with [setup, themes and fonts](getting-started.md) and the
 
 [Example applications](example-applications.md) describes DutchyTodo and the
 planned examples. [DutchyAgent](dutchy-agent.md) demonstrates OpenAI and
-offline chat with Markdown and code copy.
+offline chat with Markdown and code copy. DutchyMail sketches a three-pane mail
+client from TreeView, List, SplitPane, StatusBar and Avatar.
 
 ## Project
 

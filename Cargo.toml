@@ -55,6 +55,12 @@ path = "examples/dutchy_agent/main.rs"
 required-features = ["bundled-fonts", "markdown"]
 test = true
 
+[[example]]
+name = "dutchy_mail"
+path = "examples/dutchy_mail/main.rs"
+required-features = ["bundled-fonts", "markdown"]
+test = true
+
 [lints.rust]
 unsafe_code = "forbid"
 missing_docs = "warn"

@@ -4,6 +4,9 @@
 
 - Use a single-select List for Showcase desktop navigation and reveal the
   focused DutchyTodo task when keyboard navigation or sorting moves it (DS-115).
+- Sketch DutchyMail: a three-pane mail client over 2,400 fictional messages
+  with a folder TreeView, Avatar rows, a Markdown reader, compose, Toast undo
+  and a StatusBar sync segment (DS-116).
 
 ## 1.4.0 — 2026-11-10
 

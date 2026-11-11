@@ -28,9 +28,10 @@ Issues Ledger ticket before work starts.
    rows with alignment, wrapping and copy; **Activity**, the port of the web
    activity panel (accent-edged surface, colored square markers, title and
    time) with a vertical connector variant; **ThemePicker** combining accent
-   swatches, mode and reduced motion in one settings control; and **Sidebar**
-   with its icon-rail mode, the port of the web navigation surface, so the
-   showcase can use the library's own navigation.
+   swatches, mode and reduced motion in one settings control; and an icon-rail
+   **Sidebar** mode if an application needs one. List and TreeView already
+   compose a navigation sidebar, as the Showcase pages and DutchyMail folders
+   show.
 4. **Dashboards.** A repository-owned charts family: sparkline, bar, donut,
    gauge and calendar heatmap with flat fills, square markers, token colors,
    hover tooltips, host-formatted labels and an accessible text summary. No

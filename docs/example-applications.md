@@ -114,9 +114,19 @@ and workbench milestones, so it follows them.
   with matching Kbd hints; SearchInput with fuzzy matching; a compose Modal
   with Field, Input and Textarea and a discard confirmation; Toast undo for
   archive and delete; StatusBar counts and simulated sync state; EmptyState for
-  empty folders and no selection; Skeleton for simulated loading; Sidebar.
+  empty folders and no selection; Skeleton for simulated loading. The folder
+  TreeView inside a SplitPane is the sidebar; no separate component is needed.
 - **Limits.** No network, mail protocols, HTML mail, attachment contents or
   persistence.
+- **Sketch** ([DS-116](issues/DS-116.md)). `cargo run --example dutchy_mail
+  --all-features` shows 2,400 generated messages in nested SplitPanes with a
+  folder TreeView, Avatar rows, a Markdown reader, Toolbar, SearchInput with
+  word matching, a compose Modal, Toast undo for archive, delete and discarded
+  drafts, and a StatusBar with a simulated sync. Compose, archive and search
+  use Command chords so plain letters stay with List type-ahead. Panes return
+  intents that the frame applies, because nested SplitPane closures cannot
+  share a mutable model. MenuBar, context menus, the command registry, fuzzy
+  search and Skeleton loading come next.
 
 ## DutchyDash
 
@@ -143,7 +153,7 @@ application.
 
 1. Workbench releases: editing helpers next to [List](lists.md),
    [TreeView](tree-view.md), [SplitPane](split-pane.md) and
-   [InlineEdit](inline-edit.md); DutchyMail composes them once available.
+   [InlineEdit](inline-edit.md); the DutchyMail sketch composes them.
 2. DutchyDash together with the dashboards milestone.
 
 Each lands in its own release with its ledger ticket and README line.

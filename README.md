@@ -86,6 +86,7 @@ cargo run --example dutchy_todo --all-features
 ```
 
 [DutchyAgent](docs/dutchy-agent.md) offers OpenAI and offline chat: `cargo run --example dutchy_agent --all-features`.
+DutchyMail sketches a three-pane mail client: `cargo run --example dutchy_mail --all-features`.
 
 ## What is inside
 
