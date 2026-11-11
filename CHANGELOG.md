@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.8.0 — 2026-11-11
+
+- Add TagInput with keyed Chips, keyboard entry and removal, and a Showcase
+  demo that validates host-owned project tags (DS-123).
+
 ## 1.7.0 — 2026-11-11
 
 - Add FilterChipGroup with keyed selection requests and a Showcase demo that

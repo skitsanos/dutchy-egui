@@ -6,10 +6,25 @@ use crate::{
 };
 use egui::accesskit::{Role, Toggled};
 use egui::{
-    Galley, IdSalt, Rect, Response, Sense, Stroke, StrokeKind, Ui, UiBuilder, WidgetInfo, pos2,
-    vec2,
+    Align, Galley, IdSalt, Layout, Rect, Response, Sense, Stroke, StrokeKind, Ui, UiBuilder,
+    WidgetInfo, pos2, vec2,
 };
 use std::{borrow::Cow, sync::Arc};
+
+pub(super) fn wrap_chips<R>(ui: &mut Ui, show: impl FnOnce(&mut Ui) -> R) -> R {
+    let layout = if ui.layout().prefer_right_to_left() {
+        Layout::right_to_left(Align::Min)
+    } else {
+        Layout::left_to_right(Align::Min)
+    };
+    // Start one chip high so later rows cannot flow back into the first row.
+    let row = vec2(
+        ui.available_size_before_wrap().x,
+        ControlSize::Small.height(),
+    );
+    ui.allocate_ui_with_layout(row, layout.with_main_wrap(true), show)
+        .inner
+}
 
 /// Independent chip controls and the requests raised in this frame.
 #[non_exhaustive]

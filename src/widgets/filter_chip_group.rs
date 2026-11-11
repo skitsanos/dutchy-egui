@@ -1,5 +1,6 @@
-use crate::{Chip, ControlSize, tokens::space};
-use egui::{Align, IdSalt, Layout, Response, Ui, UiBuilder, accesskit::Role, vec2};
+use super::chip::wrap_chips;
+use crate::{Chip, tokens::space};
+use egui::{IdSalt, Response, Ui, UiBuilder, accesskit::Role, vec2};
 use std::{
     borrow::Cow,
     hash::{DefaultHasher, Hash, Hasher},
@@ -92,11 +93,6 @@ impl<'a, K: Clone + Hash> FilterChipGroup<'a, K> {
         mut is_selected: impl FnMut(&K) -> bool,
     ) -> FilterChipGroupResponse<K> {
         let id = ui.make_persistent_id(("dutchy-filter-chip-group", self.id));
-        let layout = if ui.layout().prefer_right_to_left() {
-            Layout::right_to_left(Align::Min)
-        } else {
-            Layout::left_to_right(Align::Min)
-        };
         let enabled = self.enabled && ui.is_enabled();
         let items = self.items;
         let group = ui.scope_builder(UiBuilder::new().scope_id(id), |ui| {
@@ -104,16 +100,7 @@ impl<'a, K: Clone + Hash> FilterChipGroup<'a, K> {
                 ui.disable();
             }
             ui.spacing_mut().item_spacing = vec2(space::SM, space::SM);
-            // Start with one chip-high row. An unbounded first row would absorb
-            // the rows below it, sending later chips back to the top.
-            let row = vec2(
-                ui.available_size_before_wrap().x,
-                ControlSize::Small.height(),
-            );
-            ui.allocate_ui_with_layout(row, layout.with_main_wrap(true), |ui| {
-                chips(ui, items, &mut is_selected)
-            })
-            .inner
+            wrap_chips(ui, |ui| chips(ui, items, &mut is_selected))
         });
         let name = self.name;
         group

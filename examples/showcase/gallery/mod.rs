@@ -32,6 +32,7 @@ mod stepping;
 mod surfaces;
 mod tabbed;
 mod tabular;
+mod tag_input;
 mod trees;
 mod typography;
 mod uploads;
@@ -63,6 +64,7 @@ pub struct Showcase {
     pub forms: FormState,
     pub chips: chips::ChipsState,
     pub filter_chips: filter_chips::FilterChipsState,
+    pub tags: tag_input::TagsState,
     pub paths: paths::PathsState,
     pub primitives: primitives::PrimitivesState,
     pub colors: colors::ColorsState,
@@ -109,6 +111,7 @@ impl Default for Showcase {
             forms: FormState::default(),
             chips: chips::ChipsState::default(),
             filter_chips: filter_chips::FilterChipsState::default(),
+            tags: tag_input::TagsState::default(),
             paths: paths::PathsState::default(),
             primitives: primitives::PrimitivesState::default(),
             colors: colors::ColorsState::default(),
@@ -180,6 +183,7 @@ impl Showcase {
                             Page::Forms => forms::show(ui, &mut self.forms),
                             Page::Chips => chips::show(ui, &mut self.chips),
                             Page::FilterChipGroup => filter_chips::show(ui, &mut self.filter_chips),
+                            Page::TagInput => tag_input::show(ui, &mut self.tags),
                             Page::PathInput => paths::show(ui, &mut self.paths),
                             Page::Controls => primitives::show(ui, &mut self.primitives),
                             Page::Colors => colors::show(ui, &mut self.colors),

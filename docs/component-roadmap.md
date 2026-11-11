@@ -15,8 +15,9 @@ Issues Ledger ticket before work starts.
    [example applications](example-applications.md) for workbench compositions.
 2. **Powerful filtering.** [Chip](chips.md) provides independent toggle and
    remove actions, and [FilterChipGroup](chips.md#filter-chip-groups) groups
-   keyed filters with host-owned selection. **TagInput** and **MultiSelect**
-   build on these controls. **RangeSlider** edits
+   keyed filters with host-owned selection. [TagInput](chips.md#tag-input)
+   adds a draft and keyed add and remove requests for host-owned tags.
+   **MultiSelect** will build on these controls. **RangeSlider** edits
    two endpoints on the existing rail;
    **Combobox** accepts free text with suggestions where SearchableSelect only
    commits an option. A small repository-owned fuzzy scorer with highlighted

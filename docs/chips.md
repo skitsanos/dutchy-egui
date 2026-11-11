@@ -71,3 +71,43 @@ The host supplies selection each frame and chooses which requests to apply.
 A disabled choice displays its host-supplied selection and skips activation
 and Tab. Showcase combines multiple media types with a single collection and
 displays the assets that match both filters.
+
+## Tag input
+
+`TagInput` pairs wrapping Chips with a draft editor. The host stores the
+draft and the keyed tags, validates additions, and applies requests. Give
+each tag a stable, unique key. Use `.removable(false)` for a fixed tag.
+
+```rust
+use dutchy_egui::{TagInput, TagInputRequest, TagItem};
+
+fn show_tags(ui: &mut egui::Ui, draft: &mut String, tags: &mut Vec<(u64, String)>, next_key: &mut u64) {
+    let items: Vec<_> = tags.iter()
+        .map(|(key, label)| TagItem::new(*key, label.as_str()))
+        .collect();
+    let result = TagInput::new("project-tags", draft, &items)
+        .accessible_name("Project tags")
+        .show(ui);
+    for request in result.requests {
+        match request {
+            TagInputRequest::Add(label) => {
+                tags.push((*next_key, label));
+                *next_key += 1;
+                draft.clear();
+            }
+            TagInputRequest::Remove(key) => tags.retain(|(tag_key, _)| *tag_key != key),
+            _ => {}
+        }
+    }
+}
+```
+
+Enter and Add tag request one trimmed, nonblank label and focus the editor.
+Backspace in an already empty draft requests removal of the last removable
+tag. Tab visits each remove button before the draft, and Enter or Space on
+a remove button requests removal and returns focus to the draft. Remove
+buttons also support pointer and assistive activation.
+
+The draft keeps its text until the host clears it. Showcase's **Tag input**
+page accepts new project tags, keeps one tag fixed, and displays a validation
+message when the host declines a duplicate.
