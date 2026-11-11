@@ -167,7 +167,6 @@ impl<'a, T: Clone> CommandPalette<'a, T> {
                         name: self.name.as_ref(),
                         selected: None,
                         height,
-                        words: true,
                     }
                     .show(ui, root.with("results"), &mut cursor, &input.1);
                     input_metadata(&input.0, true, Some(results.response.id), results.active);

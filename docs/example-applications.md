@@ -121,8 +121,9 @@ and workbench milestones, so it follows them.
 - **Sketch** ([DS-116](issues/DS-116.md)). `cargo run --example dutchy_mail
   --all-features` shows 2,400 generated messages in nested SplitPanes with a
   folder TreeView, Avatar rows, a Markdown reader, Toolbar, SearchInput with
-  word matching, a compose Modal, Toast undo for archive, delete and discarded
-  drafts, and a StatusBar with a simulated sync. Compose, archive and search
+  ranked [fuzzy matching](fuzzy-search.md) and marked glyphs, a compose Modal,
+  Toast undo for archive, delete and discarded drafts, and a StatusBar with a
+  simulated sync. Compose, archive and search
   use Command chords so plain letters stay with List type-ahead. An empty
   search result clears selection, and Undo restores only messages for which
   that move is still current. The Mailbox and Message menus, message context
@@ -130,7 +131,7 @@ and workbench milestones, so it follows them.
   Shift+F10 on a focused message for context actions. An unselected row targets
   only that message, while a selected row targets the selected group. Panes
   return intents that the frame applies, because nested SplitPane closures
-  cannot share a mutable model. Fuzzy search and Skeleton loading come next.
+  cannot share a mutable model. Skeleton loading comes next.
 - **Optional icons.** Run
   `DUTCHY_MAIL_ICONS=phosphor cargo run --example dutchy_mail --all-features`
   to use the bundled Phosphor glyphs for Compose, Archive, Delete and

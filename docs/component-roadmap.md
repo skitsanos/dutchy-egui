@@ -20,9 +20,10 @@ Issues Ledger ticket before work starts.
    **MultiSelect** will build on these controls. **RangeSlider** edits
    two endpoints on the existing rail;
    **Combobox** accepts free text with suggestions where SearchableSelect only
-   commits an option. A small repository-owned fuzzy scorer with highlighted
-   matched glyphs upgrades CommandPalette, SearchableSelect and List type-ahead.
-   Compose a filter-builder example with SearchInput and the MediaCard browser,
+   commits an option. The repository-owned [fuzzy scorer](fuzzy-search.md)
+   ranks CommandPalette and SearchableSelect results and marks matched glyphs;
+   Combobox and MultiSelect will rank with it too. List type-ahead stays a
+   prefix search. Compose a filter-builder example with SearchInput and the MediaCard browser,
    with keyboard removal, empty states, explicit commit behavior and typed
    host values.
 3. **Small wins.** **Dialog presets** (confirm, alert and prompt with typed

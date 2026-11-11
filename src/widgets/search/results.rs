@@ -11,7 +11,6 @@ pub(crate) struct Results<'a, T> {
     pub name: &'a str,
     pub selected: Option<IdSalt>,
     pub height: f32,
-    pub words: bool,
 }
 pub(crate) struct ResultsResponse<T> {
     pub response: Response,
@@ -27,29 +26,12 @@ impl<T: Clone> Results<'_, T> {
         cursor: &mut Cursor,
         keys: &SearchKeys,
     ) -> ResultsResponse<T> {
-        let needle = self.query.trim().to_lowercase();
-        let matches: Vec<_> = self
-            .items
-            .iter()
-            .filter(|item| {
-                if self.words {
-                    let text = format!("{} {}", item.group.as_deref().unwrap_or(""), item.label)
-                        .to_lowercase();
-                    return item.children.is_none()
-                        && needle.split_whitespace().all(|word| text.contains(word));
-                }
-                item.children.is_none()
-                    && (item.label.to_lowercase().contains(&needle)
-                        || item
-                            .group
-                            .as_deref()
-                            .is_some_and(|group| group.to_lowercase().contains(&needle)))
-            })
-            .collect();
+        let ranked = !self.query.trim().is_empty();
+        let matches = super::rank::rank(self.items, self.query);
         let enabled: Vec<_> = matches
             .iter()
-            .filter(|item| item.enabled)
-            .map(|item| item.id)
+            .filter(|hit| hit.item.enabled)
+            .map(|hit| hit.item.id)
             .collect();
         let old_active = cursor.active;
         cursor.update(self.query, &enabled, keys);
@@ -77,7 +59,8 @@ impl<T: Clone> Results<'_, T> {
                             });
                     }
                     let mut previous_group = None;
-                    for (index, item) in matches.iter().enumerate() {
+                    for (index, hit) in matches.iter().enumerate() {
+                        let item = hit.item;
                         if item.group.as_deref() != previous_group {
                             if index > 0 {
                                 paint::divider(ui, true);
@@ -100,16 +83,18 @@ impl<T: Clone> Results<'_, T> {
                                     });
                             }
                         } else if index > 0 {
-                            paint::divider(ui, item.separator_before);
+                            // Host separators describe the host order, not a ranking.
+                            paint::divider(ui, item.separator_before && !ranked);
                         }
                         previous_group = item.group.as_deref();
                         let active = cursor.active == Some(item.id);
                         let response = ui
                             .add_enabled_ui(item.enabled, |ui| {
-                                paint::row(
+                                paint::row_marked(
                                     ui,
                                     root.with(item.id),
                                     item,
+                                    &hit.marks,
                                     paint::RowState {
                                         role: egui::accesskit::Role::ListBoxOption,
                                         active,

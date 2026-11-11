@@ -14,7 +14,8 @@ Start with [setup, themes and fonts](getting-started.md) and the
 - [Accordions and tabs](accordions-tabs.md), [menus and dropdowns](menus-dropdowns.md),
   [richer menus and command surfaces](richer-menus.md),
   [breadcrumbs and pagination](breadcrumbs-pagination.md), [stepper](stepper.md)
-- [Shared commands, shortcut editing and split actions](commands-shortcuts.md)
+- [Shared commands, shortcut editing and split actions](commands-shortcuts.md),
+  [fuzzy search](fuzzy-search.md)
 - [Modals and drawers](modals-drawers.md), [toasts](toasts.md),
   [tooltips and layout](tooltips-layout.md), [SplitPane](split-pane.md),
   [InlineEdit](inline-edit.md), [StatusBar](status-bar.md), [Avatar](avatar.md)

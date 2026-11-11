@@ -8,7 +8,7 @@ use egui::{
     Color32, Label, Response, Ui, Widget,
     text::{LayoutJob, TextFormat},
 };
-use std::borrow::Cow;
+use std::{borrow::Cow, ops::Range};
 
 /// Semantic text color, resolved against the current theme.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -66,6 +66,7 @@ pub struct Text<'a> {
     color: TextColor,
     uppercase: bool,
     italic: bool,
+    highlight: &'a [Range<usize>],
 }
 
 impl<'a> Text<'a> {
@@ -81,6 +82,7 @@ impl<'a> Text<'a> {
             color: TextColor::Foreground,
             uppercase: false,
             italic: false,
+            highlight: &[],
         }
     }
 
@@ -145,31 +147,66 @@ impl<'a> Text<'a> {
         self
     }
 
+    /// Emphasize byte ranges of the text in the bold face, such as the
+    /// [`ranges`](crate::FuzzyMatch::ranges) of a fuzzy match.
+    ///
+    /// Ranges address the text as written, before [`uppercase`](Self::uppercase).
+    /// They must be in ascending order and on character boundaries; any other
+    /// range is skipped. Text that is already bold shows no difference, and
+    /// neither does a host font without the `bundled-fonts` feature.
+    pub fn highlight(mut self, ranges: &'a [Range<usize>]) -> Self {
+        self.highlight = ranges;
+        self
+    }
+
     /// Build a reusable layout job. `wrap_width` is in logical points.
     pub fn layout_job(&self, theme: &Theme, wrap_width: f32) -> LayoutJob {
-        let size = self.size.points();
-        let content = if self.uppercase {
-            self.text.to_uppercase()
-        } else {
-            self.text.to_string()
-        };
-        let mut job = LayoutJob::simple_format(
-            content,
-            TextFormat {
-                font_id: fonts::font_id(self.family, self.weight, size),
-                extra_letter_spacing: self.tracking.em() * size,
-                line_height: Some(
-                    size * self
-                        .leading
-                        .map_or(self.size.line_height(), Leading::factor),
-                ),
-                color: self.color.resolve(theme),
-                italics: self.italic,
-                ..Default::default()
-            },
-        );
+        let mut job = LayoutJob::default();
+        let mut written = 0;
+        for range in self.highlight {
+            let Some(marked) = self.text.get(range.clone()) else {
+                continue;
+            };
+            if range.start < written || marked.is_empty() {
+                continue;
+            }
+            self.append(
+                &mut job,
+                &self.text[written..range.start],
+                self.weight,
+                theme,
+            );
+            self.append(&mut job, marked, Weight::Bold, theme);
+            written = range.end;
+        }
+        self.append(&mut job, &self.text[written..], self.weight, theme);
         job.wrap.max_width = wrap_width.max(0.0);
         job
+    }
+
+    fn append(&self, job: &mut LayoutJob, piece: &str, weight: Weight, theme: &Theme) {
+        // An empty text still needs its one section for the line height.
+        if piece.is_empty() && !(self.text.is_empty() && job.sections.is_empty()) {
+            return;
+        }
+        let size = self.size.points();
+        let format = TextFormat {
+            font_id: fonts::font_id(self.family, weight, size),
+            extra_letter_spacing: self.tracking.em() * size,
+            line_height: Some(
+                size * self
+                    .leading
+                    .map_or(self.size.line_height(), Leading::factor),
+            ),
+            color: self.color.resolve(theme),
+            italics: self.italic,
+            ..Default::default()
+        };
+        if self.uppercase {
+            job.append(&piece.to_uppercase(), 0.0, format);
+        } else {
+            job.append(piece, 0.0, format);
+        }
     }
 }
 

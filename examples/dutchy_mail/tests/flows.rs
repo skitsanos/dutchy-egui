@@ -126,6 +126,26 @@ fn search_filters_sender_and_subject_and_can_be_cleared() {
 }
 
 #[test]
+fn abbreviated_search_leads_with_the_best_match_and_marks_it() {
+    let mut h = harness();
+    h.get_by_label("Search messages").focus();
+    h.run();
+    h.get_by_label("Search messages").type_text("frry sat");
+    h.run();
+    let first = h
+        .get_all_by_role(Role::ListBoxOption)
+        .find_map(|n| n.accesskit_node().label())
+        .expect("a matching row");
+    assert!(first.ends_with("Ferry times for Saturday"), "{first}");
+    let marked = |text: &str| {
+        let shapes = &h.output().shapes;
+        let mut galleys = super::galleys(shapes).into_iter();
+        galleys.any(|galley| galley.job.text == text && galley.job.sections.len() > 1)
+    };
+    assert!(marked("Ferry times for Saturday"));
+}
+
+#[test]
 fn sync_delivers_one_new_message_after_a_short_wait() {
     let mut h = harness();
     let before = h.state().mailbox.total(INBOX);

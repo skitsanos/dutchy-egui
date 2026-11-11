@@ -62,7 +62,8 @@ existing `SelectOption` type. Give options stable `id_salt` values when labels c
 change. The host owns the query, open flag, and committed selection separately.
 Supply the initial query label explicitly if the host wants it displayed.
 
-Typing filters case-insensitive substrings. Up/Down opens and moves the active
+Typing filters and ranks options with [fuzzy matching](fuzzy-search.md) and
+marks matched glyphs in bold. Up/Down opens and moves the active
 result; Home/End navigate open results. Enter or a pointer click commits, copies
 the label to the query, and closes. Escape/outside click dismisses without
 committing. Tab exits normally. Disabled results remain visible but are skipped.
@@ -100,8 +101,8 @@ new focus destination. Host-set queries are retained between openings.
 
 ## Boundaries
 
-Filtering is substring search, not fuzzy ranking. Command search uses flat
-leaf lists. Radio/mixed menu checks, rich arbitrary result bodies, asynchronous
+Command search uses flat leaf lists; [fuzzy search](fuzzy-search.md) lists
+the matching limits. Radio/mixed menu checks, rich arbitrary result bodies, asynchronous
 search and virtualization are outside the supported scope.
 Very long shortcut hints are clipped; avoid using hints for essential guidance.
 Native popup placement may settle after a sizing pass. Display scales use logical

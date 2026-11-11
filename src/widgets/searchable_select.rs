@@ -129,7 +129,6 @@ impl<'a, T: Clone + PartialEq> SearchableSelect<'a, T> {
                     .show(|ui| {
                         ui.set_width((response.rect.width() - border::STANDARD * 2.0).max(0.0));
                         Results {
-                            words: false,
                             items: &items,
                             query: &self.state.query,
                             name: &format!("{} options", self.name),

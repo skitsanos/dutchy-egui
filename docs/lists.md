@@ -48,7 +48,8 @@ and reveals a match. Spaces continue a pending prefix, so typing "new y"
 reaches "New York"; Space toggles selection only when no prefix is pending.
 Repeating a single character cycles through matches; a one-second idle period
 resets the prefix. It is bounded to 64 characters and
-is not fuzzy, accent-insensitive or locale-aware search. Clipboard and IME
+is not fuzzy, accent-insensitive or locale-aware search; to filter rows,
+score them with [fuzzy search](fuzzy-search.md) before building the items. Clipboard and IME
 preedit events are not interpreted as commands.
 
 Setting `focused` from the host reveals that key without stealing focus from

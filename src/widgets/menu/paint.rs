@@ -4,6 +4,7 @@ use crate::{
     tokens::{border, menu as geometry},
 };
 use egui::{Id, Rect, Response, Sense, Stroke, StrokeKind, Ui, WidgetInfo, pos2, vec2};
+use std::ops::Range;
 
 pub(crate) struct RowState {
     pub role: egui::accesskit::Role,
@@ -16,6 +17,17 @@ pub(crate) struct RowState {
 }
 
 pub(crate) fn row<T>(ui: &mut Ui, id: Id, item: &MenuItem<'_, T>, state: RowState) -> Response {
+    row_marked(ui, id, item, &[], state)
+}
+
+/// A row whose label emphasizes `marks`, the byte ranges a search matched.
+pub(crate) fn row_marked<T>(
+    ui: &mut Ui,
+    id: Id,
+    item: &MenuItem<'_, T>,
+    marks: &[Range<usize>],
+    state: RowState,
+) -> Response {
     let theme = Theme::from_context(ui.ctx());
     let p = theme.palette;
     let width = ui.available_width().max(0.0);
@@ -49,11 +61,14 @@ pub(crate) fn row<T>(ui: &mut Ui, id: Id, item: &MenuItem<'_, T>, state: RowStat
     let text_width = (content - icon_width - hint_width).max(0.0);
     let job = Text::new(item.label.as_ref())
         .size(TextSize::Sm)
-        .weight(if state.selected {
+        // While a search marks its matches in bold, the fill alone shows
+        // the selected row.
+        .weight(if state.selected && marks.is_empty() {
             Weight::Bold
         } else {
             Weight::Regular
         })
+        .highlight(marks)
         .layout_job(&theme, text_width);
     let galley = ui.fonts_mut(|fonts| fonts.layout_job(job));
     let height = geometry::ROW_HEIGHT.max(galley.size().y + geometry::PADDING_Y * 2.0);

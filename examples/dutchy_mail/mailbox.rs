@@ -1,8 +1,8 @@
 //! The in-memory mailbox the application owns: folders, messages and the
 //! moves that archive, delete and restore them.
 
-use dutchy_egui::calendar::Date;
-use std::collections::HashMap;
+use dutchy_egui::{FuzzyMatch, calendar::Date, fuzzy_match};
+use std::{cmp::Reverse, collections::HashMap, ops::Range};
 
 /// Stable folder identity.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -41,6 +41,41 @@ pub struct Message {
     /// Minutes after midnight, for ordering within a day.
     pub minute: u16,
     pub unread: bool,
+}
+
+/// A message in a search result, with the byte ranges of its sender and
+/// subject that the query matched.
+pub struct Found<'a> {
+    pub message: &'a Message,
+    pub from: Vec<Range<usize>>,
+    pub subject: Vec<Range<usize>>,
+    /// One score per query word.
+    scores: Vec<i32>,
+}
+
+/// Match each word against the sender and the subject and keep the better
+/// field, so "mara build" finds Mara's mail about the build.
+fn find<'a>(message: &'a Message, words: &[&str]) -> Option<Found<'a>> {
+    let (mut from, mut subject) = (FuzzyMatch::default(), FuzzyMatch::default());
+    let mut scores = Vec::with_capacity(words.len());
+    for word in words {
+        let in_from = fuzzy_match(word, &message.from);
+        let in_subject = fuzzy_match(word, &message.subject);
+        let (field, found) = match (in_from, in_subject) {
+            (Some(f), Some(s)) if s.score > f.score => (&mut subject, s),
+            (Some(f), _) => (&mut from, f),
+            (None, Some(s)) => (&mut subject, s),
+            (None, None) => return None,
+        };
+        scores.push(found.score);
+        field.merge(found);
+    }
+    Some(Found {
+        message,
+        from: from.ranges,
+        subject: subject.ranges,
+        scores,
+    })
 }
 
 /// A move and the per-message state Undo can restore.
@@ -108,22 +143,38 @@ impl Mailbox {
         self.messages.iter().filter(|m| m.folder == folder).count()
     }
 
-    /// Messages of one folder, newest first, whose sender or subject contains
-    /// every word of `query`, ignoring case. Plain substring matching keeps
-    /// the sketch honest until a fuzzy scorer exists.
-    pub fn view(&self, folder: FolderId, query: &str) -> Vec<&Message> {
-        let words: Vec<String> = query.split_whitespace().map(str::to_lowercase).collect();
-        let mut view: Vec<&Message> = self
+    /// Messages of one folder whose sender or subject fuzzy-matches every
+    /// word of `query`. A blank query lists the folder newest first. Otherwise
+    /// the best matches lead, newest first among equals, and a message is
+    /// dropped when one of its words scores under three quarters of that
+    /// word's best score in the folder: loose matches are noise in a long list.
+    pub fn search(&self, folder: FolderId, query: &str) -> Vec<Found<'_>> {
+        let words: Vec<&str> = query.split_whitespace().collect();
+        let mut found: Vec<Found<'_>> = self
             .messages
             .iter()
             .filter(|m| m.folder == folder)
-            .filter(|m| {
-                let haystack = format!("{} {}", m.from, m.subject).to_lowercase();
-                words.iter().all(|word| haystack.contains(word))
-            })
+            .filter_map(|m| find(m, &words))
             .collect();
-        view.sort_by_key(|m| std::cmp::Reverse((m.date, m.minute, m.id)));
-        view
+        let best: Vec<i32> = (0..words.len())
+            .map(|word| found.iter().map(|f| f.scores[word]).max().unwrap_or(0))
+            .collect();
+        found.retain(|f| {
+            let mut scores = f.scores.iter().zip(&best);
+            scores.all(|(score, best)| score * 4 >= best * 3)
+        });
+        found.sort_by_key(|f| {
+            let m = f.message;
+            let score: i32 = f.scores.iter().sum();
+            (Reverse(score), Reverse((m.date, m.minute, m.id)))
+        });
+        found
+    }
+
+    /// The messages of [`search`](Self::search), without their matches.
+    pub fn view(&self, folder: FolderId, query: &str) -> Vec<&Message> {
+        let found = self.search(folder, query);
+        found.into_iter().map(|f| f.message).collect()
     }
 
     pub fn set_unread(&mut self, id: MessageId, unread: bool) {
@@ -212,6 +263,33 @@ mod tests {
         assert_eq!(ids("garden"), [1]);
         assert_eq!(ids("MARA build"), [2]);
         assert!(ids("garden build").is_empty());
+        assert_eq!(ids("grdn"), [1]);
+    }
+
+    #[test]
+    fn search_ranks_the_best_match_and_drops_loose_ones() {
+        let mailbox = Mailbox::new(
+            vec![],
+            vec![
+                message(1, INBOX, "Invoice for the shelving", 10),
+                message(2, INBOX, "Reading group: invoices", 20),
+                message(3, INBOX, "Bike repair estimate, new valve", 30),
+                message(4, INBOX, "Garden club minutes", 40),
+            ],
+        );
+        let ids = |query| -> Vec<u64> {
+            let found = mailbox.search(INBOX, query);
+            found.iter().map(|f| f.message.id.0).collect()
+        };
+        // Both start a word with the query; the subject that opens with it
+        // leads although it is older. "Bike ... new valve" only scatters it.
+        assert_eq!(ids("inv"), [1, 2]);
+        // A loose word is not rescued by a strong one.
+        assert_eq!(ids("mara inv"), [1, 2]);
+        let found = mailbox.search(INBOX, "inv mara");
+        assert_eq!(found[0].subject, std::slice::from_ref(&(0..3)));
+        assert_eq!(found[0].from, std::slice::from_ref(&(0..4)));
+        assert_eq!(mailbox.search(INBOX, "").len(), 4);
     }
 
     #[test]

@@ -2,15 +2,29 @@
 
 use dutchy_egui::{Text, TextColor, TextSize, Theme, Weight, calendar::Date};
 use egui::{Label, Ui};
+use std::ops::Range;
 
 /// One elided, non-selectable line that leaves clicks to its row.
 pub fn line(ui: &mut Ui, text: &str, size: TextSize, bold: bool, color: TextColor) {
+    marked_line(ui, text, &[], size, bold, color);
+}
+
+/// A [`line`] that emphasizes `marks`, the byte ranges a search matched.
+pub fn marked_line(
+    ui: &mut Ui,
+    text: &str,
+    marks: &[Range<usize>],
+    size: TextSize,
+    bold: bool,
+    color: TextColor,
+) {
     let theme = Theme::from_context(ui.ctx());
     let weight = if bold { Weight::Bold } else { Weight::Regular };
     let mut job = Text::new(text)
         .size(size)
         .weight(weight)
         .color(color)
+        .highlight(marks)
         .layout_job(&theme, ui.available_width().max(0.0));
     job.wrap.max_rows = 1;
     job.wrap.break_anywhere = true;

@@ -95,13 +95,13 @@ also the recorder's accessible name.
 ## Nested discovery
 
 CommandPalette recursively searches submenu leaves. Breadcrumb group
-headings retain ancestor context, and every query word must occur in the
-combined path/label. Disabled ancestors disable descendants; empty branches
+headings retain ancestor context, and every query word must match the label
+or the path. Disabled ancestors disable descendants; empty branches
 produce no commands and branch identity values never execute. Full keyed
 paths distinguish equal leaf keys in separate branches. Renaming a branch
 changes its display path without changing leaf identity. Flat items retain
-existing identity, and SearchableSelect retains its existing filtering behavior.
-This is case-insensitive substring-word matching, not fuzzy scoring.
+existing identity. Matching is [fuzzy](fuzzy-search.md): results are ranked
+best first and matched glyphs are bold.
 
 The palette's default opening shortcut remains available. When a registry owns
 opening/closing, use `.shortcut(None)` to give it sole ownership. MenuItem

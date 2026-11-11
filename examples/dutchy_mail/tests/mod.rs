@@ -69,3 +69,19 @@ fn chord(h: &mut Harness<'_, App>, modifiers: Modifiers, key: Key) {
     h.key_press_modifiers(modifiers, key);
     h.run();
 }
+
+/// Every text galley painted in a frame, including nested shape groups.
+fn galleys(shapes: &[egui::epaint::ClippedShape]) -> Vec<&egui::Galley> {
+    fn collect<'a>(shape: &'a egui::Shape, out: &mut Vec<&'a egui::Galley>) {
+        match shape {
+            egui::Shape::Text(text) => out.push(&text.galley),
+            egui::Shape::Vec(shapes) => shapes.iter().for_each(|shape| collect(shape, out)),
+            _ => {}
+        }
+    }
+    let mut out = Vec::new();
+    for clipped in shapes {
+        collect(&clipped.shape, &mut out);
+    }
+    out
+}

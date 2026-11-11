@@ -8,6 +8,7 @@ pub use egui;
 pub mod calendar;
 pub mod commands;
 pub mod fonts;
+pub mod fuzzy;
 pub mod icons;
 #[cfg(feature = "url-images")]
 pub mod image_loaders;
@@ -21,6 +22,7 @@ pub mod validation;
 pub mod widgets;
 
 pub use commands::{Command, CommandRegistry, CommandRequest, CommandScope, ShortcutConflict};
+pub use fuzzy::{FuzzyMatch, fuzzy_match};
 pub use icons::{Icon, IconPainter};
 pub use layout::{
     Container, CrossAlign, Flex, FlexDirection, ResponsiveGrid, SplitPane, SplitPaneResponse,

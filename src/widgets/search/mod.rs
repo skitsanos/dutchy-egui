@@ -1,4 +1,5 @@
 mod keys;
+mod rank;
 mod results;
 pub(crate) mod tree;
 

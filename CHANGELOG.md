@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Add `fuzzy_match`, a repository-owned fuzzy scorer that returns a score and
+  matched ranges, and `Text::highlight` to draw those ranges in bold (DS-124).
+- Behavior: CommandPalette and SearchableSelect match abbreviations, list the
+  best match first and mark matched glyphs. They used to filter substrings in
+  host order; a blank query still lists the host order (DS-124).
+- DutchyMail search ranks fuzzy matches on sender and subject and marks them.
+
 ## 1.8.0 — 2026-11-11
 
 - Add TagInput with keyed Chips, keyboard entry and removal, and a Showcase

@@ -2,7 +2,7 @@
 
 use crate::{
     commands::{Action, Commands, Request},
-    mailbox::{FolderId, Mailbox, Message, MessageId},
+    mailbox::{FolderId, Found, Mailbox, MessageId},
     text,
 };
 use dutchy_egui::{
@@ -55,7 +55,7 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &mut Commands) -> Vec<Request
                 search.request_focus();
             }
             ui.add_space(space::MD);
-            let view = mailbox.view(folder, query);
+            let view = mailbox.search(folder, query);
             if view.is_empty() {
                 // The empty state replaces List, so it must clear the row state.
                 *list = ListState::default();
@@ -65,6 +65,7 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &mut Commands) -> Vec<Request
             }
             let items: Vec<ListItem<'_, MessageId>> = view
                 .iter()
+                .map(|f| f.message)
                 .map(|m| ListItem::new(m.id, format!("{}, {}", m.from, m.subject)))
                 .collect();
             let rows = List::new(("messages", folder.0), list, &items)
@@ -72,7 +73,7 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &mut Commands) -> Vec<Request
                 .selection_mode(ListSelectionMode::Multiple)
                 .row_height(ROW_HEIGHT)
                 .max_height(ui.available_height())
-                .show_with(ui, |ui, _, row| message_row(ui, view[row.index], today));
+                .show_with(ui, |ui, _, row| message_row(ui, &view[row.index], today));
             intents.extend(
                 commands
                     .context
@@ -82,8 +83,10 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &mut Commands) -> Vec<Request
     intents
 }
 
-/// Avatar, then sender and date over the subject. Unread mail is bold.
-fn message_row(ui: &mut Ui, message: &Message, today: Date) {
+/// Avatar, then sender and date over the subject. Unread mail is bold, and
+/// so are the glyphs the search matched.
+fn message_row(ui: &mut Ui, found: &Found<'_>, today: Date) {
+    let message = found.message;
     ui.add(Avatar::new(message.from.as_str()).size(AvatarSize::Medium));
     ui.add_space(space::SM);
     ui.vertical(|ui| {
@@ -98,9 +101,10 @@ fn message_row(ui: &mut Ui, message: &Message, today: Date) {
             let date = text::date(message.date, today);
             text::line(ui, &date, TextSize::Xs, false, TextColor::Muted);
             ui.with_layout(Layout::left_to_right(Align::Center), |ui| {
-                text::line(
+                text::marked_line(
                     ui,
                     &message.from,
+                    &found.from,
                     TextSize::Sm,
                     message.unread,
                     TextColor::Foreground,
@@ -112,7 +116,14 @@ fn message_row(ui: &mut Ui, message: &Message, today: Date) {
         } else {
             TextColor::Muted
         };
-        text::line(ui, &message.subject, TextSize::Sm, false, color);
+        text::marked_line(
+            ui,
+            &message.subject,
+            &found.subject,
+            TextSize::Sm,
+            false,
+            color,
+        );
     });
 }
 
