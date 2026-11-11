@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.4.2 — 2026-11-11
 
 - Add DutchyMail's MenuBar and message context menus, sharing a command
   registry with the Toolbar and shortcuts (DS-118).
