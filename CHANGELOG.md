@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.4.3 — 2026-11-11
 
 - Add an optional bundled Phosphor icon subset for DutchyMail's Toolbar
   with the existing icons as fallback. Use an icon button for Archive
