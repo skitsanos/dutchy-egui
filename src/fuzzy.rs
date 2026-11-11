@@ -62,7 +62,8 @@ pub fn fuzzy_match(query: &str, text: &str) -> Option<FuzzyMatch> {
         }
         let hay = hay.get_or_insert_with(|| glyphs(text));
         let (score, positions) = align(&needle, hay)?;
-        found.score += score;
+        // Keep the weakest match positive so callers can discount or compare it by ratio.
+        found.score += score.max(1);
         found
             .ranges
             .extend(positions.into_iter().map(|at| hay[at].bytes.clone()));

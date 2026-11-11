@@ -267,6 +267,15 @@ mod tests {
     }
 
     #[test]
+    fn search_keeps_the_best_match_even_with_a_long_gap() {
+        let subject = format!("a{}b", "x".repeat(240));
+        let mailbox = Mailbox::new(vec![], vec![message(1, INBOX, &subject, 10)]);
+        let matches = mailbox.search(INBOX, "ab");
+        assert_eq!(matches.len(), 1);
+        assert_eq!(matches[0].message.id, MessageId(1));
+    }
+
+    #[test]
     fn search_ranks_the_best_match_and_drops_loose_ones() {
         let mailbox = Mailbox::new(
             vec![],

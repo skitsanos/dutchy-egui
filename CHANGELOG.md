@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.9.0 — 2026-11-11
 
 - Add `fuzzy_match`, a repository-owned fuzzy scorer that returns a score and
   matched ranges, and `Text::highlight` to draw those ranges in bold (DS-124).
@@ -11,6 +11,7 @@
 - Dim and block the whole window behind a Modal. The backdrop stopped 16
   points short of every window edge, and clicks in that band reached the
   host (DS-125).
+- Check Ubuntu mirror DNS before package setup and limit APT retries and timeouts.
 
 ## 1.8.0 — 2026-11-11
 

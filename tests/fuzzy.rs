@@ -67,6 +67,14 @@ fn earlier_matches_rank_higher() {
 }
 
 #[test]
+fn loose_matches_have_a_positive_score() {
+    let text = format!("a{}b", "x".repeat(240));
+    assert!(score("ab", &text) > 0);
+    assert!(score("ab", &text) < score("ab", "ab"));
+    assert_eq!(ranges("ab", &text), [(0, 1), (241, 242)]);
+}
+
+#[test]
 fn every_word_must_match_in_any_order() {
     assert_eq!(ranges("file open", "Open File"), [(0, 4), (5, 9)]);
     assert!(fuzzy_match("open zip", "Open File").is_none());

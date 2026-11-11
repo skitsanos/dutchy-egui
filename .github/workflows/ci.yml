@@ -27,10 +27,31 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Native libraries and software Vulkan
+      - name: Check Ubuntu mirror DNS
+        timeout-minutes: 1
         run: |
-          sudo apt-get update
-          sudo apt-get install -y pkg-config libwayland-dev libxkbcommon-dev libegl1-mesa-dev libx11-dev libxrandr-dev libxi-dev libxcursor-dev libxinerama-dev mesa-vulkan-drivers
+          # The hosted runner's APT mirror list can fall back between these hosts.
+          for attempt in 1 2; do
+            for mirror in azure.archive.ubuntu.com archive.ubuntu.com security.ubuntu.com; do
+              if timeout --kill-after=1s 3s getent ahosts "$mirror" >/dev/null; then
+                echo "Resolved Ubuntu mirror $mirror"
+                exit 0
+              fi
+              echo "DNS attempt $attempt failed for $mirror"
+            done
+            if [ "$attempt" -eq 1 ]; then
+              sleep 2
+            fi
+          done
+          echo '::error::Ubuntu mirror DNS failed for all configured fallback hosts'
+          exit 1
+      - name: Native libraries and software Vulkan
+        timeout-minutes: 3
+        shell: bash
+        run: |
+          apt_options=(-o Acquire::Retries=1 -o Acquire::http::Timeout=10 -o Acquire::https::Timeout=10)
+          sudo apt-get "${apt_options[@]}" --error-on=any update
+          sudo apt-get "${apt_options[@]}" install -y pkg-config libwayland-dev libxkbcommon-dev libegl1-mesa-dev libx11-dev libxrandr-dev libxi-dev libxcursor-dev libxinerama-dev mesa-vulkan-drivers
           mkdir -p "$RUNNER_TEMP/xdg-runtime"
           chmod 700 "$RUNNER_TEMP/xdg-runtime"
           echo "XDG_RUNTIME_DIR=$RUNNER_TEMP/xdg-runtime" >> "$GITHUB_ENV"

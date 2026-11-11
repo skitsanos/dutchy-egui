@@ -40,8 +40,9 @@ each word, not the first one, and rewards:
   finds the F and B of "FooBar" and "fil" prefers "Open File" to "Profile";
 - matches near the beginning of the text.
 
-Skipped characters between matches cost a little. Compare scores only for one
-query; the scale may change between releases.
+Skipped characters between matches lower the score. Each matched word scores
+at least one point. Compare scores only within one query because the scale may
+change between releases.
 
 ## Highlighting
 
@@ -58,7 +59,7 @@ found only in the group, such as a submenu path in the palette, still matches
 at half its score. With a query, groups follow their best result and results
 follow their score; host separators are left out because they describe the
 host order. A blank query lists the host order unchanged. Enter activates the
-first enabled result, which is now the best match. While a query marks
+first enabled result in the displayed order. While a query marks
 matches, the selected option keeps its fill but not its bold label.
 
 ## Several fields and long lists
