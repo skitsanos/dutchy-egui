@@ -1,6 +1,6 @@
 [package]
 name = "dutchy-egui"
-version = "1.4.3"
+version = "1.5.0"
 edition = "2024"
 rust-version = "1.95"
 description = "Dutchy Design System for egui: sharp geometry, warm colors, and bold typography"

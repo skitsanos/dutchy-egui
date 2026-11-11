@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.5.0 — 2026-11-11
 
 - Add PathInput with typed file, folder and save requests and host-owned
   browsing. Showcase demonstrates all three modes with native dialogs (DS-120).
