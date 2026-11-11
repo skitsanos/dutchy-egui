@@ -153,8 +153,12 @@ fn example_progress_and_content_transitions_remain_application_controlled() {
     h.get_by_label("Reset progress").click();
     h.run();
     assert_eq!(h.state().loading.value, 0.0);
-    h.get_by_label("Skeletons").click();
+    h.get_by_role_and_label(egui::accesskit::Role::ListBoxOption, "Progress")
+        .focus();
     h.run();
+    h.event(egui::Event::Text("skeletons".into()));
+    h.run_steps(3);
+    assert_eq!(h.state().page, gallery::Page::Skeletons);
     assert!(h.query_by_label("Loading workspace").is_some());
     let before = h.get_by_label("02 / Shape primitives").rect();
     h.get_by_label("Show loaded content").click();

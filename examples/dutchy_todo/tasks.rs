@@ -13,7 +13,7 @@ use dutchy_egui::{
     Segmented, SplitButton, Stat, StatsGrid, StatsLayout, Text, TextColor, TextSize,
     tokens::{ControlSize, ProgressSize, border, control, space},
 };
-use egui::{Ui, accesskit::Role};
+use egui::{Id, Rect, Ui, accesskit::Role};
 
 /// Draw the central panel.
 pub fn show(ui: &mut Ui, app: &mut App) {
@@ -203,10 +203,14 @@ fn rows(ui: &mut Ui, app: &mut App, tasks: &[Task], project: ProjectId) {
         egui::UiBuilder::new().id_salt(("task-list", project.0)),
         |ui| {
             ui.spacing_mut().item_spacing.y = 0.0;
-            for task in tasks {
+            let mut focused = None;
+            for (index, task) in tasks.iter().enumerate() {
                 let outcome = row::show(ui, task, today);
                 if app.claim_focus(Focus::Row(task.id)) || outcome.response.clicked() {
                     row::focus(ui.ctx(), task.id);
+                }
+                if let Some(id) = outcome.focused_control() {
+                    focused = Some(((id, index), outcome.response.rect));
                 }
                 if let Some(done) = outcome.done {
                     app.set_task_done(task.id, done);
@@ -215,6 +219,7 @@ fn rows(ui: &mut Ui, app: &mut App, tasks: &[Task], project: ProjectId) {
                     app.edit_task(task.id, Some(outcome.response.id));
                 }
             }
+            reveal_focused_row(ui, focused);
         },
     );
     result
@@ -224,6 +229,28 @@ fn rows(ui: &mut Ui, app: &mut App, tasks: &[Task], project: ProjectId) {
             node.set_role(Role::List);
             node.set_label("Tasks");
         });
+}
+
+/// Reveal new focus or a reordered row. Ordinary scrolling leaves the focused
+/// row in place even when it moves out of the viewport.
+fn reveal_focused_row(ui: &Ui, focused: Option<((Id, usize), Rect)>) {
+    let id = ui.make_persistent_id("focused-row");
+    let current = focused.map(|(key, _)| key);
+    let previous = ui.data_mut(|data| {
+        let previous = data.get_temp::<(Id, usize)>(id);
+        if let Some(current) = current {
+            data.insert_temp(id, current);
+        } else {
+            data.remove::<(Id, usize)>(id);
+        }
+        previous
+    });
+    if let Some((key, rect)) = focused
+        && previous != Some(key)
+        && !ui.clip_rect().contains_rect(rect)
+    {
+        ui.scroll_to_rect_animation(rect, None, egui::style::ScrollAnimation::none());
+    }
 }
 
 fn empty(ui: &mut Ui, app: &mut App) {

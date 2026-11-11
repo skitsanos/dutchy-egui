@@ -153,10 +153,12 @@ fn workspace_example_preserves_focus_on_reflow_and_saves_host_state() {
     h.run_steps(2);
     assert_eq!(h.state().layout.saves, 1);
     assert!(h.query_by_role_and_label(Role::Status, "Success").is_some());
-    h.get_by_label("Tooltips").scroll_to_me();
-    h.run_steps(3);
-    h.get_by_label("Tooltips").click();
+    h.get_by_role_and_label(Role::ListBoxOption, "Layout")
+        .focus();
     h.run();
+    h.event(egui::Event::Text("toolti".into()));
+    h.run_steps(3);
+    assert_eq!(h.state().page, gallery::Page::Tooltips);
     h.get_by_label("Above").focus();
     h.run_steps(2);
     assert!(h.query_by_role(Role::Tooltip).is_some());

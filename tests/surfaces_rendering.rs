@@ -147,7 +147,8 @@ fn example_card_and_alert_actions_update_only_host_owned_state() {
     h.key_press(egui::Key::Enter);
     h.run();
     assert_eq!(h.state().surfaces.opens, 1);
-    h.get_by_label("Alerts").click();
+    h.get_by_role_and_label(egui::accesskit::Role::ListBoxOption, "Alerts")
+        .click();
     h.run();
     h.get_by_label("Retry connection").click();
     h.run();

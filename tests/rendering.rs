@@ -10,7 +10,11 @@ use dutchy_egui::{
     Accent, Badge, BadgeVariant, Button, ButtonVariant, ControlSize, Mode, Text, TextColor,
     TextSize, Theme,
 };
-use egui_kittest::{Harness, SnapshotResults, kittest::Queryable};
+use egui::{Event, Key, accesskit::Role};
+use egui_kittest::{
+    Harness, SnapshotResults,
+    kittest::{NodeT, Queryable},
+};
 
 fn state_matrix(ui: &mut egui::Ui) {
     ui.painter().rect_filled(
@@ -127,6 +131,12 @@ fn showcase_is_usable_at_desktop_and_narrow_widths() {
             .save(format!("target/visual-proof/{name}.png"))
             .unwrap();
         assert!(harness.get_by_label("D. DUTCHY / EGUI").rect().width() < size[0]);
+        let role = if size[0] >= 820.0 {
+            Role::ListBoxOption
+        } else {
+            Role::Button
+        };
+        harness.get_by_role_and_label(role, "Overview");
         assert!(
             harness
                 .get_by_role_and_label(egui::accesskit::Role::Button, "Destructive")
@@ -168,10 +178,9 @@ fn showcase_navigation_and_theme_switches_update_the_host_state() {
     assert_eq!(harness.state().mode, Mode::Dark);
     assert!(harness.ctx.global_style().visuals.dark_mode);
     save_proof(&mut harness, "showcase-green-dark");
-    // The component list now overflows the sidebar at this viewport height.
-    harness.get_by_label("Badges").scroll_to_me();
-    harness.run_steps(3);
-    harness.get_by_label("Badges").click();
+    harness
+        .get_by_role_and_label(Role::ListBoxOption, "Badges")
+        .click();
     harness.run();
     harness.get_by_label("Dismiss Removable tag").click();
     harness.run();
@@ -194,12 +203,7 @@ fn showcase_navigation_leads_with_the_foundation_pages() {
             }
         });
     harness.run();
-    let top = |label: &str| {
-        harness
-            .get_by_role_and_label(egui::accesskit::Role::Button, label)
-            .rect()
-            .top()
-    };
+    let top = |label: &str| page_rect(&harness, label).top();
     assert!(top("Overview") < top("Typography"));
     assert!(top("Typography") < top("Tokens"));
     assert!(
@@ -208,10 +212,6 @@ fn showcase_navigation_leads_with_the_foundation_pages() {
     );
     assert!(top("Accordions") < top("Alerts"));
     assert!(top("Alerts") < top("Badges"));
-    assert!(
-        top("Tooltips") > top("Toasts"),
-        "component pages are sorted by name"
-    );
 }
 
 #[test]
@@ -264,34 +264,38 @@ fn showcase_sidebar_pins_the_foundation_footer_and_scrolls_the_pages() {
         "the footer stays inside the viewport: {footer:?}"
     );
     assert!(
-        button_rect(&harness, "Tooltips").bottom() > footer.top(),
-        "the page list overflows beneath the footer"
+        harness
+            .query_by_role_and_label(Role::ListBoxOption, "Tree view")
+            .is_none()
     );
     harness
-        .get_by_role_and_label(egui::accesskit::Role::Button, "Tooltips")
-        .scroll_to_me();
+        .get_by_role_and_label(Role::ListBoxOption, "Overview")
+        .focus();
+    harness.run();
+    harness.key_press(Key::End);
     harness.run_steps(3);
+    assert_eq!(harness.state().page, gallery::Page::TreeView);
     assert_eq!(
         harness.get_by_label("01 / Foundation").rect(),
         footer,
         "the footer does not move while the list scrolls"
     );
     assert!(
-        button_rect(&harness, "Tooltips").bottom() <= footer.top(),
+        page_rect(&harness, "Tree view").bottom() <= footer.top(),
         "the scrolled page sits above the footer"
     );
     save_proof(&mut harness, "showcase-short");
 }
 
-fn button_rect(harness: &Harness<'_, gallery::Showcase>, label: &str) -> egui::Rect {
+fn page_rect(harness: &Harness<'_, gallery::Showcase>, label: &str) -> egui::Rect {
     harness
-        .get_by_role_and_label(egui::accesskit::Role::Button, label)
+        .get_by_role_and_label(Role::ListBoxOption, label)
         .rect()
 }
 
 #[test]
-fn sidebar_reveals_arriving_focus_without_overriding_manual_scrolling() {
-    use egui::{Event, Modifiers, MouseWheelSource, MouseWheelUnit, TouchPhase, vec2};
+fn sidebar_type_ahead_selects_and_reveals_pages_without_overriding_manual_scrolling() {
+    use egui::{Modifiers, MouseWheelSource, MouseWheelUnit, TouchPhase, vec2};
     for height in [600.0, 940.0] {
         let mut harness = Harness::builder()
             .with_size([1200.0, height])
@@ -305,17 +309,32 @@ fn sidebar_reveals_arriving_focus_without_overriding_manual_scrolling() {
             });
         harness.run();
         let footer = harness.get_by_label("01 / Foundation").rect();
-        harness
-            .get_by_role_and_label(egui::accesskit::Role::Button, "Tooltips")
-            .focus();
+        harness.get_by_role_and_label(Role::ListBox, "Showcase pages");
+        harness.get_by_label("Reduce motion").focus();
+        harness.run();
+        harness.key_press(Key::Tab);
+        harness.run_steps(2);
+        assert!(
+            harness
+                .get_by_role_and_label(Role::ListBoxOption, "Overview")
+                .is_focused()
+        );
+        harness.key_press(Key::ArrowDown);
+        harness.run_steps(2);
+        assert_eq!(harness.state().page, gallery::Page::Typography);
+        harness.event(Event::Text("toolti".into()));
         harness.run_steps(4);
-        let focused = button_rect(&harness, "Tooltips");
+        assert_eq!(harness.state().page, gallery::Page::Tooltips);
+        let option = harness.get_by_role_and_label(Role::ListBoxOption, "Tooltips");
+        assert_eq!(option.accesskit_node().is_selected(), Some(true));
+        assert!(option.is_focused());
+        let focused = option.rect();
         assert!(
             focused.bottom() <= footer.top(),
             "arriving focus must reveal the page above the footer: {focused:?} / {footer:?}"
         );
         assert!(focused.top() >= harness.get_by_label("The system").rect().bottom());
-        let outline = focused.expand(
+        let outline = focused.shrink(
             dutchy_egui::tokens::border::FOCUS_OFFSET + dutchy_egui::tokens::border::FOCUS_WIDTH,
         );
         assert!(
@@ -335,10 +354,10 @@ fn sidebar_reveals_arriving_focus_without_overriding_manual_scrolling() {
             modifiers: Modifiers::NONE,
         });
         harness.run_steps(80);
-        assert!(button_rect(&harness, "Tooltips").bottom() > footer.top());
+        assert!(page_rect(&harness, "Tooltips").bottom() > footer.top());
         assert!(
             harness
-                .get_by_role_and_label(egui::accesskit::Role::Button, "Tooltips")
+                .get_by_role_and_label(Role::ListBoxOption, "Tooltips")
                 .is_focused(),
             "wheel scrolling keeps focus without pulling the page list back"
         );

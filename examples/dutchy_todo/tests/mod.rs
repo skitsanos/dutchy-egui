@@ -6,6 +6,7 @@ mod format;
 mod imports;
 mod keyboard;
 mod rendering;
+mod row_scroll;
 mod store;
 
 use crate::app::App;

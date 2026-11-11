@@ -21,6 +21,7 @@ mod pages;
 mod people;
 mod primitives;
 mod renaming;
+mod sidebar;
 pub(crate) mod sketch;
 mod splits;
 mod status;
@@ -39,7 +40,8 @@ pub use surfaces::SurfacesState;
 
 use dutchy_egui::tokens::{border, space};
 use dutchy_egui::{
-    Accent, Button, ButtonVariant, ControlSize, Flex, Mode, Text, TextColor, TextSize, Theme,
+    Accent, Button, ButtonVariant, ControlSize, Flex, ListState, Mode, Text, TextColor, TextSize,
+    Theme,
 };
 use egui::{Frame, Margin, Stroke, Ui};
 
@@ -50,6 +52,7 @@ pub struct Showcase {
     pub mode: Mode,
     pub reduced_motion: bool,
     pub page: Page,
+    pub sidebar_list: ListState<Page>,
     pub clicks: u32,
     pub badge_visible: bool,
     pub native_text: String,
@@ -92,6 +95,7 @@ impl Default for Showcase {
             mode: Mode::Light,
             reduced_motion: false,
             page: Page::Overview,
+            sidebar_list: ListState::default(),
             clicks: 0,
             badge_visible: true,
             native_text: "Native egui, Dutchy style".into(),
@@ -147,13 +151,13 @@ impl Showcase {
         self.header(ui);
         let wide = ui.available_width() >= 820.0;
         if wide {
-            self.sidebar(ui);
+            sidebar::show(ui, self.theme(), &mut self.page, &mut self.sidebar_list);
         }
         egui::CentralPanel::default()
             .frame(frame(self.theme(), 24))
             .show(ui, |ui| {
                 if !wide {
-                    ui.horizontal_wrapped(|ui| self.navigation(ui, false));
+                    ui.horizontal_wrapped(|ui| self.narrow_navigation(ui));
                     ui.add_space(space::LG);
                 }
                 // Each page keeps its own offset, so a newly opened page starts at the top.
@@ -281,69 +285,25 @@ impl Showcase {
         }
     }
 
-    fn sidebar(&mut self, ui: &mut Ui) {
-        egui::Panel::left("showcase-navigation")
-            .exact_size(208.0)
-            .resizable(false)
-            .frame(frame(self.theme(), 16))
-            .show(ui, |ui| {
-                ui.with_layout(egui::Layout::bottom_up(egui::Align::Min), |ui| {
-                    foundation(ui);
-                    ui.with_layout(egui::Layout::top_down(egui::Align::Min), |ui| {
-                        ui.add(Text::label("The system").color(TextColor::Primary));
-                        ui.add_space(space::LG);
-                        egui::ScrollArea::vertical()
-                            .id_salt("navigation-scroll")
-                            .show(ui, |ui| {
-                                let focus_inset = border::FOCUS_OFFSET + border::FOCUS_WIDTH;
-                                ui.add_space(focus_inset);
-                                self.navigation(ui, true);
-                                ui.add_space(focus_inset);
-                            });
-                    });
-                });
-            });
-    }
-
-    fn navigation(&mut self, ui: &mut Ui, full_width: bool) {
+    fn narrow_navigation(&mut self, ui: &mut Ui) {
         for page in Page::all() {
-            if full_width && page == Page::COMPONENTS[0] {
-                ui.add_space(space::MD);
-            }
             let variant = if page == self.page {
                 ButtonVariant::Secondary
             } else {
                 ButtonVariant::Ghost
             };
-            let response = ui.add(
-                Button::new(page.name())
-                    .variant(variant)
-                    .size(ControlSize::Small)
-                    .full_width(full_width),
-            );
-            let outline = response
-                .rect
-                .expand(border::FOCUS_OFFSET + border::FOCUS_WIDTH);
-            if full_width && response.gained_focus() && !ui.clip_rect().contains_rect(outline) {
-                ui.scroll_to_rect_animation(outline, None, egui::style::ScrollAnimation::none());
-            }
-            if response.clicked() {
+            if ui
+                .add(
+                    Button::new(page.name())
+                        .variant(variant)
+                        .size(ControlSize::Small),
+                )
+                .clicked()
+            {
                 self.page = page;
             }
         }
     }
-}
-
-/// The sidebar footer, pinned under the scrolling page list. Laid out bottom-up:
-/// tagline, label, then a divider the list scrolls beneath.
-fn foundation(ui: &mut Ui) {
-    ui.add(Text::new("Zero radius.\nFlat color.\nBold typography.").color(TextColor::Muted));
-    ui.add(Text::label("01 / Foundation"));
-    ui.add_space(space::LG);
-    let (_, rect) = ui.allocate_space(egui::vec2(ui.available_width(), border::THIN));
-    ui.painter()
-        .rect_filled(rect, 0, Theme::from_context(ui.ctx()).palette.border);
-    ui.add_space(space::LG);
 }
 
 fn frame(theme: Theme, inset: i8) -> Frame {

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Use a single-select List for Showcase desktop navigation and reveal the
+  focused DutchyTodo task when keyboard navigation or sorting moves it (DS-115).
+
 ## 1.4.0 — 2026-11-10
 
 - Add InlineEdit with host-owned drafts, explicit rename requests and cancellation,

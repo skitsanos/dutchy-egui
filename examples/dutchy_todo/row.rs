@@ -8,7 +8,7 @@ use crate::store::{Priority, Task, TaskId};
 use dutchy_egui::{
     Badge, BadgeVariant, Checkbox, Theme,
     calendar::Date,
-    interaction::paint_focus,
+    interaction::paint_focus_inside,
     tokens::{border, space},
 };
 use egui::{
@@ -34,10 +34,22 @@ pub enum RowAction {
 pub struct Outcome {
     /// The row surface.
     pub response: Response,
+    /// The independent completion control.
+    pub checkbox: Response,
     /// Checkbox changed to this value.
     pub done: Option<bool>,
     /// Double-click asked for the editor.
     pub edit: bool,
+}
+
+impl Outcome {
+    /// The focused control in the row, if any.
+    pub fn focused_control(&self) -> Option<Id> {
+        [&self.response, &self.checkbox]
+            .into_iter()
+            .find(|response| response.has_focus())
+            .map(|response| response.id)
+    }
 }
 
 /// Stable egui id of a row, independent of layout.
@@ -129,6 +141,7 @@ pub fn show(ui: &mut Ui, task: &Task, today: Date) -> Outcome {
         UiBuilder::new()
             .id_salt(("row", task.id.0))
             .max_rect(inner)
+            .accessibility_parent(response.id)
             .layout(egui::Layout::right_to_left(egui::Align::Center)),
     );
     child.spacing_mut().item_spacing.x = space::SM;
@@ -144,10 +157,11 @@ pub fn show(ui: &mut Ui, task: &Task, today: Date) -> Outcome {
             task.title.as_str(),
         ))
     });
-    paint_focus(ui, &response, p.primary);
+    paint_focus_inside(ui, &response, p.primary);
     Outcome {
         edit: response.double_clicked(),
         done: checkbox.inner.changed().then_some(done),
+        checkbox: checkbox.inner,
         response,
     }
 }

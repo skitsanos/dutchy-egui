@@ -88,3 +88,6 @@ edits and activation; stale keys are still normalized.
 
 The showcase's **Lists** page demonstrates 10,000 generated projects, mode
 switching, passive badges, host removal/reorder and activation requests.
+The Showcase desktop sidebar uses a single-select List for page navigation.
+Arrow keys and type-ahead select and reveal a page while focus stays in the
+sidebar. At narrow widths, Showcase uses wrapped navigation buttons.

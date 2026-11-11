@@ -59,7 +59,9 @@ The smallest complete application and the tutorial companion to
 - **Limits.** No synchronisation, recurring tasks, reminders or notifications.
 - **As built** ([DS-077](issues/DS-077.md)). Rows are the keyboard anchor:
   Up/Down, Home and End move between rows, a pointer click focuses a row and a
-  double-click edits it, while the Checkbox keeps its own activation. Import
+  double-click edits it, while the Checkbox keeps its own activation. The
+  viewport reveals the focused task when focus arrives or the task moves after
+  sorting. The focus outline fits inside the row. Import
   and export use a tab-separated line format instead of serde, and an import
   replaces the store with an undo toast rather than asking first. Replacing
   the store (also through undo-import) discards older Undo actions and closes

@@ -44,14 +44,13 @@ fn markdown_page_is_reachable_and_accessible() {
         });
     harness.run();
     harness
-        .get_by_role_and_label(Role::Button, "Markdown")
-        .scroll_to_me();
-    harness.run_steps(3);
-    harness
-        .get_by_role_and_label(Role::Button, "Markdown")
-        .click();
+        .get_by_role_and_label(Role::ListBoxOption, "Overview")
+        .focus();
     harness.run();
+    harness.event(egui::Event::Text("markdown".into()));
+    harness.run_steps(3);
     assert_eq!(harness.state().page, gallery::Page::Markdown);
+    harness.get_by_role_and_label(Role::ListBoxOption, "Markdown");
     harness.check_accessibility();
     harness.get_by_role_and_label(Role::Document, "Release notes");
     std::fs::create_dir_all("target/visual-proof").unwrap();

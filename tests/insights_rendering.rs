@@ -149,7 +149,8 @@ fn example_refreshes_metrics_and_host_actions_replace_empty_content() {
             .as_deref(),
         Some("$52,460")
     );
-    h.get_by_label("Empty states").click();
+    h.get_by_role_and_label(Role::ListBoxOption, "Empty states")
+        .click();
     h.run();
     h.get_by_label("Browse project templates").click();
     h.run();
