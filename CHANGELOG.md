@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add an optional bundled Phosphor icon subset for DutchyMail's Toolbar
+  with the existing icons as fallback. Use an icon button for Archive
+  with either icon pack (DS-119).
+
 ## 1.4.2 — 2026-11-11
 
 - Add DutchyMail's MenuBar and message context menus, sharing a command

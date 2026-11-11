@@ -131,6 +131,12 @@ and workbench milestones, so it follows them.
   only that message, while a selected row targets the selected group. Panes
   return intents that the frame applies, because nested SplitPane closures
   cannot share a mutable model. Fuzzy search and Skeleton loading come next.
+- **Optional icons.** Run
+  `DUTCHY_MAIL_ICONS=phosphor cargo run --example dutchy_mail --all-features`
+  to use the bundled Phosphor glyphs for Compose, Archive, Delete and
+  Read / unread. The named icon family loads from the binary and uses
+  the active theme's ink. The original icons are the default and the
+  fallback if the family or glyph is unavailable.
 
 ## DutchyDash
 

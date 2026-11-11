@@ -6,6 +6,7 @@
 //!
 //! `DUTCHY_EXAMPLE_ZOOM`, `DUTCHY_EXAMPLE_MODE` and `DUTCHY_EXAMPLE_CAPTURE`
 //! drive native verification runs; see `support::capture`.
+//! Set `DUTCHY_MAIL_ICONS=phosphor` to use the bundled toolbar icon font.
 
 #[path = "../support/mod.rs"]
 mod support;
@@ -19,6 +20,7 @@ mod folders;
 mod icons;
 mod mailbox;
 mod messages;
+mod phosphor;
 mod reader;
 mod status;
 #[cfg(test)]
@@ -46,6 +48,9 @@ fn main() -> eframe::Result {
             }
             app.capture = support::capture::Capture::from_env();
             dutchy_egui::install(&cc.egui_ctx, app.theme.theme());
+            if std::env::var("DUTCHY_MAIL_ICONS").as_deref() == Ok("phosphor") {
+                app.commands.use_phosphor_icons(&cc.egui_ctx);
+            }
             Ok(Box::new(app))
         }),
     )

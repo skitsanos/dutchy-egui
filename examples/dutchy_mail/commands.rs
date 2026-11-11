@@ -4,6 +4,7 @@ use crate::{
     context_menu::ContextMenu,
     icons,
     mailbox::{ARCHIVE, FolderId, MessageId, TRASH},
+    phosphor,
 };
 use dutchy_egui::{
     ButtonVariant, Command, CommandRegistry, ControlSize, Icon, MenuBar, MenuBarItem, MenuBarState,
@@ -98,6 +99,21 @@ impl Default for Commands {
 }
 
 impl Commands {
+    pub fn use_phosphor_icons(&mut self, ctx: &Context) {
+        phosphor::install(ctx);
+        for (action, icon) in [
+            (Action::Compose, Icon::Custom(phosphor::plus)),
+            (Action::Archive, Icon::Custom(phosphor::archive)),
+            (Action::Delete, Icon::Custom(phosphor::trash)),
+            (Action::ToggleRead, Icon::Custom(phosphor::envelope)),
+        ] {
+            self.registry
+                .get_mut(&action)
+                .expect("mail command is registered")
+                .icon = Some(icon);
+        }
+    }
+
     pub fn update(&mut self, availability: Availability) {
         for action in MESSAGE_ACTIONS.into_iter().chain([Action::Sync]) {
             self.registry
@@ -144,7 +160,7 @@ impl Commands {
                 .expect("mail command is registered");
             match action {
                 Action::Compose => item.variant(ButtonVariant::Primary),
-                Action::Archive => item.icon_only(false).separator_before(true),
+                Action::Archive => item.separator_before(true),
                 _ => item,
             }
         });

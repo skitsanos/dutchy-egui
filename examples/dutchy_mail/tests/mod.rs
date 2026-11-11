@@ -4,6 +4,7 @@
 mod compose;
 mod flows;
 mod menus;
+mod phosphor;
 mod rendering;
 
 use crate::app::App;
@@ -19,6 +20,15 @@ fn harness() -> Harness<'static, App> {
 }
 
 fn harness_with(accent: Accent, mode: Mode, scale: f32) -> Harness<'static, App> {
+    harness_with_icons(accent, mode, scale, false)
+}
+
+fn harness_with_icons(
+    accent: Accent,
+    mode: Mode,
+    scale: f32,
+    phosphor: bool,
+) -> Harness<'static, App> {
     let mut app = App::seeded(FIXED_TODAY);
     app.theme.accent = accent;
     app.theme.mode = mode;
@@ -35,6 +45,9 @@ fn harness_with(accent: Accent, mode: Mode, scale: f32) -> Harness<'static, App>
         })
         .build_eframe(move |cc| {
             dutchy_egui::install(&cc.egui_ctx, theme);
+            if phosphor {
+                app.commands.use_phosphor_icons(&cc.egui_ctx);
+            }
             app
         });
     h.run();

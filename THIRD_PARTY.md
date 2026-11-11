@@ -36,6 +36,13 @@ tool, not a runtime dependency. No network/font preparation is required to build
 the package. Distributed font files may not be sold on their own; retain the
 OFL notices with redistributed fonts.
 
+DutchyMail's optional example-only icon font is a four-glyph subset of
+[Phosphor Regular v2.1.2](https://github.com/phosphor-icons/web/tree/v2.1.2/src/regular).
+The [Phosphor MIT notice](https://github.com/phosphor-icons/web/blob/v2.1.2/LICENSE)
+ships alongside the subset in the example source. Regenerate the subset and
+glyph map with `uv run --with fonttools==4.68.0 examples/dutchy_mail/assets/prepare_phosphor.py`.
+The script pins and checks the upstream revision and source bytes.
+
 ## Crate dependencies
 
 egui is the core UI runtime crate. The default `markdown` feature adds
