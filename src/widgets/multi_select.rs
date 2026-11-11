@@ -40,8 +40,9 @@ pub struct MultiSelectResponse<T> {
 ///
 /// The host owns the selection, query, and popup flag. Result activation
 /// requests a toggle and leaves the query and popup open for further choices.
-/// Options must have unique values and stable, unique salts. Chips appear in
-/// option order. Selected values missing from the catalog remain with the host.
+/// Options must have unique values and stable, unique salts. Chips appear
+/// below the query in option order, so a choice never moves the query or the
+/// open results. Selected values missing from the catalog remain with the host.
 #[must_use = "Call show to render the multi-select"]
 pub struct MultiSelect<'a, T> {
     id: IdSalt,
@@ -119,7 +120,6 @@ impl<'a, T: Clone + PartialEq> MultiSelect<'a, T> {
             .iter()
             .filter(|option| self.selected.contains(&option.value))
             .collect();
-        let mut requests = chips(ui, &chosen);
         let input_id = ui.make_persistent_id(IdSalt::new("query"));
         let (keys, enter_opens) = query_keys(ui, input_id, self.state.open);
         let response = ui.add(
@@ -131,11 +131,12 @@ impl<'a, T: Clone + PartialEq> MultiSelect<'a, T> {
         if response.clicked() || response.changed() || keys.opens() || enter_opens {
             self.state.open = true;
         }
-        if !ui.is_enabled() || keys.escape || keys.tab || !requests.is_empty() {
+        if !ui.is_enabled() || keys.escape || keys.tab {
             self.state.open = false;
         }
 
         let mut cursor = Cursor::load(ui.ctx(), root);
+        let mut requests = Vec::new();
         let shown = self.popup(&response, root, &chosen, &mut cursor, &keys);
         let (popup, list, active) = if let Some(shown) = shown {
             if let Some(value) = shown.inner.action {
@@ -150,6 +151,12 @@ impl<'a, T: Clone + PartialEq> MultiSelect<'a, T> {
         } else {
             (None, None, None)
         };
+        // Chips follow the query so a choice never moves it or the open results.
+        let removed = chips(ui, &chosen);
+        if !removed.is_empty() {
+            self.state.open = false;
+        }
+        requests.extend(removed);
         if keys.escape || !requests.is_empty() {
             response.request_focus();
         }

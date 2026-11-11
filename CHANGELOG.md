@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.1 — 2026-11-11
+
+- Show MultiSelect Chips below the query, so choosing an option no longer
+  moves the query and the open results under the pointer (DS-127).
+
 ## 1.10.0 — 2026-11-11
 
 - Add MultiSelect with fuzzy search and removable Chips for host-owned

@@ -116,8 +116,8 @@ message when the host declines a duplicate.
 
 `MultiSelect` filters a catalog of `SelectOption` values using [fuzzy
 search](fuzzy-search.md). The host stores the chosen values and `SearchState`.
-The widget shows chosen values as removable Chips and requests changes by
-value. Give options unique values and use `id_salt` to keep their identity
+The widget shows chosen values as removable Chips below the query and requests
+changes by value. Give options unique values and use `id_salt` to keep their identity
 stable when labels change or repeat.
 
 ```rust
@@ -143,6 +143,14 @@ preserves the query and keeps results open. Escape, Tab, or clicking outside clo
 the popup. Tab reaches each Chip's remove button, which requests removal and
 returns focus to the query. A selected disabled option stays visible as a fixed
 Chip. Values absent from the catalog remain with the host.
+
+Chips sit below the query so that a choice never moves the query or the open
+results under the pointer. Open results cover the Chips; their check marks
+show the selection, and the Chips are reachable again once the popup closes.
+
+The query text belongs to the host as well: it stays after a choice and after
+the popup closes, so clear `SearchState::query` where an empty field should
+follow. Backspace in an empty query does not remove a Chip.
 
 Showcase's **Multi-select** page filters assets by any of the selected media
 types and shows all assets when the selection is empty.

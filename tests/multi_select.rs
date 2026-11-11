@@ -18,6 +18,8 @@ struct State {
     requests: Vec<(u8, bool)>,
     enabled: bool,
     parent_enabled: bool,
+    /// Apply requests to the selection, as an accepting host would.
+    accept: bool,
 }
 
 impl Default for State {
@@ -34,6 +36,7 @@ impl Default for State {
             requests: Vec::new(),
             enabled: true,
             parent_enabled: true,
+            accept: false,
         }
     }
 }
@@ -45,12 +48,15 @@ fn show(ui: &mut Ui, state: &mut State) {
             .accessible_name(NAME)
             .enabled(state.enabled)
             .show(ui);
-        state.requests.extend(
-            result
-                .requests
-                .into_iter()
-                .map(|request| (request.value, request.selected)),
-        );
+        for request in result.requests {
+            if state.accept {
+                state.selected.retain(|value| *value != request.value);
+                if request.selected {
+                    state.selected.push(request.value);
+                }
+            }
+            state.requests.push((request.value, request.selected));
+        }
     });
     let _ = ui.button("After choices");
 }
@@ -123,7 +129,8 @@ fn assistive_activation_and_chip_removal_use_the_host_selection() {
     h.run_steps(3);
     assert_eq!(h.state().requests, [(3, false)]);
     assert!(h.state().search.open);
-    h.get_by_label("Remove Photography").click();
+    // The open results cover the chips; assistive activation still reaches them.
+    h.get_by_label("Remove Photography").click_accesskit();
     h.run_steps(3);
     assert_eq!(h.state().requests, [(3, false), (1, false)]);
     assert!(!h.state().search.open);
@@ -186,7 +193,7 @@ fn escape_tab_and_chip_removal_preserve_native_focus() {
         h.get_by_role_and_label(Role::EditableComboBox, NAME)
             .is_focused()
     );
-    h.key_press_modifiers(Modifiers::SHIFT, Key::Tab);
+    h.key_press(Key::Tab);
     h.run_steps(2);
     assert!(h.get_by_label("Remove Photography").is_focused());
     h.key_press(Key::Space);
@@ -201,6 +208,9 @@ fn escape_tab_and_chip_removal_preserve_native_focus() {
     h.key_press(Key::Tab);
     h.run_steps(3);
     assert!(!h.state().search.open);
+    assert!(h.get_by_label("Remove Photography").is_focused());
+    h.key_press(Key::Tab);
+    h.run_steps(2);
     assert!(h.get_by_label("After choices").is_focused());
 }
 
@@ -281,8 +291,8 @@ fn chips_keep_focus_through_reorder_and_wrap_across_themes() {
         let first = h.get_by_role_and_label(Role::Label, "Prints").rect();
         let last = h.get_by_role_and_label(Role::Label, "Photography").rect();
         let query = h.get_by_role_and_label(Role::EditableComboBox, NAME).rect();
+        assert!(first.top() >= query.bottom() + space::SM);
         assert!(last.top() >= first.bottom() + space::SM);
-        assert!(query.top() >= last.bottom() + space::SM);
         assert!(query.right() <= 150.0);
         let remove = h.get_by_label("Remove Photography");
         assert_eq!(remove.accesskit_node().id(), id);
@@ -299,4 +309,40 @@ fn chips_keep_focus_through_reorder_and_wrap_across_themes() {
         h.run_steps(2);
         assert_eq!(h.state().requests, [(1, false)]);
     }
+}
+
+#[test]
+fn accepted_choices_never_move_the_query_or_the_open_results() {
+    // Narrow enough that the second chip starts a new row.
+    let mut h = harness(Theme::default(), 1.0, 220.0);
+    h.state_mut().selected.clear();
+    h.state_mut().accept = true;
+    h.run_steps(2);
+    h.get_by_role_and_label(Role::EditableComboBox, NAME)
+        .click();
+    h.run_steps(4);
+    let query = h.get_by_role_and_label(Role::EditableComboBox, NAME).rect();
+    let row = h
+        .get_by_role_and_label(Role::ListBoxOption, "Drawings")
+        .rect();
+    for (option, chips) in [("Photography", 1), ("Drawings", 2)] {
+        h.get_by_role_and_label(Role::ListBoxOption, option).click();
+        h.run_steps(3);
+        assert_eq!(h.state().selected.len(), chips);
+        assert_eq!(
+            h.get_by_role_and_label(Role::EditableComboBox, NAME).rect(),
+            query,
+            "query after {option}"
+        );
+        assert_eq!(
+            h.get_by_role_and_label(Role::ListBoxOption, "Drawings")
+                .rect(),
+            row,
+            "results after {option}"
+        );
+    }
+    let first = h.get_by_role_and_label(Role::Label, "Photography").rect();
+    let second = h.get_by_role_and_label(Role::Label, "Drawings").rect();
+    assert!(first.top() >= query.bottom() + space::SM);
+    assert!(second.top() >= first.bottom() + space::SM, "chips wrap");
 }

@@ -54,7 +54,8 @@ does a host font without the `bundled-fonts` feature, which has one weight.
 
 ## CommandPalette and SearchableSelect
 
-Both match a query word against the label first and mark it there. A word
+CommandPalette, SearchableSelect and MultiSelect match a query word against
+the label first and mark it there. A word
 found only in the group, such as a submenu path in the palette, still matches
 at half its score. With a query, groups follow their best result and results
 follow their score; host separators are left out because they describe the

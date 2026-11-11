@@ -32,6 +32,9 @@ fn choosing_and_removing_types_updates_the_asset_results() {
     h.run_steps(3);
     h.get_by_label("Studio colour proof");
     h.get_by_label("Canal at dusk");
+    // The open results cover the chips until Escape closes them.
+    h.key_press(Key::Escape);
+    h.run_steps(3);
     h.get_by_label("Remove Photography").click();
     h.run_steps(3);
     assert!(h.query_by_label("Canal at dusk").is_none());
