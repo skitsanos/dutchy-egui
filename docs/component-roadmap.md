@@ -17,12 +17,13 @@ Issues Ledger ticket before work starts.
    remove actions, and [FilterChipGroup](chips.md#filter-chip-groups) groups
    keyed filters with host-owned selection. [TagInput](chips.md#tag-input)
    adds a draft and keyed add and remove requests for host-owned tags.
-   **MultiSelect** will build on these controls. **RangeSlider** edits
+   [MultiSelect](chips.md#multi-select) combines fuzzy catalog search with
+   removable Chips and host-owned selection. **RangeSlider** edits
    two endpoints on the existing rail;
    **Combobox** accepts free text with suggestions where SearchableSelect only
    commits an option. The repository-owned [fuzzy scorer](fuzzy-search.md)
-   ranks CommandPalette and SearchableSelect results and marks matched glyphs;
-   Combobox and MultiSelect will rank with it too. List type-ahead stays a
+   ranks CommandPalette, SearchableSelect, and MultiSelect results and marks
+   matched glyphs. Combobox will rank with it too. List type-ahead stays a
    prefix search. Compose a filter-builder example with SearchInput and the MediaCard browser,
    with keyboard removal, empty states, explicit commit behavior and typed
    host values.

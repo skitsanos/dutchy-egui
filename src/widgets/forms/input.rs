@@ -93,7 +93,7 @@ impl<'a> Input<'a> {
     }
 
     /// Let a compound control handle submission after the editor processes input.
-    pub(super) fn without_return_key(mut self) -> Self {
+    pub(in crate::widgets) fn without_return_key(mut self) -> Self {
         self.return_key = false;
         self
     }

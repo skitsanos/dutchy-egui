@@ -165,7 +165,7 @@ impl<'a, T: Clone> CommandPalette<'a, T> {
                         items: &leaves,
                         query: &self.state.query,
                         name: self.name.as_ref(),
-                        selected: None,
+                        selection: crate::widgets::search::Selection::Single(None),
                         height,
                     }
                     .show(ui, root.with("results"), &mut cursor, &input.1);

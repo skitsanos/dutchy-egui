@@ -111,3 +111,38 @@ buttons also support pointer and assistive activation.
 The draft keeps its text until the host clears it. Showcase's **Tag input**
 page accepts new project tags, keeps one tag fixed, and displays a validation
 message when the host declines a duplicate.
+
+## Multi-select
+
+`MultiSelect` filters a catalog of `SelectOption` values using [fuzzy
+search](fuzzy-search.md). The host stores the chosen values and `SearchState`.
+The widget shows chosen values as removable Chips and requests changes by
+value. Give options unique values and use `id_salt` to keep their identity
+stable when labels change or repeat.
+
+```rust
+use dutchy_egui::{MultiSelect, SearchState, SelectOption};
+
+fn show_media_types(ui: &mut egui::Ui, selected: &mut Vec<u8>, search: &mut SearchState) {
+    let options = [SelectOption::new(1, "Photography"), SelectOption::new(2, "Prints")];
+    let result = MultiSelect::new("media-types", selected, search, &options)
+        .accessible_name("Media types")
+        .show(ui);
+    for request in result.requests {
+        selected.retain(|value| *value != request.value);
+        if request.selected {
+            selected.push(request.value);
+        }
+    }
+}
+```
+
+Click the query, type, or press Enter or an arrow key to open results. The
+arrow keys move the active result and Enter requests a toggle. Toggling
+preserves the query and keeps results open. Escape, Tab, or clicking outside closes
+the popup. Tab reaches each Chip's remove button, which requests removal and
+returns focus to the query. A selected disabled option stays visible as a fixed
+Chip. Values absent from the catalog remain with the host.
+
+Showcase's **Multi-select** page filters assets by any of the selected media
+types and shows all assets when the selection is empty.

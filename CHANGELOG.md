@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.0 — 2026-11-11
+
+- Add MultiSelect with fuzzy search and removable Chips for host-owned
+  selection. Showcase uses it to filter assets by media type (DS-126).
+
 ## 1.9.0 — 2026-11-11
 
 - Add `fuzzy_match`, a repository-owned fuzzy scorer that returns a score and

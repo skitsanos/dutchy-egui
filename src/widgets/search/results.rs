@@ -4,12 +4,32 @@ use crate::{
     widgets::menu::paint,
 };
 use egui::{Id, IdSalt, Response, Ui, UiBuilder, WidgetInfo};
+use std::collections::HashSet;
+
+#[derive(Clone, Copy)]
+pub(crate) enum Selection<'a> {
+    Single(Option<IdSalt>),
+    Multiple(&'a HashSet<IdSalt>),
+}
+
+impl Selection<'_> {
+    pub fn is_multiple(self) -> bool {
+        matches!(self, Self::Multiple(_))
+    }
+
+    pub fn contains(self, id: IdSalt) -> bool {
+        match self {
+            Self::Single(selected) => selected == Some(id),
+            Self::Multiple(selected) => selected.contains(&id),
+        }
+    }
+}
 
 pub(crate) struct Results<'a, T> {
     pub items: &'a [MenuItem<'a, T>],
     pub query: &'a str,
     pub name: &'a str,
-    pub selected: Option<IdSalt>,
+    pub selection: Selection<'a>,
     pub height: f32,
 }
 pub(crate) struct ResultsResponse<T> {
@@ -98,7 +118,7 @@ impl<T: Clone> Results<'_, T> {
                                     paint::RowState {
                                         role: egui::accesskit::Role::ListBoxOption,
                                         active,
-                                        selected: self.selected == Some(item.id),
+                                        selected: self.selection.contains(item.id),
                                         focusable: false,
                                         check_slot: item.checked.is_some(),
                                         pointer: true,
@@ -129,6 +149,10 @@ impl<T: Clone> Results<'_, T> {
         list.response.widget_info(|| {
             WidgetInfo::labeled(egui::accesskit::Role::ListBox, ui.is_enabled(), self.name)
         });
+        if self.selection.is_multiple() {
+            ui.ctx()
+                .accesskit_node_builder(list.response.id, |node| node.set_multiselectable());
+        }
         ResultsResponse {
             response: list.response,
             action,

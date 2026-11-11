@@ -1,9 +1,8 @@
 use crate::{
-    Input, MenuItem, SearchState, SelectOption, Theme,
+    Input, SearchState, SelectOption,
     tokens::{border, menu as geometry},
-    widgets::{
-        menu::paint,
-        search::{Cursor, Results, SearchKeys, input_metadata},
+    widgets::search::{
+        Cursor, Results, SearchKeys, Selection, input_metadata, option_items, options_popup,
     },
 };
 use egui::{IdSalt, Response, Ui, UiBuilder};
@@ -91,60 +90,33 @@ impl<'a, T: Clone + PartialEq> SearchableSelect<'a, T> {
             if !ui.is_enabled() || keys.escape || keys.tab {
                 self.state.open = false;
             }
-            let items: Vec<_> = self
-                .options
-                .iter()
-                .map(|option| MenuItem {
-                    checked: None,
-                    children: None,
-                    value: option.value.clone(),
-                    label: option.label.clone(),
-                    group: None,
-                    shortcut: None,
-                    variant: crate::MenuItemVariant::Default,
-                    enabled: option.enabled,
-                    separator_before: false,
-                    icon: None,
-                    id: option.id,
-                })
-                .collect();
             let selected = self
                 .options
                 .iter()
                 .find(|option| self.value.as_ref() == Some(&option.value))
                 .map(|option| option.id);
             let mut cursor = Cursor::load(ui.ctx(), root);
-            let mut result = None;
-            let mut popup = None;
-            if self.state.open {
-                crate::commands::dispatch::mark_overlay(ui.ctx());
-                let shown = egui::Popup::from_response(&response)
-                    .id(root.with("popup"))
-                    .open_bool(&mut self.state.open)
-                    .close_behavior(egui::PopupCloseBehavior::CloseOnClickOutside)
-                    .gap(geometry::POPUP_GAP)
-                    .frame(paint::frame(Theme::from_context(ui.ctx())))
-                    .width(response.rect.width())
-                    .accessible_name(format!("{} options", self.name))
-                    .show(|ui| {
-                        ui.set_width((response.rect.width() - border::STANDARD * 2.0).max(0.0));
-                        Results {
-                            items: &items,
-                            query: &self.state.query,
-                            name: &format!("{} options", self.name),
-                            selected,
-                            height: geometry::RESULTS_HEIGHT.min(
-                                (ui.ctx().content_rect().height() - border::STANDARD * 2.0)
-                                    .max(0.0),
-                            ),
-                        }
-                        .show(ui, root.with("results"), &mut cursor, &keys)
-                    });
-                if let Some(shown) = shown {
-                    popup = Some(shown.response);
-                    result = Some(shown.inner);
-                }
-            }
+            let selection = Selection::Single(selected);
+            let items = option_items(self.options, selection);
+            let shown = options_popup(
+                &response,
+                root,
+                &mut self.state.open,
+                Results {
+                    items: &items,
+                    query: &self.state.query,
+                    name: &format!("{} options", self.name),
+                    selection,
+                    height: geometry::RESULTS_HEIGHT
+                        .min((ui.ctx().content_rect().height() - border::STANDARD * 2.0).max(0.0)),
+                },
+                &mut cursor,
+                &keys,
+            );
+            let (popup, result) = match shown {
+                Some(shown) => (Some(shown.response), Some(shown.inner)),
+                None => (None, None),
+            };
             let committed = result
                 .as_ref()
                 .is_some_and(|result| result.action.is_some());

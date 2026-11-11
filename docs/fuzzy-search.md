@@ -1,7 +1,7 @@
 # Fuzzy search
 
 `fuzzy_match(query, text)` scores one text against a typed query and reports
-which characters matched. CommandPalette and SearchableSelect rank their
+which characters matched. CommandPalette, SearchableSelect, and MultiSelect rank their
 results with it, and hosts can use it for their own lists. The scorer lives in
 the repository; no search crate is required.
 

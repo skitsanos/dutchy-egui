@@ -63,6 +63,7 @@ pub use widgets::{
 };
 pub use widgets::{FilterChipGroup, FilterChipGroupResponse, FilterChipItem, FilterChipRequest};
 pub use widgets::{KeyRecorder, KeyRecorderResponse, SplitButton, SplitButtonResponse};
+pub use widgets::{MultiSelect, MultiSelectRequest, MultiSelectResponse};
 pub use widgets::{
     Toast, ToastAppearance, ToastDismissal, ToastEvent, ToastId, ToastPosition, ToastQueue,
     ToastResponse, ToastVariant, Toasts, ToastsResponse,

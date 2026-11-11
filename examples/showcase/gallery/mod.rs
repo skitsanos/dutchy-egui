@@ -16,6 +16,7 @@ mod loading;
 mod markdown;
 pub(crate) mod media;
 mod menus;
+mod multi_select;
 mod navigation;
 mod notifications;
 mod overlays;
@@ -64,6 +65,7 @@ pub struct Showcase {
     pub forms: FormState,
     pub chips: chips::ChipsState,
     pub filter_chips: filter_chips::FilterChipsState,
+    pub multi_select: multi_select::AssetFilters,
     pub tags: tag_input::TagsState,
     pub paths: paths::PathsState,
     pub primitives: primitives::PrimitivesState,
@@ -111,6 +113,7 @@ impl Default for Showcase {
             forms: FormState::default(),
             chips: chips::ChipsState::default(),
             filter_chips: filter_chips::FilterChipsState::default(),
+            multi_select: multi_select::AssetFilters::default(),
             tags: tag_input::TagsState::default(),
             paths: paths::PathsState::default(),
             primitives: primitives::PrimitivesState::default(),
@@ -183,6 +186,7 @@ impl Showcase {
                             Page::Forms => forms::show(ui, &mut self.forms),
                             Page::Chips => chips::show(ui, &mut self.chips),
                             Page::FilterChipGroup => filter_chips::show(ui, &mut self.filter_chips),
+                            Page::MultiSelect => multi_select::show(ui, &mut self.multi_select),
                             Page::TagInput => tag_input::show(ui, &mut self.tags),
                             Page::PathInput => paths::show(ui, &mut self.paths),
                             Page::Controls => primitives::show(ui, &mut self.primitives),

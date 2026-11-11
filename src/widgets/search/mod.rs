@@ -1,11 +1,13 @@
 mod keys;
+mod options;
 mod rank;
 mod results;
 pub(crate) mod tree;
 
 use egui::{Context, Id, IdSalt};
 pub(crate) use keys::{SearchKeys, input_metadata};
-pub(crate) use results::Results;
+pub(crate) use options::{option_items, options_popup};
+pub(crate) use results::{Results, ResultsResponse, Selection};
 
 /// Host-owned open state and editable query for searchable selection/commands.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]

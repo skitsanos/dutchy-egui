@@ -7,6 +7,7 @@ pub enum Page {
     Cards,
     Chips,
     FilterChipGroup,
+    MultiSelect,
     TagInput,
     Controls,
     Colors,
@@ -58,7 +59,7 @@ impl Page {
     pub(crate) const FOUNDATION: [Self; 3] = [Self::Overview, Self::Typography, Self::Tokens];
 
     /// Component pages follow, sorted by display name.
-    pub(crate) const COMPONENTS: [Self; 45 + cfg!(feature = "markdown") as usize] = [
+    pub(crate) const COMPONENTS: [Self; 46 + cfg!(feature = "markdown") as usize] = [
         Self::Accordions,
         Self::Alerts,
         Self::Avatars,
@@ -89,6 +90,7 @@ impl Page {
         Self::Menus,
         Self::Modals,
         Self::Motion,
+        Self::MultiSelect,
         Self::Pagination,
         Self::PathInput,
         Self::Progress,
@@ -121,6 +123,7 @@ impl Page {
             Self::Cards => "Cards",
             Self::Chips => "Chips",
             Self::FilterChipGroup => "Filter chip group",
+            Self::MultiSelect => "Multi-select",
             Self::TagInput => "Tag input",
             Self::Controls => "Form controls",
             Self::Colors => "Color picker",
