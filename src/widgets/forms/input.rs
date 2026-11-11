@@ -127,8 +127,10 @@ impl<'a> Input<'a> {
                     } else {
                         egui::Frame::NONE
                     };
+                    // A focused editor can receive queued input in the frame it is disabled.
+                    let editable = ui.is_enabled() && !self.read_only;
                     let mut immutable;
-                    let buffer: &mut dyn TextBuffer = if self.read_only {
+                    let buffer: &mut dyn TextBuffer = if !editable {
                         immutable = self.value.as_str();
                         &mut immutable
                     } else {
@@ -167,7 +169,7 @@ impl<'a> Input<'a> {
                         .show(ui)
                         .response
                         .response;
-                    if self.read_only || !response.enabled() {
+                    if !editable {
                         // egui can mark a paste into an immutable buffer as changed.
                         response.flags.remove(egui::response::Flags::CHANGED);
                     }

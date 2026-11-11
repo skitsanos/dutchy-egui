@@ -157,6 +157,44 @@ fn read_only_and_disabled_states_block_browsing() {
 }
 
 #[test]
+fn directly_disabling_a_focused_path_input_blocks_paste() {
+    assert_disabled_editor_blocks_queued_paste(false, true);
+}
+
+#[test]
+fn disabling_a_focused_path_inputs_parent_blocks_paste() {
+    assert_disabled_editor_blocks_queued_paste(true, false);
+}
+
+fn assert_disabled_editor_blocks_queued_paste(enabled: bool, parent_enabled: bool) {
+    let mut h = harness(
+        State {
+            path: "host path".into(),
+            ..Default::default()
+        },
+        Theme::default(),
+        1.0,
+    );
+    h.get_by_role_and_label(Role::TextInput, NAME).focus();
+    h.run();
+    assert!(h.get_by_role_and_label(Role::TextInput, NAME).is_focused());
+
+    let state = h.state_mut();
+    state.enabled = enabled;
+    state.parent_enabled = parent_enabled;
+    h.event(egui::Event::Paste("queued paste".into()));
+    h.run();
+
+    assert!(
+        h.get_by_role_and_label(Role::TextInput, NAME)
+            .accesskit_node()
+            .is_disabled()
+    );
+    assert_eq!(h.state().path, "host path");
+    assert_eq!(h.state().changes, 0);
+}
+
+#[test]
 fn ids_and_focus_survive_switching_to_stacked_layout() {
     let mut h = harness(State::default(), Theme::default(), 1.0);
     let editor = h.get_by_role_and_label(Role::TextInput, NAME);

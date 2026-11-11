@@ -4,8 +4,8 @@
 
 - Add PathInput with typed file, folder and save requests and host-owned
   browsing. Showcase demonstrates all three modes with native dialogs (DS-120).
-- Read-only Input, Textarea and the controls built on Input no longer report a
-  change when text is pasted into them (DS-120).
+- Block queued paste when a focused editor becomes disabled and suppress false
+  paste change reports on read-only editors (DS-120).
 
 ## 1.4.3 — 2026-11-11
 
