@@ -22,3 +22,4 @@
   - `cargo clippy --all-targets --all-features -- -D warnings`
   - `cargo clippy --all-targets --no-default-features -- -D warnings`
 - Verify the renderer at multiple display scales and themes. Use meaningful interaction tests and focused rendering checks; do not claim browser/native parity from compilation alone.
+- In the repository checkout, use `.agents/skills/dutchy-egui-qa/SKILL.md` for component QA, regression verification, and release qualification.
