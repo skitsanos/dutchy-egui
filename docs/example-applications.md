@@ -123,10 +123,12 @@ and workbench milestones, so it follows them.
   folder TreeView, Avatar rows, a Markdown reader, Toolbar, SearchInput with
   word matching, a compose Modal, Toast undo for archive, delete and discarded
   drafts, and a StatusBar with a simulated sync. Compose, archive and search
-  use Command chords so plain letters stay with List type-ahead. Panes return
-  intents that the frame applies, because nested SplitPane closures cannot
-  share a mutable model. MenuBar, context menus, the command registry, fuzzy
-  search and Skeleton loading come next.
+  use Command chords so plain letters stay with List type-ahead. An empty
+  search result clears selection, and Undo restores only messages for which
+  that move is still current. Panes return intents that the frame applies,
+  because nested SplitPane closures cannot share a mutable model. MenuBar,
+  context menus, the command registry, fuzzy search and Skeleton loading come
+  next.
 
 ## DutchyDash
 

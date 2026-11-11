@@ -229,10 +229,10 @@ impl App {
 
     fn move_selection(&mut self, to: FolderId, verb: &str) {
         let moved = self.mailbox.move_to(&self.selection(), to);
-        if moved.ids.is_empty() {
+        let count = moved.count();
+        if count == 0 {
             return;
         }
-        let count = moved.ids.len();
         self.list.selected.clear();
         let noun = if count == 1 { "message" } else { "messages" };
         self.toasts

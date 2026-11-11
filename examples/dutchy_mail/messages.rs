@@ -46,6 +46,8 @@ pub fn show(
             ui.add_space(space::MD);
             let view = mailbox.view(folder, query);
             if view.is_empty() {
+                // The empty state replaces List, so it must clear the row state.
+                *list = ListState::default();
                 empty(ui, mailbox, folder, query);
                 return;
             }

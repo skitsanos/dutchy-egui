@@ -138,3 +138,68 @@ fn sync_delivers_one_new_message_after_a_short_wait() {
     h.get_by_label_contains("New message:");
     h.get_by_role_and_label(Role::Button, "Sync");
 }
+
+#[test]
+fn empty_search_clears_reader_and_prevents_archiving_hidden_selection() {
+    let mut h = harness();
+    let id = newest(&h, INBOX);
+    h.get_by_role_and_label(Role::ListBoxOption, &row_label(&h, id))
+        .click();
+    h.run();
+    h.get_by_label("Search messages").focus();
+    h.run();
+    h.get_by_label("Search messages")
+        .type_text("totally unmatched 981276");
+    h.run_steps(3);
+    assert!(h.get_all_by_label("No matching messages").next().is_some());
+    let selection_stale = h.state().list.selected.contains(&id);
+    let reader_stale = h.query_by_label("Message body").is_some();
+    chord(&mut h, Modifiers::COMMAND, Key::E);
+    assert_eq!(
+        (
+            selection_stale,
+            reader_stale,
+            h.state().mailbox.message(id).unwrap().folder
+        ),
+        (false, false, INBOX),
+    );
+    assert_eq!(h.state().list.focused, None);
+    h.get_by_role_and_label(Role::Heading, "No message selected");
+    assert!(
+        h.get_by_role_and_label(Role::Button, "Archive")
+            .accesskit_node()
+            .data()
+            .is_disabled()
+    );
+    h.get_by_role_and_label(Role::Button, "Clear search")
+        .click();
+    h.run();
+    assert!(h.state().list.selected.is_empty());
+}
+
+#[test]
+fn undo_archive_does_not_override_a_later_move_to_trash() {
+    let mut h = harness();
+    let id = newest(&h, INBOX);
+    h.get_by_role_and_label(Role::ListBoxOption, &row_label(&h, id))
+        .click();
+    h.run();
+    chord(&mut h, Modifiers::COMMAND, Key::E);
+    h.get_by_role_and_label(Role::TreeItem, "Archive").click();
+    h.run_steps(2);
+    h.get_by_role_and_label(Role::ListBoxOption, &row_label(&h, id))
+        .click();
+    h.run();
+    chord(&mut h, Modifiers::NONE, Key::Delete);
+    assert_eq!(h.state().mailbox.message(id).unwrap().folder, TRASH);
+    let toast = h
+        .get_all_by_role(Role::Status)
+        .find(|node| node.accesskit_node().description().as_deref() == Some("Archived 1 message."))
+        .expect("original archive toast");
+    toast.get_by_role_and_label(Role::Button, "Undo").click();
+    h.run();
+    assert_eq!(h.state().mailbox.message(id).unwrap().folder, TRASH);
+    h.get_by_role_and_label(Role::Button, "Undo").click();
+    h.run();
+    assert_eq!(h.state().mailbox.message(id).unwrap().folder, ARCHIVE);
+}

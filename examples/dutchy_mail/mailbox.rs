@@ -2,6 +2,7 @@
 //! moves that archive, delete and restore them.
 
 use dutchy_egui::calendar::Date;
+use std::collections::HashMap;
 
 /// Stable folder identity.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -42,11 +43,24 @@ pub struct Message {
     pub unread: bool,
 }
 
-/// Where a moved message came from, so Undo can put it back.
+/// A move and the per-message state Undo can restore.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Moved {
-    pub ids: Vec<(MessageId, FolderId)>,
-    pub to: FolderId,
+    sequence: u64,
+    origins: Vec<MoveOrigin>,
+}
+
+impl Moved {
+    pub fn count(&self) -> usize {
+        self.origins.len()
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct MoveOrigin {
+    id: MessageId,
+    folder: FolderId,
+    previous_move: Option<u64>,
 }
 
 #[derive(Default)]
@@ -54,6 +68,8 @@ pub struct Mailbox {
     folders: Vec<Folder>,
     messages: Vec<Message>,
     next_id: u64,
+    move_sequence: u64,
+    last_move: HashMap<MessageId, u64>,
 }
 
 impl Mailbox {
@@ -63,6 +79,7 @@ impl Mailbox {
             folders,
             messages,
             next_id,
+            ..Self::default()
         }
     }
 
@@ -117,21 +134,35 @@ impl Mailbox {
 
     /// Move messages and return what Undo needs; unknown ids are skipped.
     pub fn move_to(&mut self, ids: &[MessageId], to: FolderId) -> Moved {
-        let mut moved = Vec::new();
+        self.move_sequence += 1;
+        let sequence = self.move_sequence;
+        let mut origins = Vec::new();
         for message in &mut self.messages {
             if ids.contains(&message.id) && message.folder != to {
-                moved.push((message.id, message.folder));
+                origins.push(MoveOrigin {
+                    id: message.id,
+                    folder: message.folder,
+                    previous_move: self.last_move.insert(message.id, sequence),
+                });
                 message.folder = to;
             }
         }
-        Moved { ids: moved, to }
+        Moved { sequence, origins }
     }
 
-    /// Put moved messages back where they were.
+    /// Undo only the messages for which this move is still current.
     pub fn restore(&mut self, moved: &Moved) {
-        for (id, from) in &moved.ids {
-            if let Some(message) = self.messages.iter_mut().find(|m| m.id == *id) {
-                message.folder = *from;
+        for origin in &moved.origins {
+            if self.last_move.get(&origin.id) != Some(&moved.sequence) {
+                continue;
+            }
+            if let Some(message) = self.messages.iter_mut().find(|m| m.id == origin.id) {
+                message.folder = origin.folder;
+                if let Some(sequence) = origin.previous_move {
+                    self.last_move.insert(origin.id, sequence);
+                } else {
+                    self.last_move.remove(&origin.id);
+                }
             }
         }
     }
@@ -190,12 +221,46 @@ mod tests {
             vec![message(1, INBOX, "A", 1), message(2, ARCHIVE, "B", 2)],
         );
         let moved = mailbox.move_to(&[MessageId(1), MessageId(2), MessageId(9)], ARCHIVE);
-        assert_eq!(moved.ids, [(MessageId(1), INBOX)]);
+        assert_eq!(moved.count(), 1);
         assert_eq!(mailbox.total(ARCHIVE), 2);
         mailbox.restore(&moved);
         assert_eq!(mailbox.total(INBOX), 1);
         assert_eq!(mailbox.unread(INBOX), 1);
         let id = mailbox.add(message(0, SENT, "C", 3));
         assert_eq!(id, MessageId(3));
+    }
+
+    #[test]
+    fn undo_a_batch_skips_only_messages_that_moved_again() {
+        let mut mailbox = Mailbox::new(
+            vec![],
+            vec![message(1, INBOX, "A", 1), message(2, INBOX, "B", 2)],
+        );
+        let a = MessageId(1);
+        let b = MessageId(2);
+        let archived = mailbox.move_to(&[a, b], ARCHIVE);
+        mailbox.move_to(&[a], TRASH);
+        mailbox.restore(&archived);
+        assert_eq!(mailbox.message(a).unwrap().folder, TRASH);
+        assert_eq!(mailbox.message(b).unwrap().folder, INBOX);
+    }
+
+    #[test]
+    fn undo_tracks_moves_even_when_the_message_returns_to_the_same_folder() {
+        let mut mailbox = Mailbox::new(vec![], vec![message(1, INBOX, "A", 1)]);
+        let id = MessageId(1);
+        let first_archive = mailbox.move_to(&[id], ARCHIVE);
+        let trashed = mailbox.move_to(&[id], TRASH);
+        let second_archive = mailbox.move_to(&[id], ARCHIVE);
+        mailbox.restore(&first_archive);
+        assert_eq!(mailbox.message(id).unwrap().folder, ARCHIVE);
+
+        // Undo in reverse order can still unwind the valid moves.
+        mailbox.restore(&second_archive);
+        assert_eq!(mailbox.message(id).unwrap().folder, TRASH);
+        mailbox.restore(&trashed);
+        assert_eq!(mailbox.message(id).unwrap().folder, ARCHIVE);
+        mailbox.restore(&first_archive);
+        assert_eq!(mailbox.message(id).unwrap().folder, INBOX);
     }
 }

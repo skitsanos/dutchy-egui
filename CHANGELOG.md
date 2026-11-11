@@ -7,6 +7,8 @@
 - Sketch DutchyMail: a three-pane mail client over 2,400 fictional messages
   with a folder TreeView, Avatar rows, a Markdown reader, compose, Toast undo
   and a StatusBar sync segment (DS-116).
+- Clear DutchyMail selection when search has no matches and keep older Undo
+  actions from overriding later moves (DS-117).
 
 ## 1.4.0 — 2026-11-10
 
