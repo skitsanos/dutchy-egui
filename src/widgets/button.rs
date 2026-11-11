@@ -89,6 +89,7 @@ pub struct Button<'a> {
     enabled: bool,
     loading: bool,
     full_width: bool,
+    shrink_padding: bool,
     text_align: egui::Align,
 }
 
@@ -102,6 +103,7 @@ impl<'a> Button<'a> {
             enabled: true,
             loading: false,
             full_width: false,
+            shrink_padding: false,
             text_align: egui::Align::Center,
         }
     }
@@ -160,6 +162,11 @@ impl Widget for Button<'_> {
 }
 
 impl Button<'_> {
+    pub(crate) fn shrink_padding_to_fit(mut self) -> Self {
+        self.shrink_padding = true;
+        self
+    }
+
     pub(crate) fn natural_width(&self, ui: &Ui) -> f32 {
         let job = self.layout_job(Theme::from_context(ui.ctx()));
         ui.fonts_mut(|fonts| fonts.layout_job(job).size().x) + 2.0 * self.size.padding()
@@ -189,6 +196,10 @@ impl Button<'_> {
     ) -> Response {
         let normal = self.variant.visuals(theme, false);
         let hover = self.variant.visuals(theme, true);
+        let mut padding = self.size.padding();
+        if self.shrink_padding {
+            padding = padding.min(((width - text_width) / 2.0).max(0.0));
+        }
         let style = ui.style_mut();
         style.visuals.override_text_color = None;
         style.visuals.widgets.noninteractive = normal;
@@ -196,7 +207,7 @@ impl Button<'_> {
         style.visuals.widgets.hovered = hover;
         style.visuals.widgets.active = hover;
         style.visuals.widgets.open = hover;
-        style.spacing.button_padding = vec2(self.size.padding(), 0.0);
+        style.spacing.button_padding = vec2(padding, 0.0);
         style.spacing.interact_size.y = self.size.height();
         if !self.enabled || self.loading {
             ui.disable();
@@ -220,12 +231,11 @@ impl Button<'_> {
             response
                 .ctx
                 .accesskit_node_builder(response.id, |node| node.set_busy());
-            let width =
-                text_width.min((response.rect.width() - 2.0 * self.size.padding()).max(0.0));
+            let width = text_width.min((response.rect.width() - 2.0 * padding).max(0.0));
             let left = match self.text_align {
-                egui::Align::Min => response.rect.left() + self.size.padding(),
+                egui::Align::Min => response.rect.left() + padding,
                 egui::Align::Center => response.rect.center().x - width / 2.0,
-                egui::Align::Max => response.rect.right() - self.size.padding() - width,
+                egui::Align::Max => response.rect.right() - padding - width,
             };
             let center = pos2(
                 left + SpinnerSize::Small.extent() / 2.0,

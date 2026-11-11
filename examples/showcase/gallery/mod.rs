@@ -18,6 +18,7 @@ mod navigation;
 mod notifications;
 mod overlays;
 mod pages;
+mod paths;
 mod people;
 mod primitives;
 mod renaming;
@@ -58,6 +59,7 @@ pub struct Showcase {
     pub native_text: String,
     pub native_checked: bool,
     pub forms: FormState,
+    pub paths: paths::PathsState,
     pub primitives: primitives::PrimitivesState,
     pub colors: colors::ColorsState,
     pub collection: collection::CollectionState,
@@ -101,6 +103,7 @@ impl Default for Showcase {
             native_text: "Native egui, Dutchy style".into(),
             native_checked: true,
             forms: FormState::default(),
+            paths: paths::PathsState::default(),
             primitives: primitives::PrimitivesState::default(),
             colors: colors::ColorsState::default(),
             collection: collection::CollectionState::default(),
@@ -169,6 +172,7 @@ impl Showcase {
                             Page::Overview => components::overview(ui, self),
                             Page::Typography => typography::show(ui),
                             Page::Forms => forms::show(ui, &mut self.forms),
+                            Page::PathInput => paths::show(ui, &mut self.paths),
                             Page::Controls => primitives::show(ui, &mut self.primitives),
                             Page::Colors => colors::show(ui, &mut self.colors),
                             Page::MediaCards => self.collection.cards(ui),

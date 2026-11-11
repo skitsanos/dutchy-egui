@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Add PathInput with typed file, folder and save requests and host-owned
+  browsing. Showcase demonstrates all three modes with native dialogs (DS-120).
+- Read-only Input, Textarea and the controls built on Input no longer report a
+  change when text is pasted into them (DS-120).
+
 ## 1.4.3 — 2026-11-11
 
 - Add an optional bundled Phosphor icon subset for DutchyMail's Toolbar

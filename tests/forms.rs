@@ -301,3 +301,50 @@ fn text_and_select_heights_match_the_shared_size_contract() {
         );
     }
 }
+
+#[test]
+fn pasting_into_read_only_text_controls_reports_no_change() {
+    #[derive(Default)]
+    struct Fields {
+        line: String,
+        notes: String,
+        changes: usize,
+    }
+    let mut h = Harness::builder()
+        .with_size([480.0, 400.0])
+        .with_theme(egui::Theme::Light)
+        .with_context_setup(|ctx| common::install(ctx, Theme::default()))
+        .build_ui_state(
+            |ui, fields: &mut Fields| {
+                let line = ui.add(
+                    Input::new("line", &mut fields.line)
+                        .accessible_name("Line")
+                        .read_only(true),
+                );
+                let notes = ui.add(
+                    Textarea::new("notes", &mut fields.notes)
+                        .accessible_name("Notes")
+                        .read_only(true),
+                );
+                fields.changes += usize::from(line.changed()) + usize::from(notes.changed());
+            },
+            Fields {
+                line: "Reference".into(),
+                notes: "Archived".into(),
+                changes: 0,
+            },
+        );
+    for (role, name) in [
+        (Role::TextInput, "Line"),
+        (Role::MultilineTextInput, "Notes"),
+    ] {
+        h.get_by_role_and_label(role, name).click();
+        h.run();
+        assert!(h.get_by_role_and_label(role, name).is_focused());
+        h.event(egui::Event::Paste("pasted".into()));
+        h.run();
+    }
+    assert_eq!(h.state().line, "Reference");
+    assert_eq!(h.state().notes, "Archived");
+    assert_eq!(h.state().changes, 0);
+}

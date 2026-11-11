@@ -38,6 +38,7 @@ rule and explicitly validate every required field at submission.
 - Input: single-line, placeholder, password mask, shared sizes, disabled/read-only,
   width, and character limit. Password clipboard/accessibility behavior uses egui.
   The text row is vertically centered in the frame.
+- [PathInput](#path-input): editable path with a separately focusable Browse button.
 - Textarea: native multiline editing, rows, 120-point minimum height, count/limit,
   and read-only/disabled states. Interactive resize handles remain planned.
 - Checkbox: square indicator, wrapped clickable label, keyboard activation.
@@ -73,6 +74,41 @@ let mut selected: Option<&str> = None;
 // In a UI closure:
 // ui.add(Select::new("role", &mut selected, &choices));
 ```
+
+## Path input
+
+`PathInput` binds a host-owned `String`. Browse emits `OpenFile`, `OpenFolder`
+or `SaveFile` for the mode supplied at construction. Use `response` as the
+editor's `Response` for `Field` and change/blur validation. Browse is a separate
+Tab stop and moves below the editor once the editor would be narrower than the
+button. Set `accessible_name` to the field's label: `Field` names the editor,
+but Browse takes its name from PathInput and is otherwise "Browse for Path".
+
+```rust
+use dutchy_egui::{PathBrowseRequest, PathInput};
+
+fn export_path(
+    ui: &mut egui::Ui,
+    path: &mut String,
+    pick: impl FnOnce(PathBrowseRequest) -> Option<String>,
+) {
+    let result = PathInput::new("export", path, PathBrowseRequest::SaveFile)
+        .accessible_name("Export destination")
+        .placeholder("Choose where to save")
+        .show(ui);
+    if let Some(request) = result.request {
+        if let Some(chosen) = pick(request) {
+            *path = chosen;
+        }
+        result.browse.request_focus();
+    }
+}
+```
+
+The host opens the picker, handles cancellation, validates paths, and performs
+any filesystem I/O. A typed path can be relative or incomplete. Read-only mode
+retains text selection and copying and disables Browse. The Showcase's Path input
+page uses `rfd` to choose a file, choose a folder, and select a save destination.
 
 ## Validation lifecycle
 

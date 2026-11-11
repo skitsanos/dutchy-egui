@@ -156,8 +156,7 @@ DutchyNotes (Markdown notes with a preview split, folder tree and fuzzy
 search), DutchyBoard (kanban columns with reorderable cards), an onboarding
 wizard with Stepper and PinInput, and DutchyLogs over the LogViewer candidate.
 Preferences live inside each application as a settings Drawer, adopting
-ThemePicker, KeyRecorder and PathInput as they land, rather than as a separate
-application.
+ThemePicker, KeyRecorder and [PathInput](forms.md#path-input) where needed.
 
 ## Order
 

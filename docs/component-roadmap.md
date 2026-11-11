@@ -8,11 +8,11 @@ Issues Ledger ticket before work starts.
 
 ## Recommended next milestones
 
-1. **Workbench building blocks.** **PathInput** pairs a text field with a browse
-   button that returns a typed file, folder or save request.
-   [InlineEdit](inline-edit.md), [StatusBar](status-bar.md) and
-   [Avatar](avatar.md) already ship for this milestone. The DutchyMail example
-   demonstrates the set; see [example applications](example-applications.md).
+1. **Workbench building blocks.** [PathInput](forms.md#path-input) pairs a path
+   field with a typed browse request and demonstrates the three picker modes
+   in Showcase. [InlineEdit](inline-edit.md), [StatusBar](status-bar.md) and
+   [Avatar](avatar.md) also ship for this milestone. See
+   [example applications](example-applications.md) for workbench compositions.
 2. **Powerful filtering.** A square **Chip** primitive with optional remove and
    toggle states is the shared base for **FilterChipGroup**, **TagInput** and
    **MultiSelect**; **RangeSlider** edits two endpoints on the existing rail;

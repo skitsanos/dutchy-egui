@@ -167,6 +167,10 @@ impl<'a> Input<'a> {
                         .show(ui)
                         .response
                         .response;
+                    if self.read_only || !response.enabled() {
+                        // egui can mark a paste into an immutable buffer as changed.
+                        response.flags.remove(egui::response::Flags::CHANGED);
+                    }
                     if let Some(name) = self.name {
                         response = response.accessible_name(name.into_owned());
                     }
