@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add FilterChipGroup with keyed selection requests and a Showcase demo that
+  combines media type and collection filters (DS-122).
+
 ## 1.6.0 — 2026-11-11
 
 - Add square Chip controls with host-owned toggle and remove requests, and a

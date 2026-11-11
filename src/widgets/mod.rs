@@ -14,6 +14,7 @@ mod code_block;
 mod command_palette;
 mod dropdown;
 mod empty_state;
+mod filter_chip_group;
 pub mod forms;
 mod kbd;
 mod key_recorder;
@@ -66,6 +67,9 @@ pub use code_block::{CodeBlock, CodeHighlighter, CodeSpan};
 pub use command_palette::{CommandPalette, CommandPaletteResponse};
 pub use dropdown::{Dropdown, DropdownAlign, DropdownResponse};
 pub use empty_state::{EmptyState, EmptyStateIcon, EmptyStateResponse, EmptyStateVariant};
+pub use filter_chip_group::{
+    FilterChipGroup, FilterChipGroupResponse, FilterChipItem, FilterChipRequest,
+};
 pub use kbd::Kbd;
 pub use key_recorder::{KeyRecorder, KeyRecorderResponse};
 #[cfg(feature = "markdown")]

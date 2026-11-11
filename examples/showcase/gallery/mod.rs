@@ -5,6 +5,7 @@ mod colors;
 mod command_surfaces;
 mod components;
 mod disclosures;
+mod filter_chips;
 mod forms;
 mod help;
 mod insights;
@@ -61,6 +62,7 @@ pub struct Showcase {
     pub native_checked: bool,
     pub forms: FormState,
     pub chips: chips::ChipsState,
+    pub filter_chips: filter_chips::FilterChipsState,
     pub paths: paths::PathsState,
     pub primitives: primitives::PrimitivesState,
     pub colors: colors::ColorsState,
@@ -106,6 +108,7 @@ impl Default for Showcase {
             native_checked: true,
             forms: FormState::default(),
             chips: chips::ChipsState::default(),
+            filter_chips: filter_chips::FilterChipsState::default(),
             paths: paths::PathsState::default(),
             primitives: primitives::PrimitivesState::default(),
             colors: colors::ColorsState::default(),
@@ -176,6 +179,7 @@ impl Showcase {
                             Page::Typography => typography::show(ui),
                             Page::Forms => forms::show(ui, &mut self.forms),
                             Page::Chips => chips::show(ui, &mut self.chips),
+                            Page::FilterChipGroup => filter_chips::show(ui, &mut self.filter_chips),
                             Page::PathInput => paths::show(ui, &mut self.paths),
                             Page::Controls => primitives::show(ui, &mut self.primitives),
                             Page::Colors => colors::show(ui, &mut self.colors),
