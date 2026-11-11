@@ -104,7 +104,8 @@ Reviewed the web checkout at `104e4dab59fd94130b44fb276736c6be731e1ebf`:
 surfaces use native dialogs; the port uses native `egui::Modal` rather than
 emulating modality with a SidePanel. The 50% backdrop uses the theme's foreground
 color, so the dark theme lightens the workspace beneath it, consistent with the
-semantic source token. There are no copied third-party implementations or new
+semantic source token. It dims and blocks the whole window, including the
+16-point clearance around a Modal. There are no copied third-party implementations or new
 runtime dependencies. Existing font/third-party notices remain distributed.
 
 Top/bottom or resizable/docked drawers, draggable dialogs, exit transitions, and

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Dim and block the whole window behind a Modal. The backdrop stopped 16
+  points short of every window edge, and clicks in that band reached the
+  host (DS-125).
+
 ## 1.8.0 — 2026-11-11
 
 - Add TagInput with keyed Chips, keyboard entry and removal, and a Showcase

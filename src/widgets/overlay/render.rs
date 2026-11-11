@@ -126,9 +126,9 @@ fn area(ctx: &Context, root: Id, config: &Config<'_>, width: f32, opening: bool)
         .role(egui::accesskit::Role::Dialog)
         .fade_in(false);
     match config.placement {
-        Placement::Modal(_) => {
-            area.constrain_to(ctx.content_rect().shrink(geometry::VIEWPORT_GUTTER))
-        }
+        // The area clips the backdrop too, so it spans the window. The surface
+        // keeps VIEWPORT_GUTTER through its width and height limits while centered.
+        Placement::Modal(_) => area,
         Placement::Drawer(side, _) => {
             let animation = root.with("entrance");
             if opening {
