@@ -2,8 +2,8 @@ use super::section;
 use dutchy_egui::calendar::{Date, Time};
 use dutchy_egui::tokens::space;
 use dutchy_egui::{
-    ColumnWidth, ControlSize, DatePicker, Field, Kbd, NumberInput, ResponsiveGrid, Segmented,
-    SelectOption, Slider, Switch, Text, TextColor, TextSize, TimePicker,
+    ColumnWidth, ControlSize, DatePicker, Field, Kbd, NumberInput, RangeSlider, ResponsiveGrid,
+    Segmented, SelectOption, Slider, Switch, Text, TextColor, TextSize, TimePicker,
 };
 
 #[derive(Clone, Copy, PartialEq, Debug)]
@@ -21,6 +21,7 @@ pub struct PrimitivesState {
     pub alignment: Option<&'static str>,
     pub volume: f64,
     pub threshold: f64,
+    pub latency: (f64, f64),
     pub retries: f64,
     pub timeout: f64,
     pub issued: Option<Date>,
@@ -41,6 +42,7 @@ impl Default for PrimitivesState {
             alignment: Some("left"),
             volume: 40.0,
             threshold: 0.75,
+            latency: (100.0, 400.0),
             retries: 3.0,
             timeout: 2.5,
             issued: Some(today),
@@ -150,6 +152,18 @@ fn numbers(ui: &mut egui::Ui, state: &mut PrimitivesState) {
                 Slider::new("threshold", &mut state.threshold, 0.0..=1.0)
                     .step(0.05)
                     .value_label(|value| format!("{value:.2}")),
+            )
+        });
+    let (fastest, slowest) = &mut state.latency;
+    Field::new("Response time")
+        .help("Two handles that meet but never cross, at least 50 ms apart.")
+        .show(ui, |ui| {
+            ui.add(
+                RangeSlider::new("latency", fastest, slowest, 0.0..=1000.0)
+                    .step(50.0)
+                    .min_separation(50.0)
+                    .accessible_name("Response time")
+                    .value_label(|low, high| format!("{low:.0}–{high:.0} ms")),
             )
         });
     Field::new("Retries").show(ui, |ui| {
@@ -263,8 +277,8 @@ fn summary(ui: &mut egui::Ui, state: &PrimitivesState) {
         .map_or_else(|| "none".to_owned(), |t| t.format(true));
     ui.add(
         Text::new(format!(
-            "Host state: notifications {}, autosave {}, density {:?}, volume {:.0}, threshold {:.2}, retries {:.0}, timeout {:.1}, issued {issued}, review by {review}, {starts} to {ends}.",
-            state.notifications, state.autosave, state.density, state.volume, state.threshold, state.retries, state.timeout
+            "Host state: notifications {}, autosave {}, density {:?}, volume {:.0}, threshold {:.2}, response time {:.0} to {:.0} ms, retries {:.0}, timeout {:.1}, issued {issued}, review by {review}, {starts} to {ends}.",
+            state.notifications, state.autosave, state.density, state.volume, state.threshold, state.latency.0, state.latency.1, state.retries, state.timeout
         ))
         .size(TextSize::Sm)
         .color(TextColor::Muted),

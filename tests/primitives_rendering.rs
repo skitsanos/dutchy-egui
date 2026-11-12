@@ -7,8 +7,8 @@ mod gallery;
 
 use dutchy_egui::calendar::{Date, Time};
 use dutchy_egui::{
-    Accent, ControlSize, DatePicker, Field, Kbd, Mode, NumberInput, Segmented, SelectOption,
-    Slider, Switch, Text, TextSize, Theme, TimePicker,
+    Accent, ControlSize, DatePicker, Field, Kbd, Mode, NumberInput, RangeSlider, Segmented,
+    SelectOption, Slider, Switch, Text, TextSize, Theme, TimePicker,
 };
 use egui_kittest::{Harness, SnapshotResults, kittest::Queryable};
 
@@ -17,6 +17,7 @@ struct Values {
     off: bool,
     choice: Option<u8>,
     level: f64,
+    span: (f64, f64),
     count: f64,
     date: Option<Date>,
     time: Option<Time>,
@@ -50,6 +51,15 @@ fn fixture(ui: &mut egui::Ui, values: &mut Values) {
                 .value_label(|value| format!("{value:.0} %")),
         )
     });
+    let (low, high) = &mut values.span;
+    Field::new("Span").show(ui, |ui| {
+        ui.add(
+            RangeSlider::new("span", low, high, 0.0..=100.0)
+                .step(5.0)
+                .accessible_name("Span")
+                .value_label(|low, high| format!("{low:.0}–{high:.0} %")),
+        )
+    });
     Field::new("Count").show(ui, |ui| {
         ui.add(
             NumberInput::new("count", &mut values.count)
@@ -80,6 +90,7 @@ fn values() -> Values {
         off: false,
         choice: Some(1),
         level: 40.0,
+        span: (20.0, 70.0),
         count: 3.0,
         date: Date::new(2026, 11, 12),
         time: Time::new(9, 30, 0),

@@ -131,6 +131,8 @@ pub mod control {
     pub const SLIDER_HEIGHT: f32 = INDICATOR * 1.25;
     /// Reserved width of a slider's host-formatted value label.
     pub const SLIDER_VALUE_WIDTH: f32 = super::space::MAJOR;
+    /// Reserved width of a range slider's label, which shows both values.
+    pub const RANGE_SLIDER_VALUE_WIDTH: f32 = super::space::HERO_LARGE;
     /// Length of the minus/plus glyph strokes in number-input step buttons.
     pub const STEP_GLYPH: f32 = super::space::MD;
     /// Calendar day cell side; the grid is seven cells wide and six tall.

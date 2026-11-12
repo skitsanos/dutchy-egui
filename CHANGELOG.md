@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Add RangeSlider: a low and a high value on the Slider rail, with handles
+  that meet but never cross, a minimum separation, per-handle keyboard and
+  accessibility support and a host-formatted label (DS-128).
+- Visual: a Slider's value label starts 12 points after the rail instead of
+  20, so a labelled Slider no longer runs 8 points past its width (DS-128).
+
 ## 1.10.1 — 2026-11-11
 
 - Show MultiSelect Chips below the query, so choosing an option no longer

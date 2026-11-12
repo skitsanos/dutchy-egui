@@ -40,8 +40,8 @@ pub use tokens::{
 pub use widgets::forms::{
     Checkbox, ColorPicker, ColorPreset, DatePicker, Field, InlineEdit, InlineEditEvent,
     InlineEditResponse, InlineEditState, Input, NumberInput, PathBrowseRequest, PathInput,
-    PathInputResponse, RadioGroup, SearchInput, Segmented, Select, SelectOption, Slider, Switch,
-    TagInput, TagInputRequest, TagInputResponse, TagItem, Textarea, TimePicker,
+    PathInputResponse, RadioGroup, RangeSlider, SearchInput, Segmented, Select, SelectOption,
+    Slider, Switch, TagInput, TagInputRequest, TagInputResponse, TagItem, Textarea, TimePicker,
 };
 pub use widgets::{
     Accordion, AccordionItem, AccordionResponse, AccordionState, AccordionVariant, Alert,

@@ -2,7 +2,10 @@
 
 mod common;
 
-use dutchy_egui::{ControlSize, NumberInput, Slider, Theme, tokens::border, tokens::control};
+use dutchy_egui::{
+    ControlSize, NumberInput, Slider, Theme,
+    tokens::{border, control, space},
+};
 use egui::accesskit::Role;
 use egui::{Event, Key, Modifiers, PointerButton};
 use egui_kittest::{
@@ -120,8 +123,13 @@ fn slider_paints_a_four_point_rail_with_primary_fill_and_a_square_primary_handle
         })
         .expect("the host-formatted value label");
     assert!(
-        label_x > rail.0.right(),
-        "the label sits in its column after the rail"
+        (label_x - (rail.0.right() + space::MD)).abs() < 0.5,
+        "the label column starts one gap after the rail: {label_x} {rail:?}"
+    );
+    let outer = rail.0.width() + space::MD + control::SLIDER_VALUE_WIDTH;
+    assert!(
+        (outer - (480.0 - 2.0 * rail.0.left())).abs() < 0.5,
+        "rail, gap and label column fill the available width exactly"
     );
 }
 

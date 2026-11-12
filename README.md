@@ -93,7 +93,7 @@ DutchyMail sketches a three-pane mail client: `cargo run --example dutchy_mail -
 - **Actions:** Button, IconButton, ToggleButton, Toolbar, Kbd.
 - **Forms:** Field with validation, Input, Textarea, Checkbox, RadioGroup,
   Switch, Segmented, Select, SearchableSelect, SearchInput, Slider,
-  NumberInput, DatePicker, TimePicker, ColorPicker.
+  RangeSlider, NumberInput, DatePicker, TimePicker, ColorPicker.
 - **Surfaces and feedback:** Card, Alert, Badge, Stat and StatsGrid,
   EmptyState, Progress, Skeleton, Spinner, Toasts, Tooltip.
 - **Navigation and disclosure:** Accordion, Tabs, Menu, MenuBar, Dropdown,

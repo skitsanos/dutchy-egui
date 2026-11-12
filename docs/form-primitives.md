@@ -1,7 +1,7 @@
 # Form primitives
 
-Switch, Kbd, Segmented, Slider, NumberInput, DatePicker and TimePicker are
-controls a native form needs but the web registry never listed. They follow
+Switch, Kbd, Segmented, Slider, RangeSlider, NumberInput, DatePicker and
+TimePicker are controls a native form needs but the web registry never listed. They follow
 the existing form conventions: values stay in application state, IDs are
 stable salts within the parent UI, `Field` supplies
 the visible label and validation decoration, and every control returns the
@@ -13,12 +13,15 @@ zero radius and flat fills.
 
 ```rust
 use dutchy_egui::calendar::{Date, Time};
-use dutchy_egui::{DatePicker, Field, NumberInput, Segmented, SelectOption, Slider, Switch};
+use dutchy_egui::{
+    DatePicker, Field, NumberInput, RangeSlider, Segmented, SelectOption, Slider, Switch,
+};
 
 struct Settings {
     notify: bool,
     density: Option<u8>,
     volume: f64,
+    price: (f64, f64),
     retries: f64,
     issued: Option<Date>,
     today: Date,
@@ -34,6 +37,13 @@ fn show(ui: &mut egui::Ui, s: &mut Settings) {
         ui.add(Slider::new("volume", &mut s.volume, 0.0..=100.0)
             .step(5.0)
             .value_label(|v| format!("{v:.0} %")))
+    });
+    let (low, high) = &mut s.price;
+    Field::new("Price").show(ui, |ui| {
+        ui.add(RangeSlider::new("price", low, high, 0.0..=500.0)
+            .step(10.0)
+            .accessible_name("Price")
+            .value_label(|low, high| format!("{low:.0}–{high:.0}")))
     });
     Field::new("Retries").show(ui, |ui| {
         ui.add(NumberInput::new("retries", &mut s.retries).range(0.0..=10.0).accessible_name("Retries"))
@@ -68,7 +78,20 @@ fn show(ui: &mut egui::Ui, s: &mut Settings) {
   20-point square primary handle (foreground while hovered or dragged). The
   rail egui would paint is zero height; the Dutchy rail and fill are inserted
   beneath the handle. The value label is optional, host-formatted and sits in
-  a 64-point column after the rail.
+  a 64-point column, 12 points after the rail. Rail, gap and column together
+  take exactly the width the control was given.
+- **RangeSlider** wraps egui's range slider and edits a low and a high value
+  on the same rail, with the primary fill between two square handles. A press
+  or drag on the rail moves the nearer handle and keeps it for the whole
+  gesture; the handles may meet but never cross, and `min_separation` keeps
+  them apart. Values out of range or out of order are pulled back in. Each
+  handle is its own tab stop with Left/Right stepping and a Slider node whose
+  bounds end at the other handle. The rail is a named Group. Handles are named
+  after `accessible_name` with "minimum" and "maximum"; `handle_names`
+  replaces both, for example in another language. A Field can only name the
+  rail, so set `accessible_name` inside a Field too. The optional label
+  formats both values in a 96-point column. The returned Response belongs to
+  the rail: it reports changes and the drag, not the focus of a handle.
 - **NumberInput** is a single-line editor in the input frame with square
   decrease/increase buttons the height of the control, Up/Down stepping while
   the editor has focus, optional bounds and decimals, and the SpinButton role
@@ -111,7 +134,9 @@ own instants; no date crate is added.
 
 ## Boundaries
 
-No range slider, vertical slider, week numbers, date ranges, locale-specific
+No vertical or logarithmic slider, week numbers, date ranges, locale-specific
 formats, 12-hour clocks or time zones. Pickers have no read-only mode yet;
-disable them instead. The showcase derives `today` from the system clock on
+disable them instead. Slider label columns have fixed widths, so a Slider
+and a RangeSlider stacked with labels end their rails 32 points apart. The
+showcase derives `today` from the system clock on
 native targets only.

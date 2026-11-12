@@ -38,7 +38,8 @@ come next, and each component guide states its limits.
 | Switch | Port addition | 36 × 20 track with a sliding square thumb, Switch role, Space/Enter activation, disabled state, reduced motion |
 | Kbd | Port addition | Mono uppercase key chip on the muted surface; a label, composed per key |
 | Segmented | Port addition | Typed exclusive segments at a shared height, foreground selection, RadioGroup/RadioButton semantics, one tab stop, Left/Right/Home/End roving that selects, disabled segments, full width |
-| Slider | Port addition | egui slider interaction and Slider semantics under a 4-point rail, primary trailing fill, 20-point square handle, step snapping, host-formatted value label, disabled state. Single value; no range or vertical slider yet. |
+| Slider | Port addition | egui slider interaction and Slider semantics under a 4-point rail, primary trailing fill, 20-point square handle, step snapping, host-formatted value label, disabled state. No vertical or logarithmic slider yet. |
+| RangeSlider | Port addition | egui range-slider interaction on the Slider rail: low and high handles that meet but never cross, minimum separation, step snapping, one Slider node and tab stop per handle, host-named handles, host-formatted label for both values, disabled state. Horizontal and linear only. |
 | NumberInput | Port addition | Editor with square decrease/increase buttons, Up/Down stepping, bounds, decimals, read-only, SpinButton value/min/max/step; unparsable text reverts on blur |
 | DatePicker | Port addition | ISO `YYYY-MM-DD` editor, caret-segment stepping, bounds, host-supplied today, calendar popup with month navigation, arrows/Home/End/PageUp/PageDown, Enter/Escape and focus return. No week numbers, ranges or locale formats yet. |
 | TimePicker | Port addition | `HH:MM` or `HH:MM:SS` editor with wrapping caret-segment steps and strict parsing; no time zones or 12-hour display. |

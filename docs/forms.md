@@ -48,9 +48,9 @@ rule and explicitly validate every required field at submission.
   opens; Tab/arrows navigate; Enter chooses; Escape dismisses. Choosing a value
   returns focus to the trigger, including choosing the existing value.
 
-Switch, Segmented, Slider, NumberInput, DatePicker, TimePicker and the Kbd chip
-follow the same ownership and ID rules; their decisions, keyboard behavior and
-examples are in the [form primitives guide](form-primitives.md).
+Switch, Segmented, Slider, RangeSlider, NumberInput, DatePicker, TimePicker and
+the Kbd chip follow the same ownership and ID rules; their decisions, keyboard
+behavior and examples are in the [form primitives guide](form-primitives.md).
 
 Use change or explicit submit validation for selection controls. RadioGroup
 returns a structural group Response with change events; it does not aggregate
