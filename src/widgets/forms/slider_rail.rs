@@ -6,7 +6,7 @@ use crate::{
     tokens::{border, control},
 };
 use egui::layers::ShapeIdx;
-use egui::{Align, Id, Layout, Rangef, Rect, Response, Shape, Stroke, Ui, pos2, vec2};
+use egui::{Align, Id, Layout, Rangef, Rect, Response, Shape, Stroke, TextStyle, Ui, pos2, vec2};
 use std::ops::RangeInclusive;
 
 /// Zero-height egui rail (painted here instead), square handle colors, no strokes.
@@ -61,20 +61,32 @@ impl Rail {
 
 /// The square handle egui paints for `value` inside the control's `rect`.
 pub(super) fn handle_rect(rect: Rect, range: &RangeInclusive<f64>, value: f64) -> Rect {
-    // egui derives the handle radius from the control height.
-    let radius = rect.height() / 2.5;
+    let radius = handle_radius(rect.height());
     let positions = rect.x_range().shrink(radius);
-    let (min, max) = (*range.start(), *range.end());
-    let fraction = if max > min {
-        ((value - min) / (max - min)).clamp(0.0, 1.0) as f32
+    let (start, end) = (*range.start(), *range.end());
+    let fraction = if start == end {
+        0.5
     } else {
-        0.0
+        ((value - start) / (end - start)).clamp(0.0, 1.0) as f32
     };
     let center_x = positions.min + (positions.max - positions.min) * fraction;
     Rect::from_center_size(
         pos2(center_x, rect.center().y),
         vec2(2.0 * radius, 2.0 * radius),
     )
+}
+
+fn handle_radius(height: f32) -> f32 {
+    // egui derives the handle radius from the control height.
+    height / 2.5
+}
+
+/// Leave room for both handles even when the slider has a narrow column.
+pub(super) fn minimum_rail_width(ui: &Ui) -> f32 {
+    let height = ui
+        .text_style_height(&TextStyle::Body)
+        .max(control::SLIDER_HEIGHT);
+    4.0 * handle_radius(height)
 }
 
 /// Ring the handle while the widget with `id` holds keyboard focus.

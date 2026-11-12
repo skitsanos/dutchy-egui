@@ -84,14 +84,17 @@ fn show(ui: &mut egui::Ui, s: &mut Settings) {
   on the same rail, with the primary fill between two square handles. A press
   or drag on the rail moves the nearer handle and keeps it for the whole
   gesture; the handles may meet but never cross, and `min_separation` keeps
-  them apart. Values out of range or out of order are pulled back in. Each
-  handle is its own tab stop with Left/Right stepping and a Slider node whose
-  bounds end at the other handle. The rail is a named Group. Handles are named
-  after `accessible_name` with "minimum" and "maximum"; `handle_names`
-  replaces both, for example in another language. A Field can only name the
-  rail, so set `accessible_name` inside a Field too. The optional label
-  formats both values in a 96-point column. The returned Response belongs to
-  the rail: it reports changes and the drag, not the focus of a handle.
+  them apart. The response reports changes from both interaction and
+  normalization of host values. Each handle is its own tab stop with
+  Left/Right stepping and a Slider node whose bounds end at the other handle.
+  The named group contains both handles and carries the Field name and help.
+  Set `accessible_name` to include the range name in each handle's name,
+  or use `handle_names` to supply both names directly. Disabled handles
+  reject assistive edits, and numeric assistive requests must be finite.
+  The optional value label sits in a 96-point column when it fits and moves
+  below the rail in a narrow layout. The rail keeps room for two handles even
+  if the requested width is smaller. Use the group response for change and
+  drag tracking. Each handle keeps its own focus.
 - **NumberInput** is a single-line editor in the input frame with square
   decrease/increase buttons the height of the control, Up/Down stepping while
   the editor has focus, optional bounds and decimals, and the SpinButton role

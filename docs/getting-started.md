@@ -5,12 +5,10 @@ navigation and action execution. The core UI dependency is egui; the default
 `markdown` feature adds its parser. eframe and egui_kittest are development-only.
 No web checkout is required.
 
-The package is prepared locally; registry publication is a separate step.
-Use a path dependency while working from this checkout:
+Add Dutchy to your Cargo project.
 
-```toml
-[dependencies]
-dutchy-egui = { path = "../dutchy-egui" }
+```sh
+cargo add dutchy-egui
 ```
 
 Install once during application setup, then compose widgets:
@@ -55,6 +53,8 @@ proportional and monospace fonts and the library embeds no font bytes.
 | `markdown` (default) | CommonMark parsing via pulldown-cmark; CodeBlock is unconditional |
 | `url-images` | ehttp/image-backed HTTP(S) PNG/JPEG loading |
 | `png-export` | Image-backed PNG drawing export without HTTP/JPEG |
+
+From a repository checkout, run the native Showcase.
 
 ```sh
 cargo run --example showcase --all-features

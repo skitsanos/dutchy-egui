@@ -2,11 +2,19 @@
 
 ## Unreleased
 
+## 1.11.0 — 2026-11-12
+
 - Add RangeSlider: a low and a high value on the Slider rail, with handles
   that meet but never cross, a minimum separation, per-handle keyboard and
   accessibility support and a host-formatted label (DS-128).
+- RangeSlider keeps both handles in one accessible group, reports clamping
+  as a change, and rejects disabled or non-finite assistive edits. Focus and
+  fill follow descending and single-value ranges. The value label moves
+  below the rail in narrow layouts (DS-128).
 - Visual: a Slider's value label starts 12 points after the rail instead of
   20, so a labelled Slider no longer runs 8 points past its width (DS-128).
+- Use crates.io installation commands in the quick start and guides, and
+  clarify that Showcase runs from a repository checkout.
 
 ## 1.10.1 — 2026-11-11
 

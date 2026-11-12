@@ -1,14 +1,13 @@
 # URL images
 
-Enable the optional integration:
+Enable the optional integration in your Cargo project.
 
-```toml
-[dependencies]
-dutchy-egui = { path = "../dutchy-egui", features = ["url-images"] }
+```sh
+cargo add dutchy-egui --features url-images
 ```
 
 ```rust
-use dutchy_egui::{Image, ImageAspect, Theme};
+use dutchy_egui::{Image, ImageAspect, Theme, egui};
 
 fn setup(ctx: &egui::Context) {
     dutchy_egui::install(ctx, Theme::default());

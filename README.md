@@ -35,11 +35,10 @@ palettes in light and dark mode, and a small set of feature-gated dependencies.
 
 ## Quick start
 
-Add the crate as a path dependency while registry publication is being prepared:
+Add Dutchy to your Cargo project.
 
-```toml
-[dependencies]
-dutchy-egui = { path = "../dutchy-egui" }
+```sh
+cargo add dutchy-egui
 ```
 
 Install the theme once, then compose widgets in your `egui` UI:
@@ -71,8 +70,8 @@ Requires Rust 1.95 or newer and egui 0.37.
 
 ## Showcase
 
-Run the native showcase to browse every component in all accents, both modes
-and with reduced motion:
+Run the native showcase from a repository checkout to browse every component
+in all accents, both modes and with reduced motion.
 
 ```sh
 cargo run --example showcase --all-features

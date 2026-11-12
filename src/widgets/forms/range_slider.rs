@@ -1,15 +1,21 @@
-use super::slider_rail::{Rail, configure, handle_rect, paint_handle_focus, value_column};
+use super::slider_rail::{
+    Rail, configure, handle_rect, minimum_rail_width, paint_handle_focus, value_column,
+};
 use crate::{
     Theme,
     tokens::{control, space},
 };
-use egui::accesskit::Role;
+use egui::accesskit::{Action, ActionData, ActionRequest, Role};
 use egui::style::HandleShape;
-use egui::{IdSalt, Rangef, Response, SliderClamping, Ui, UiBuilder, Widget};
+use egui::{
+    Align, Id, IdSalt, Layout, Rangef, Response, SliderClamping, Ui, UiBuilder, Widget, WidgetInfo,
+};
 use std::borrow::Cow;
 use std::ops::RangeInclusive;
 
 type RangeLabel<'a> = Box<dyn Fn(f64, f64) -> String + 'a>;
+
+const EDIT_ACTIONS: [Action; 3] = [Action::SetValue, Action::Increment, Action::Decrement];
 
 /// Two-ended range control over egui's range slider: native drag of the nearer
 /// handle, arrow-key stepping and one Slider node per handle, under the Slider
@@ -53,7 +59,7 @@ impl<'a> RangeSlider<'a> {
             enabled: true,
         }
     }
-    /// Snap dragged values and arrow-key steps to multiples of `step`.
+    /// Snap dragged values and arrow-key steps to increments from the range start.
     pub fn step(mut self, step: f64) -> Self {
         self.step = Some(step.abs());
         self
@@ -64,7 +70,7 @@ impl<'a> RangeSlider<'a> {
         self
     }
     /// Name the range; the handles announce it with "minimum" and "maximum".
-    /// Set it inside a Field too, which can only name the rail.
+    /// Set it inside a Field too to include the field name in each handle's name.
     pub fn accessible_name(mut self, name: impl Into<Cow<'a, str>>) -> Self {
         self.name = Some(name.into());
         self
@@ -78,7 +84,7 @@ impl<'a> RangeSlider<'a> {
         self.handle_names = Some((low.into(), high.into()));
         self
     }
-    /// Show host-formatted values beside the rail in a reserved column.
+    /// Show host-formatted values beside the rail, or below it in a narrow layout.
     pub fn value_label(mut self, format: impl Fn(f64, f64) -> String + 'a) -> Self {
         self.label = Some(Box::new(format));
         self
@@ -104,22 +110,45 @@ impl<'a> RangeSlider<'a> {
         }
     }
 
-    fn rail_width(&self, ui: &Ui) -> f32 {
+    fn layout(&self, ui: &Ui) -> (f32, bool) {
+        let minimum = minimum_rail_width(ui);
         let total = self
             .width
             .unwrap_or(ui.available_width())
-            .min(ui.available_width());
-        let reserved = if self.label.is_some() {
-            control::RANGE_SLIDER_VALUE_WIDTH + space::MD
+            .min(ui.available_width())
+            .max(minimum);
+        let beside = total - control::RANGE_SLIDER_VALUE_WIDTH - space::MD;
+        if self.label.is_some() && beside >= minimum {
+            (beside, true)
         } else {
-            0.0
-        };
-        (total - reserved).max(0.0)
+            (total, false)
+        }
     }
 
-    fn show(self, ui: &mut Ui, theme: Theme) -> Response {
+    fn show_group(&mut self, ui: &mut Ui, theme: Theme) -> Response {
+        let builder = UiBuilder::new()
+            .id_salt("range-group")
+            .accessibility_role(Role::Group);
+        let group = ui.scope_builder(builder, |ui| self.show_rail(ui, theme));
+        // Field attaches its name and help to the group. Keep native drag and change flags.
+        let response = group.response.union(group.inner);
+        response.widget_info(|| {
+            WidgetInfo::labeled(
+                Role::Group,
+                response.enabled(),
+                self.name.as_deref().unwrap_or_default(),
+            )
+        });
+        response
+    }
+
+    fn show_rail(&mut self, ui: &mut Ui, theme: Theme) -> Response {
         let names = self.names();
         let rail = Rail::reserve(ui);
+        let rail_key = ui.scope_id().with("native-rail");
+        let editable = ui.is_enabled() && ui.memory(|m| m.allows_interaction(ui.layer_id()));
+        filter_assistive_edits(ui, rail_key, editable);
+        let before = (*self.low, *self.high);
         let mut slider =
             egui::RangeSlider::new(&mut *self.low, &mut *self.high, self.range.clone())
                 .show_value(false)
@@ -129,58 +158,108 @@ impl<'a> RangeSlider<'a> {
         if let Some(step) = self.step {
             slider = slider.step_by(step);
         }
-        let response = ui.add(slider);
+        let mut response = ui.add(slider);
+        ui.data_mut(|data| data.insert_temp(rail_key, response.id));
         let (low, high) = (*self.low, *self.high);
+        // egui measures change after its initial clamping. Hosts observe that correction too.
+        if (low, high) != before {
+            response.mark_changed();
+        }
         let rect = response.rect;
         let handles = [low, high].map(|value| handle_rect(rect, &self.range, value));
         rail.paint(
             ui,
             theme,
             rect,
-            Rangef::new(handles[0].center().x, handles[1].center().x),
+            Rangef::new(handles[0].center().x, handles[1].center().x).as_positive(),
         );
-        // egui keys each handle's focus stop and Slider node off the rail's ID.
-        let ids = ["low", "high"].map(|end| response.id.with(end));
-        for ((id, handle), name) in ids.into_iter().zip(handles).zip(names) {
+        for ((id, handle), name) in handle_ids(response.id).into_iter().zip(handles).zip(names) {
             paint_handle_focus(ui, &response, id, handle, theme);
-            ui.ctx()
-                .accesskit_node_builder(id, |node| node.set_label(name));
+            ui.ctx().accesskit_node_builder(id, |node| {
+                node.set_label(name);
+                if !editable {
+                    for action in EDIT_ACTIONS {
+                        node.remove_action(action);
+                    }
+                }
+            });
         }
-        // The rail carries no value of its own; the two handles are the sliders.
         ui.ctx().accesskit_node_builder(response.id, |node| {
-            node.set_role(Role::Group);
-            if let Some(name) = &self.name {
-                node.set_label(name.to_string());
-            }
+            node.set_role(Role::GenericContainer);
+            node.set_hidden();
         });
-        if let Some(label) = &self.label {
-            ui.add_space(space::MD);
-            value_column(
-                ui,
-                control::RANGE_SLIDER_VALUE_WIDTH,
-                rect.height(),
-                label(low, high),
-            );
-        }
         response
+    }
+
+    fn show_label(&self, ui: &mut Ui, width: f32, height: f32, gap: f32) {
+        if let Some(label) = &self.label {
+            ui.add_space(gap);
+            value_column(ui, width, height, label(*self.low, *self.high));
+        }
     }
 }
 
 impl Widget for RangeSlider<'_> {
-    fn ui(self, ui: &mut Ui) -> Response {
+    fn ui(mut self, ui: &mut Ui) -> Response {
         let theme = Theme::from_context(ui.ctx());
-        let rail_width = self.rail_width(ui);
+        let (rail_width, beside) = self.layout(ui);
         let id = ui.make_persistent_id(self.id);
-        ui.scope_builder(UiBuilder::new().scope_id(id), |ui| {
-            ui.horizontal(|ui| {
-                configure(ui, theme, rail_width);
+        ui.scope_builder(
+            UiBuilder::new()
+                .scope_id(id)
+                .layout(Layout::top_down(Align::Min)),
+            |ui| {
                 if !self.enabled {
                     ui.disable();
                 }
-                self.show(ui, theme)
-            })
-            .inner
-        })
+                let response = ui
+                    .horizontal(|ui| {
+                        configure(ui, theme, rail_width);
+                        let response = self.show_group(ui, theme);
+                        if beside {
+                            self.show_label(
+                                ui,
+                                control::RANGE_SLIDER_VALUE_WIDTH,
+                                response.rect.height(),
+                                space::MD,
+                            );
+                        }
+                        response
+                    })
+                    .inner;
+                if !beside {
+                    self.show_label(ui, rail_width, 0.0, 0.0);
+                }
+                response
+            },
+        )
         .inner
+    }
+}
+
+fn handle_ids(rail: Id) -> [Id; 2] {
+    ["low", "high"].map(|end| rail.with(end))
+}
+
+fn filter_assistive_edits(ui: &Ui, rail_key: Id, editable: bool) {
+    // An action targets a handle that egui already exposed in a previous frame.
+    if let Some(rail) = ui.data(|data| data.get_temp::<Id>(rail_key)) {
+        ui.input_mut(|input| {
+            for id in handle_ids(rail) {
+                input.consume_accesskit_action_requests(id, |request| {
+                    blocked_edit(request, editable)
+                });
+            }
+        });
+    }
+}
+
+fn blocked_edit(request: &ActionRequest, editable: bool) -> bool {
+    match request.action {
+        Action::SetValue => {
+            !editable || !matches!(request.data, Some(ActionData::NumericValue(v)) if v.is_finite())
+        }
+        Action::Increment | Action::Decrement => !editable,
+        _ => false,
     }
 }
